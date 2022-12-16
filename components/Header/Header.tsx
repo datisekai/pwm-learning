@@ -1,11 +1,16 @@
-import React from "react";
+import React, { FC } from "react";
 import BottomHeader from "./BottomHeader";
 import TopHeader from "./TopHeader";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { BsSearch } from "react-icons/bs";
 import { BiMenuAltLeft } from "react-icons/bi";
 
-const Header = () => {
+interface HeaderProps{
+  handleOpen:() => void
+  handleOpenSearch:() => void
+}
+
+const Header:FC<HeaderProps> = ({handleOpen,handleOpenSearch}) => {
   return (
     <div
       className="sticky top-0 right-0 left-0 z-[100]"
@@ -17,7 +22,7 @@ const Header = () => {
       <TopHeader />
       <div className="bg-grey">
         <div className="max-w-[1200px]  mx-auto py-4 w-[calc(100%-16px)] flex items-center justify-between">
-          <BiMenuAltLeft fontSize={30} className="block md:hidden" />
+          <BiMenuAltLeft onClick={handleOpen} fontSize={30} className="block md:hidden" />
           <LazyLoadImage
             src="/images/logo.png"
             className="w-[150px] md:w-auto"
@@ -64,7 +69,7 @@ const Header = () => {
               </span>
             </div>
           </div>
-          <BsSearch fontSize={20} className="block md:hidden" />
+          <BsSearch onClick={handleOpenSearch} fontSize={20} className="block md:hidden" />
         </div>
       </div>
       <div className="w-full bg-white py-2">

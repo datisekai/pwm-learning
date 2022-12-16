@@ -62,3 +62,30 @@ body{
 .swiper-pagination-bullet-active{
   background-color: #EA8143 !important;
 }
+
+.leftRightAnimation{
+  animation: leftToRight ease 0.3s;
+}
+
+.opacityAnimation{
+  animation: opacity ease 0.3s;
+}
+
+@keyframes opacity{
+  from{
+    opacity: 0;
+  }to{
+    opacity: 1;
+  }
+}
+
+@keyframes leftToRight{
+  from{
+    left:-100%;
+    opacity: 0;
+  }
+  to{
+    left: 0;
+    opacity: 1;
+  }
+}

@@ -12,7 +12,7 @@ const data = [
 
 const Slider = () => {
   return (
-    <div className="max-w-[1200px] mx-auto">
+    <div className="max-w-[1200px] mx-auto mt-2">
       <Swiper
         modules={[Navigation, Pagination]}
         spaceBetween={50}
