@@ -31,7 +31,7 @@ const Header = () => {
               height={36}
               src="/images/supporticon.png"
             />
-            <span className="ml-2 hover:text-primary transition-all hover:cursor-pointer text-lg font-extralight">
+            <span className="ml-2 hover:text-primary transition-all hover:cursor-pointer text-md font-extralight">
               Hỗ trợ khách hàng
             </span>
           </div>
@@ -41,7 +41,7 @@ const Header = () => {
               height={36}
               src="/images/system-ecommerce.png"
             />
-            <span className="ml-2 hover:text-primary transition-all hover:cursor-pointer text-lg font-extralight">
+            <span className="ml-2 hover:text-primary transition-all hover:cursor-pointer text-md font-extralight">
               Hệ thống cửa hàng
             </span>
           </div>
