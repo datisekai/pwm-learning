@@ -28,12 +28,13 @@ const data = [
     url: "/",
     title: "Nghiên cứu chuyên sâu",
   },
+  
 ];
 
 const BottomHeader = () => {
   return (
     <div className=" max-w-[1200px] mx-auto ">
-     <Swiper
+      {/* <Swiper
       className="w-full h-full"
       modules={[Navigation]}
       spaceBetween={8}
@@ -54,11 +55,23 @@ const BottomHeader = () => {
           <span className="animation-left-right relative left-right">{item.title}</span>
         </SwiperSlide>
       ))}
-    </Swiper>
+    </Swiper> */}
 
-    {/* <div className="flex items-center flex-nowrap category-header overflow-x-scroll">
-      {data.map((item,index) => <button className={` ml-2 first:ml-0 line-clamp-1  text-md rounded-tl-lg rounded-br-lg  text-center hover:cursor-pointer  px-4 py-[6px] ${index === 0 ? 'bg-primary text-white' : 'bg-gray-200 hover:bg-gray-300'}`}>{item.title}</button>)}
-    </div> */}
+      <div className="flex items-center flex-nowrap px-2 md:px-0 md:justify-center category-header overflow-x-scroll w-full">
+        {data.map((item, index) => (
+          <button
+            className={` select-none whitespace-nowrap max-w-[200px] w-auto text-md rounded-tl-lg rounded-br-lg  text-center hover:cursor-pointer  px-4 py-[6px] font-bold ${
+              index === 0
+                ? "bg-primary text-white"
+                : "bg-transparent text-white "
+            }`}
+          >
+            <span className="animation-left-right relative left-right">
+              {item.title}
+            </span>
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
