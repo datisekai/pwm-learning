@@ -3,18 +3,25 @@ import BottomHeader from "./BottomHeader";
 import TopHeader from "./TopHeader";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { BsSearch } from "react-icons/bs";
-import {BiMenuAltLeft} from 'react-icons/bi'
+import { BiMenuAltLeft } from "react-icons/bi";
 
 const Header = () => {
   return (
-    <div className="sticky top-0 right-0 left-0 z-[100]" style={{
-      boxShadow:'rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;'
-    }}>
+    <div
+      className="sticky top-0 right-0 left-0 z-[100]"
+      style={{
+        boxShadow:
+          "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;",
+      }}
+    >
       <TopHeader />
       <div className="bg-grey">
         <div className="max-w-[1200px]  mx-auto py-4 w-[calc(100%-16px)] flex items-center justify-between">
-            <BiMenuAltLeft fontSize={30} className='block md:hidden'/>
-          <LazyLoadImage src="/images/logo.png" className="w-[150px] md:w-auto"/>
+          <BiMenuAltLeft fontSize={30} className="block md:hidden" />
+          <LazyLoadImage
+            src="/images/logo.png"
+            className="w-[150px] md:w-auto"
+          />
           <div className="md:flex items-center hidden">
             <input
               type="text"
@@ -52,15 +59,17 @@ const Header = () => {
             </button>
             <div className="ml-2 relative">
               <LazyLoadImage width={37} height={36} src="/images/cart.png" />
-              <span className="absolute w-[20px] h-[20px] text-center flex items-center justify-center text-xs top-[-6px] right-[-8px] bg-primary text-white rounded-full">1</span>
+              <span className="absolute w-[20px] h-[20px] text-center flex items-center justify-center text-xs top-[-6px] right-[-8px] bg-primary text-white rounded-full">
+                1
+              </span>
             </div>
           </div>
-          <BsSearch fontSize={20} className='block md:hidden'/>
+          <BsSearch fontSize={20} className="block md:hidden" />
         </div>
       </div>
-       <div className="w-full bg-white py-2">
-       <BottomHeader />
-       </div>
+      <div className="w-full bg-white py-2">
+        <BottomHeader />
+      </div>
     </div>
   );
 };

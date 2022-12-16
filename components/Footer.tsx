@@ -31,7 +31,7 @@ const Footer = () => {
             {["Company History", "About us"].map((item) => (
               <div
                 key={item}
-                className="py-1 first:mt-2 text-white flex items-center"
+                className="py-1 hover:underline hover:cursor-pointer first:mt-2 text-white flex items-center"
               >
                 <AiOutlineRight fontSize={20} />
                 <span className="ml-2">{item}</span>
@@ -46,7 +46,7 @@ const Footer = () => {
               (item, index) => (
                 <div
                   key={index}
-                  className="py-1 first:mt-2 text-white flex items-center"
+                  className="py-1 hover:underline hover:cursor-pointer first:mt-2 text-white flex items-center"
                 >
                   <AiOutlineRight fontSize={20} />
                   <span className="ml-2">{item}</span>
