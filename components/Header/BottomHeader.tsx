@@ -44,14 +44,14 @@ const BottomHeader = () => {
           slidesPerView:4
         },
         320:{
-          slidesPerView:3
+          slidesPerView:2
         }
       }}
      
     >
       {data.map((item, index) => (
-        <SwiperSlide key={item.url} className={`line-clamp-1 max-w-[200px] w-auto text-md rounded-tl-lg rounded-br-lg  text-center hover:cursor-pointer  px-4 py-[6px] ${index === 0 ? 'bg-primary text-white' : 'bg-gray-200 hover:bg-gray-300'}`}>
-          {item.title}
+        <SwiperSlide key={item.url} className={`select-none flex justify-center line-clamp-1 max-w-[200px] w-auto text-md rounded-tl-lg rounded-br-lg  text-center hover:cursor-pointer  px-4 py-[6px] font-bold ${index === 0 ? 'bg-primary text-white' : 'bg-transparent text-white '}`}>
+          <span className="animation-left-right relative left-right">{item.title}</span>
         </SwiperSlide>
       ))}
     </Swiper>

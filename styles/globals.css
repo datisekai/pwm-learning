@@ -89,3 +89,20 @@ body{
     opacity: 1;
   }
 }
+
+.left-right:hover::after{
+  width: 100%;
+}
+
+.left-right::after{
+  content: "";
+  position: absolute;
+  display: block;
+  width: 0;
+  height: 5px;
+  background-color: #EA8143;
+  z-index: 200;
+  transition:width 0.7s;
+  left:0;
+}
+

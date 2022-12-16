@@ -19,7 +19,7 @@ const Header:FC<HeaderProps> = ({handleOpen,handleOpenSearch}) => {
           "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;",
       }}
     >
-      <TopHeader />
+      {/* <TopHeader /> */}
       <div className="bg-grey">
         <div className="max-w-[1200px]  mx-auto py-4 w-[calc(100%-16px)] flex items-center justify-between">
           <BiMenuAltLeft onClick={handleOpen} fontSize={30} className="block md:hidden" />
@@ -72,7 +72,7 @@ const Header:FC<HeaderProps> = ({handleOpen,handleOpenSearch}) => {
           <BsSearch onClick={handleOpenSearch} fontSize={20} className="block md:hidden" />
         </div>
       </div>
-      <div className="w-full bg-white py-2">
+      <div className="w-full bg-green-600 py-2">
         <BottomHeader />
       </div>
     </div>

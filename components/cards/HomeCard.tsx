@@ -7,7 +7,7 @@ const HomeCard = () => {
     <div>
       <div className="bg-gray-200 flex items-center justify-center aspect-[1/1] rounded-lg relative">
         <LazyLoadImage src="/images/product.png" />
-        <button className="absolute  bottom-4 hover:bg-primary hover:text-white transition-all bg-gray-300 px-4 py-2 rounded-sm mt-2">Thêm vào giỏ hàng</button>
+        <button className="absolute  bottom-4 hover:bg-primary hover:text-white transition-all bg-gray-300 px-4 py-2 rounded-tl-lg rounded-br-lg mt-2">Xem chi tiết</button>
 
       </div>
       <div className="mt-2 text-center">
