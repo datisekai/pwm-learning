@@ -18,6 +18,7 @@ const Slider = () => {
         spaceBetween={50}
         slidesPerView={1}
         navigation
+        color="#EA8143"
         pagination={{ clickable: true }}
       >
         {data.map(item => <SwiperSlide key={item}>

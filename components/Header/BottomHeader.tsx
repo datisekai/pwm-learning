@@ -41,10 +41,10 @@ const BottomHeader = () => {
       navigation
       breakpoints={{
         768:{
-          slidesPerView:3
+          slidesPerView:4
         },
         320:{
-          slidesPerView:2
+          slidesPerView:3
         }
       }}
      
