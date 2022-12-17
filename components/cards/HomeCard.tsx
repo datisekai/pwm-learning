@@ -9,7 +9,7 @@ const HomeCard:React.FC<HomeCardProps> = ({data}) => {
   return (
     <div>
       <div className="bg-gray-200 flex items-center justify-center aspect-[1/1] rounded-lg relative">
-        <LazyLoadImage src={data} />
+        <LazyLoadImage src={data} className='aspect-[1/1] w-full'/>
         <button className="absolute  bottom-4 hover:bg-primary hover:text-white transition-all bg-gray-300 px-4 py-2 rounded-tl-lg rounded-br-lg mt-2">Xem chi tiết</button>
 
       </div>
