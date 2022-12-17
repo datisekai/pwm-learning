@@ -2,6 +2,8 @@ import React from "react";
 import { BsChevronDown } from "react-icons/bs";
 import HomeCard from "../cards/HomeCard";
 
+const data = ["/images/1.jpg","/images/2.jpg","/images/3.jpg","/images/4.jpg"]
+
 const Section3 = () => {
   return (
     <div className="mt-4 py-4 max-w-[1200px] w-[calc(100%-16px)] mx-auto">
@@ -21,7 +23,7 @@ const Section3 = () => {
           ))}
         </div>
         <div className="flex-1 md:ml-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-2 gap-y-8">
-            {[1,2,3,4,5,6,7,8].map(item => <HomeCard key={item}/>)}
+            {data.map(item => <HomeCard data={item} key={item}/>)}
         </div>
       </div>
     </div>
