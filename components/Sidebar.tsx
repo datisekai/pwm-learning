@@ -50,7 +50,7 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
         onClick={handleHide}
       ></div>
       <div
-        className={`leftRightAnimation w-[240px] bg-white fixed left-0 top-0 bottom-0 z-[130] ${
+        className={`leftRightAnimation w-[240px] bg-white fixed left-0 top-0 bottom-0 z-[200] ${
           open ? "block" : "hidden"
         }`}
       >
