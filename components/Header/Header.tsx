@@ -87,7 +87,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
           boxShadow:
             "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;",
         }}
-        className="w-full sticky top-[0] right-0 z-[150] left-0 bg-green-600 py-2"
+        className="w-full sticky top-[0] right-0 z-[110] left-0 bg-green-600 py-2"
       >
         <BottomHeader />
       </div>
