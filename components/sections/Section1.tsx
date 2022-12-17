@@ -6,12 +6,12 @@ import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 const data = [
-  "/images/2.png",
-  "/images/1.png",
-  "/images/4.png",
-  "/images/1.png",
-  "/images/4.png",
-  "/images/3.png",
+  "/images/2.jpg",
+  "/images/1.jpg",
+  "/images/4.jpg",
+  "/images/1.jpg",
+  "/images/4.jpg",
+  "/images/3.jpg",
 ];
 
 const Section1 = () => {
