@@ -2,11 +2,14 @@ import React from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { formatPrices } from "../../utils";
 
-const HomeCard = () => {
+interface HomeCardProps{
+data:string
+}
+const HomeCard:React.FC<HomeCardProps> = ({data}) => {
   return (
     <div>
       <div className="bg-gray-200 flex items-center justify-center aspect-[1/1] rounded-lg relative">
-        <LazyLoadImage src="/images/product.png" />
+        <LazyLoadImage src={data} />
         <button className="absolute  bottom-4 hover:bg-primary hover:text-white transition-all bg-gray-300 px-4 py-2 rounded-tl-lg rounded-br-lg mt-2">Xem chi tiết</button>
 
       </div>
