@@ -61,7 +61,7 @@ const BottomHeader = () => {
         {data.map((item, index) => (
           <button
           key={index}
-            className={` select-none whitespace-nowrap max-w-[200px] w-auto text-md rounded-tl-lg rounded-br-lg  text-center hover:cursor-pointer  px-4 py-[6px] font-bold ${
+            className={` select-none whitespace-nowrap max-w-[200px] w-auto text-sm md:text-md rounded-tl-lg rounded-br-lg  text-center hover:cursor-pointer  px-4 py-[6px] font-bold ${
               index === 0
                 ? "bg-primary text-white"
                 : "bg-transparent text-white "

@@ -4,6 +4,7 @@ import TopHeader from "./TopHeader";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { BsSearch } from "react-icons/bs";
 import { BiMenuAltLeft } from "react-icons/bi";
+import Image from "next/image";
 
 interface HeaderProps {
   handleOpen: () => void;
@@ -17,7 +18,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
         className="relative top-0 right-0 left-0 z-[100]"
         style={{
           boxShadow:
-            "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;",
+            "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px",
         }}
       >
         {/* <TopHeader /> */}
@@ -28,7 +29,9 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
               fontSize={30}
               className="block md:hidden"
             />
-            <LazyLoadImage
+
+            <img
+              alt="PWM Logo"
               src="/images/logo.png"
               className="w-[150px] md:w-auto"
             />
@@ -43,7 +46,8 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
               </div>
             </div>
             <div className="hidden lg:flex items-center">
-              <LazyLoadImage
+              <Image
+                alt="Icon"
                 width={37}
                 height={36}
                 src="/images/supporticon.png"
@@ -53,9 +57,10 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
               </span>
             </div>
             <div className="hidden lg:flex items-center">
-              <LazyLoadImage
+              <Image
                 width={37}
                 height={36}
+                alt="Icon"
                 src="/images/system-ecommerce.png"
               />
               <span className="ml-2 hover:text-primary transition-all hover:cursor-pointer text-md font-extralight">
@@ -67,8 +72,13 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
               <button className="px-4 ml-2 py-2 rounded-tl-lg rounded-br-lg hover:bg-primaryHover transition-all bg-primary text-white">
                 Đăng ký
               </button>
-              <div className="ml-2 relative">
-                <LazyLoadImage width={37} height={36} src="/images/cart.png" />
+              <div className="ml-2 relative cursor-pointer">
+                <Image
+                  alt="Cart"
+                  width={37}
+                  height={36}
+                  src="/images/cart.png"
+                />
                 <span className="absolute w-[20px] h-[20px] text-center flex items-center justify-center text-xs top-[-6px] right-[-8px] bg-primary text-white rounded-full">
                   1
                 </span>

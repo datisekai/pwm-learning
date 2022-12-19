@@ -42,7 +42,7 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
   const [isDark, setIsDark] = React.useState(false);
 
   return (
-    <div className={`${open ? "block" : "hidden"} transition-all`}>
+    <div>
       <div
         className={`fixed inset-0 bg-[rgba(0,0,0,0.6)] opacityAnimation z-[120] ${
           open ? "block" : "hidden"
@@ -50,8 +50,8 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
         onClick={handleHide}
       ></div>
       <div
-        className={`leftRightAnimation w-[240px] bg-white fixed left-0 top-0 bottom-0 z-[200] ${
-          open ? "block" : "hidden"
+        className={` w-[240px] bg-white fixed transition-transform left-0 translate-x-[0] top-0 bottom-0 z-[200] ${
+          open ? "translate-x-0" : " translate-x-[-100%]"
         }`}
       >
         <div className="py-6 border-b-2">
@@ -62,7 +62,7 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
             const Icon = item.icon;
             return (
               <div key={index} className="flex items-center py-3">
-                <Icon fontSize={24} />
+                <Icon fontSize={24} className='text-primary'/>
                 <span className="ml-2">{item.title}</span>
               </div>
             );
@@ -73,7 +73,7 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
             const Icon = item.icon;
             return (
               <div key={index} className="flex items-center py-3">
-                <Icon fontSize={24} />
+                <Icon fontSize={24} className='text-primary'/>
                 <span className="ml-2">{item.title}</span>
               </div>
             );

@@ -8,8 +8,7 @@ const Footer = () => {
     <div className="pt-4 bg-[#2D3641]">
       <div className="pb-4 max-w-[1200px] w-[calc(100%-16px)] mx-auto flex flex-col md:flex-row  md:items-start md:justify-between">
         <div className="flex-1 flex flex-col items-center md:items-start">
-          <LazyLoadImage src="/images/logo.png" />
-          <p className="text-white mt-2">
+          <p className="text-white mt-2 text-sm md:text-md">
             Lorem ipsum dolor amet consectetur adipisicing elit sed eiusm tempor
             incididunt labore dolore magna aliqua enim.
           </p>
@@ -26,7 +25,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="flex-1 flex flex-col mt-2 md:mt-0">
-          <h2 className="text-white text-xl">Service</h2>
+          <h2 className="text-white text-lg md:text-xl">Service</h2>
           <div>
             {["Company History", "About us"].map((item) => (
               <div
@@ -34,13 +33,13 @@ const Footer = () => {
                 className="py-1 hover:underline hover:cursor-pointer first:mt-2 text-white flex items-center"
               >
                 <AiOutlineRight fontSize={20} />
-                <span className="ml-2">{item}</span>
+                <span className="ml-2 text-sm md:text-md">{item}</span>
               </div>
             ))}
           </div>
         </div>
         <div className="flex-1 mt-2 md:mt-0">
-          <h2 className="text-white text-xl">Quick Link</h2>
+          <h2 className="text-white text-lg md:text-xl">Quick Link</h2>
           <div>
             {["Company History", "About us", "Company History", "About us"].map(
               (item, index) => (
@@ -49,15 +48,15 @@ const Footer = () => {
                   className="py-1 hover:underline hover:cursor-pointer first:mt-2 text-white flex items-center"
                 >
                   <AiOutlineRight fontSize={20} />
-                  <span className="ml-2">{item}</span>
+                  <span className="ml-2 text-sm md:text-md">{item}</span>
                 </div>
               )
             )}
           </div>
         </div>
         <div className="flex-1 mt-2 md:mt-0">
-          <h2 className="text-white text-xl">Subscribe Us</h2>
-          <p className="mt-4 text-white">
+          <h2 className="text-white text-lg md:text-xl">Subscribe Us</h2>
+          <p className="mt-2 text-sm md:text-lg text-white">
             Lorem ipsum dolor sit amet, consect etur adipisicing. elit sed do
             eiusmod.
           </p>
@@ -67,7 +66,7 @@ const Footer = () => {
               className="px-4 py-2 bg-white rounded-tl-lg "
               placeholder="Enter your email"
             />
-            <div className="bg-primary h-[40px] flex items-center hover:bg-primaryHover transition-all hover:cursor-pointer justify-center w-[40px] rounded-br-lg">
+            <div className="text-sm md:text-md bg-primary h-[40px] flex items-center hover:bg-primaryHover transition-all hover:cursor-pointer justify-center w-[40px] rounded-br-lg">
               <AiOutlinePlusCircle fontSize={20} className="text-white" />
             </div>
           </div>

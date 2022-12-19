@@ -63,9 +63,14 @@ body{
   background-color: #EA8143 !important;
 }
 
-.leftRightAnimation{
-  animation: leftToRight ease 0.3s;
+.swiper-button-next,.swiper-button-prev{
+  width: 30px !important;
+  height: 30px !important;
+  background-color: white;
+  border-radius: 100%;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
+
 
 .opacityAnimation{
   animation: opacity ease 0.3s;
@@ -79,16 +84,6 @@ body{
   }
 }
 
-@keyframes leftToRight{
-  from{
-    left:-100%;
-    opacity: 0;
-  }
-  to{
-    left: 0;
-    opacity: 1;
-  }
-}
 
 .left-right:hover::after{
   width: 100%;

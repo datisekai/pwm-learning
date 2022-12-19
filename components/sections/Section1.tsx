@@ -18,10 +18,10 @@ const Section1 = () => {
   return (
     <div className="mt-4 py-4 max-w-[1200px] mx-auto">
       <div className="flex justify-between items-center py-1 border-b-[2px] px-2">
-        <h1 className="inline font-bold text-xl border-line">
+        <h1 className="inline font-bold text-lg md:text-xl border-line">
           Sản phẩm nổi bật
         </h1>
-        <div className="flex items-center hover:text-primary transition-all hover:cursor-pointer">
+        <div className="flex text-sm md:text-md items-center hover:text-primary transition-all hover:cursor-pointer">
           <button>Xem tất cả</button>
           <BsChevronDown className="ml-1" />
         </div>
