@@ -21,6 +21,10 @@ body{
   display: none;
 }
 
+.list-image::-webkit-scrollbar{
+  display: none;
+}
+
 .border-line::after{
   content: "";
   width: 200px;

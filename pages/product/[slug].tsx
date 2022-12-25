@@ -21,7 +21,7 @@ const ProductDetail = () => {
           <Breadcumb current="Kim cương viên"/>
           <div className="flex items-center flex-col md:flex-row">
             <div className="flex w-full md:w-[60%]  flex-col-reverse md:flex-row items-center">
-              <div className="w-full  md:w-[110px] flex flex-row md:flex-col">
+              <div className="w-full  md:w-[110px] flex flex-row md:flex-col overflow-x-scroll list-image" >
                 {[0, 1, 2, 3].map((item) => (
                   <LazyLoadImage
                     key={item}
