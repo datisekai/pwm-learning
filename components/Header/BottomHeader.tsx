@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React from "react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 
@@ -17,18 +18,17 @@ const data = [
     title: "Trang sức kim cương",
   },
   {
-    url: "/",
+    url: "/blog/tin-tuc",
     title: "Tips hay",
   },
   {
-    url: "/",
+    url: "/blog/tin-tuc",
     title: "Tin tức",
   },
   {
-    url: "/",
+    url: "/blog/tin-tuc",
     title: "Nghiên cứu chuyên sâu",
   },
-  
 ];
 
 const BottomHeader = () => {
@@ -59,18 +59,19 @@ const BottomHeader = () => {
 
       <div className="flex items-center flex-nowrap px-2 md:px-0 md:justify-center category-header overflow-x-scroll w-full">
         {data.map((item, index) => (
-          <button
-          key={index}
-            className={` select-none whitespace-nowrap max-w-[200px] w-auto text-sm md:text-md rounded-tl-lg rounded-br-lg  text-center hover:cursor-pointer  px-4 py-[6px] font-bold ${
-              index === 0
-                ? "bg-primary text-white"
-                : "bg-transparent text-white "
-            }`}
-          >
-            <span className="animation-left-right relative left-right">
-              {item.title}
-            </span>
-          </button>
+          <Link key={index} href={item.url}>
+            <button
+              className={` select-none whitespace-nowrap max-w-[200px] w-auto text-sm md:text-md rounded-tl-lg rounded-br-lg  text-center hover:cursor-pointer  px-4 py-[6px] font-bold ${
+                index === 0
+                  ? "bg-primary text-white"
+                  : "bg-transparent text-white "
+              }`}
+            >
+              <span className="animation-left-right relative left-right">
+                {item.title}
+              </span>
+            </button>
+          </Link>
         ))}
       </div>
     </div>

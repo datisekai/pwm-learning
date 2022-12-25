@@ -5,6 +5,7 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { BsSearch } from "react-icons/bs";
 import { BiMenuAltLeft } from "react-icons/bi";
 import Image from "next/image";
+import Link from "next/link";
 
 interface HeaderProps {
   handleOpen: () => void;
@@ -30,11 +31,13 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
               className="block md:hidden"
             />
 
-            <img
-              alt="PWM Logo"
-              src="/images/logo.png"
-              className="w-[150px] md:w-auto"
-            />
+            <Link href={"/"}>
+              <img
+                alt="PWM Logo"
+                src="/images/logo.png"
+                className="w-[150px] md:w-auto"
+              />
+            </Link>
             <div className="md:flex items-center hidden">
               <input
                 type="text"
