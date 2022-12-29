@@ -10,7 +10,7 @@ interface HomeCardProps {
 const HomeCard: React.FC<HomeCardProps> = ({ data }) => {
   return (
     <Link href={"/product/kim-cuong-vien"}>
-      <div>
+      <div className="">
         <div className="bg-gray-200 flex items-center justify-center aspect-[1/1]  relative">
           <LazyLoadImage
             src={data}
