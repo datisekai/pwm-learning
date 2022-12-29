@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 
@@ -10,15 +11,15 @@ const data = [
     title: "Trang chủ",
   },
   {
-    url: "/",
+    url: "/search?keyword=nhan-kim-cuong",
     title: "Nhẫn kim cương",
   },
   {
-    url: "/",
+    url: "/search?keyword=trang-suc-kim-cuong",
     title: "Trang sức kim cương",
   },
   {
-    url: "/blog/tin-tuc",
+    url: "/blog/tips-hay",
     title: "Tips hay",
   },
   {
@@ -26,12 +27,13 @@ const data = [
     title: "Tin tức",
   },
   {
-    url: "/blog/tin-tuc",
+    url: "/blog/nghien-cuu-chuyen-sau",
     title: "Nghiên cứu chuyên sâu",
   },
 ];
 
 const BottomHeader = () => {
+  const router = useRouter()
   return (
     <div className=" max-w-[1200px] mx-auto ">
       {/* <Swiper
@@ -62,7 +64,7 @@ const BottomHeader = () => {
           <Link key={index} href={item.url}>
             <button
               className={` select-none whitespace-nowrap max-w-[200px] w-auto text-sm md:text-md rounded-tl-lg rounded-br-lg  text-center hover:cursor-pointer  px-4 py-[6px] font-bold ${
-                index === 0
+                item.url === router.asPath
                   ? "bg-primary text-white"
                   : "bg-transparent text-white "
               }`}

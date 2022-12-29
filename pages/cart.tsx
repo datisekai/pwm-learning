@@ -20,7 +20,7 @@ export default function Home() {
         description=""
       />
       <MainLayout>
-        <div className="py-10 px-10 overflow-auto">
+        <div className="px-2 py-4 md:p-10 ">
           <h1 className="font-sans text-2xl text-orange-600 font-bold text-center">
             YOUR CART
           </h1>
