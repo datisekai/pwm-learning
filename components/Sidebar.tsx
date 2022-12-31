@@ -53,7 +53,7 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
       >
        <Link href={'/'}>
        <div className="py-6 border-b-2">
-          <LazyLoadImage src="/images/logo.png" className="mx-auto" />
+          <LazyLoadImage effect="blur" src="/images/logo.png" className="mx-auto" />
         </div>
        </Link>
         <div className="px-4 border-b-2 py-2">

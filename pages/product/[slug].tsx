@@ -82,15 +82,15 @@ const ProductDetail = () => {
               </a>
               <div className="mt-4">
                 <div className="flex items-center">
-                  <LazyLoadImage src="/images/list-style.gif" />
+                  <LazyLoadImage effect="blur" src="/images/list-style.gif" />
                   <span>Giá sản phẩm thay đổi theo trọng lượng vàng và đá</span>
                 </div>
                 <div className="flex items-center">
-                  <LazyLoadImage src="/images/list-style.gif" />
+                  <LazyLoadImage effect="blur" src="/images/list-style.gif" />
                   <span>Đổi sản phẩm trong 48h tại hệ thống cửa hàng PWM</span>
                 </div>
                 <div className="flex items-center">
-                  <LazyLoadImage src="/images/list-style.gif" />
+                  <LazyLoadImage effect="blur" src="/images/list-style.gif" />
                   <span>Miễn phí giao nhanh toàn quốc 1 - 7 ngày</span>
                 </div>
               </div>

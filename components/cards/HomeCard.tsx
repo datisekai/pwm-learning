@@ -13,6 +13,7 @@ const HomeCard: React.FC<HomeCardProps> = ({ data }) => {
       <div className="">
         <div className="bg-gray-200 flex items-center justify-center aspect-[1/1]  relative">
           <LazyLoadImage
+          effect="blur"
             src={data}
             className="aspect-[1/1] rounded-sm w-full object-cover"
           />

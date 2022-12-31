@@ -39,7 +39,7 @@ const Section6 = () => {
           {data.map((item) => (
             <SwiperSlide key={item}>
               <div className="flex flex-col items-center">
-                <LazyLoadImage src={item} className="w-full rounded-lg " />
+                <LazyLoadImage effect="blur" src={item} className="w-full rounded-lg " />
                 <div className="mt-2 flex flex-col">
                   <h4 className="uppercase font-bold">BST Nhẫn đính hôn</h4>
                   <Link href={`/search?keyword=${encodeURI("BST Nhẫn đính hôn")}`}>
