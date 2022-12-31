@@ -115,3 +115,7 @@ body {
 .h-sectioncart {
     height: 700px;
 }
+
+.table-home::-webkit-scrollbar{
+    display: none;
+}
