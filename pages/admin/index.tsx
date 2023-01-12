@@ -9,6 +9,7 @@ import { formatNumber, formatPrices } from "../../utils";
 import { BsPeople } from "react-icons/bs";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Link from "next/link";
+import { getCookie } from "cookies-next";
 
 const dataSection1 = [
   {
@@ -33,7 +34,9 @@ const dataSection1 = [
   },
 ];
 
+
 const HomeAdmin = () => {
+
   return (
     <>
       <AdminLayout>
@@ -140,22 +143,20 @@ const HomeAdmin = () => {
 export default HomeAdmin;
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  // const token = req.cookies["token"];
+  const token = req.cookies["token"];
 
-  // if (token) {
-  //   return {
-  //     props: {},
-  //   };
-  // }
+  if (token) {
+    return {
+      props: {},
+    };
+  }
 
-  // return {
-  //   props: {},
-  //   redirect: {
-  //     destination: "/admin/login",
-  //     permanent: false,
-  //   },
-  // };
   return {
     props: {},
+    redirect: {
+      destination: "/admin/login",
+      permanent: false,
+    },
   };
+
 };

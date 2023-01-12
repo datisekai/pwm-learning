@@ -5,6 +5,14 @@ import AdminLayout from "../../../components/layouts/AdminLayout";
 import PCategoryAdmin from "../../../components/admin/products/PCategoryAdmin";
 import ProductAdmin from "../../../components/admin/products/ProductAdmin";
 import SpeciesAdmin from "../../../components/admin/products/SpeciesAdmin";
+import SkuAdmin from "../../../components/admin/products/SkuAdmin";
+import { GetServerSideProps, NextPage } from "next";
+import ProductAction from "../../../actions/Product.action";
+import { ProductModel } from "../../../models/Product.model";
+import CategoryAction from "../../../actions/Category.action";
+import SpeciesAction from "../../../actions/Species.action";
+import { CategoryModel } from "../../../models/Category.model";
+import { SpeciesModel } from "../../../models/Species.model";
 
 const dataTab = [
   {
@@ -13,15 +21,25 @@ const dataTab = [
   },
   {
     id: 1,
-    title: "Chủng loại",
+    title: "Hàng hóa",
   },
   {
     id: 2,
+    title: "Chủng loại",
+  },
+  {
+    id: 3,
     title: "Thể loại",
   },
 ];
 
-const ProductAdminManager = () => {
+interface ProductAdminMnProps{
+  products:ProductModel[],
+  categories:CategoryModel[],
+  species:SpeciesModel[]
+}
+
+const ProductAdminManager:NextPage<ProductAdminMnProps> = ({products,categories,species}) => {
   const [tab, setTab] = useState(0);
   return (
     <AdminLayout>
@@ -48,9 +66,10 @@ const ProductAdminManager = () => {
           ]}
         </ul>
         <div>
-          {tab === 0 && <ProductAdmin/>}
-          {tab === 1 && <SpeciesAdmin/>}
-          {tab === 2 && <PCategoryAdmin/>}
+          {tab === 0 && <ProductAdmin data={products}/>}
+          {tab === 1 && <SkuAdmin/>}
+          {tab === 2 && <SpeciesAdmin data={species}/>}
+          {tab === 3 && <PCategoryAdmin data={categories}/>}
         </div>
       </div>
     </AdminLayout>
@@ -58,3 +77,15 @@ const ProductAdminManager = () => {
 };
 
 export default ProductAdminManager;
+
+export const getServerSideProps = async() => {
+  const data = await Promise.all([ProductAction.getAll(), CategoryAction.getAll(), SpeciesAction.getAll()])
+
+  return {
+    props:{
+      products:data[0],
+      categories:data[1],
+      species:data[2]
+    }
+  }
+}

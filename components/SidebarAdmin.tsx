@@ -54,11 +54,22 @@ interface SidebarAdminProps {
 
 const SidebarAdmin: FC<SidebarAdminProps> = ({ handleClose, show }) => {
   const router = useRouter();
+
+
   return (
     <>
-      {show && <div className="md:hidden fixed inset-0 z-10 bg-[rgba(0,0,0,0.6)]" onClick={handleClose}></div>}
+      {show && (
+        <div
+          className="md:hidden fixed inset-0 z-10 bg-[rgba(0,0,0,0.6)]"
+          onClick={handleClose}
+        ></div>
+      )}
 
-      <div className={`w-[200px] py-2  z-20 md:block bg-primary fixed top-0 left-0 bottom-0 md:relative transition-all ${!show && 'hidden'}`}>
+      <div
+        className={`w-[200px] py-2  z-20 md:block bg-primary fixed top-0 left-0 bottom-0 md:relative transition-all ${
+          !show && "hidden"
+        }`}
+      >
         <div className="bg-white rounded-sm px-2 flex items-center mx-4">
           <LazyLoadImage effect="blur" src="/images/logo.png" />
         </div>
@@ -68,11 +79,7 @@ const SidebarAdmin: FC<SidebarAdminProps> = ({ handleClose, show }) => {
             return (
               <Link key={index} href={item.url}>
                 <div
-                  className={`flex items-center px-4 rounded-lg  py-3 mt-1 hover:bg-white hover:text-primary transition-all ${
-                    item.url === router.asPath
-                      ? "bg-white text-primary"
-                      : "text-white"
-                  }`}
+                  className={`flex items-center px-4 rounded-lg  py-3 mt-1 hover:bg-white hover:text-primary transition-all text-white ${item.url === '/admin' && router.asPath === '/admin' ? 'bg-white text-primary' : item.url !=='/admin' &&router.asPath.includes(item.url) && 'bg-white text-primary' }`}
                 >
                   <Icon fontSize={22} />
                   <span className="ml-4 ">{item.title}</span>

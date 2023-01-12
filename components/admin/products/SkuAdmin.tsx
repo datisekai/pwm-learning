@@ -1,23 +1,18 @@
-import dayjs from "dayjs";
-import React, { FC } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import React from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { SpeciesModel } from "../../../models/Species.model";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
-interface SpeciesAdminProps{
-  data:SpeciesModel[]
-}
-
-const SpeciesAdmin:FC<SpeciesAdminProps> = ({data}) => {
+const SkuAdmin = () => {
   return (
     <div className="mt-5">
       <div className="flex items-center justify-between">
         <h1 className="text-white bg-primary px-4 py-2 inline rounded-lg">
-          Quản lý chủng loại
+          Quản lý hàng hóa
         </h1>
-        <button className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700">
-          Thêm chủng loại
-        </button>
+       
       </div>
       <div
         style={{
@@ -30,16 +25,19 @@ const SpeciesAdmin:FC<SpeciesAdminProps> = ({data}) => {
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="py-3 px-6">
-                  Mã chủng loại
+                  Hình ảnh
                 </th>
                 <th scope="col" className="py-3 px-6">
-                  Tên chủng loại
+                  Tên sản phẩm
                 </th>
                 <th scope="col" className="py-3 px-6">
-                  Ngày tạo
+                  Danh mục
                 </th>
                 <th scope="col" className="py-3 px-6">
                   Ngày cập nhật
+                </th>
+                <th scope="col" className="py-3 px-6">
+                  Người đăng
                 </th>
                 <th scope="col" className="py-3 px-6">
                   Hành động
@@ -47,20 +45,28 @@ const SpeciesAdmin:FC<SpeciesAdminProps> = ({data}) => {
               </tr>
             </thead>
             <tbody>
-              {data?.map((item) => (
+              {[1, 2, 3, 4, 5].map((item) => (
                 <tr
-                  key={item.id}
+                  key={item}
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                 >
                   <th
                     scope="row"
                     className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                   >
-                    {item.id}
+                    <Image
+                      src={"/images/test.jpg"}
+                      alt="123"
+                      width={50}
+                      height={50}
+                    />
                   </th>
-                  <td className="py-4 px-6">{item.name}</td>
-                  <td className="py-4 px-6">{dayjs(item.createdAt).format('DD/MM/YYYY')}</td>
-                  <td className="py-4 px-6">{dayjs(item.updatedAt).format('DD/MM/YYYY')}</td>
+                  <td className="py-4 px-6">
+                    Nhẫn cầu hôn kim cương Trellis 4 chấu xoắn NCH1402
+                  </td>
+                  <td className="py-4 px-6">Nhẫn kim cương</td>
+                  <td className="py-4 px-6">31/12/2022</td>
+                  <td className="py-4 px-6">admin@gmail.com</td>
                   <td className="py-4 px-6">
                     <div className="flex">
                       <div className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer">
@@ -81,4 +87,4 @@ const SpeciesAdmin:FC<SpeciesAdminProps> = ({data}) => {
   );
 };
 
-export default SpeciesAdmin;
+export default SkuAdmin;

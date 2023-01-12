@@ -1,7 +1,8 @@
-import React, { FC, useState } from "react";
+import React, { FC, useContext, useState } from "react";
 import { BiMenuAltLeft, BiMenuAltRight } from "react-icons/bi";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { generateAvatar } from "../../utils";
+import { AuthContext } from "../context";
 
 interface HeaderAdminProps{
     show:boolean,
@@ -9,6 +10,8 @@ interface HeaderAdminProps{
 }
 
 const HeaderAdmin:FC<HeaderAdminProps> = ({handleShow,show}) => {
+
+  const {user} = useContext(AuthContext)
 
   return (
     <div className="flex items-center justify-between">
@@ -20,10 +23,10 @@ const HeaderAdmin:FC<HeaderAdminProps> = ({handleShow,show}) => {
         )}
       </div>
       <div className="flex items-center">
-        <span>admin@gmail.com</span>
+        <span>{user && user.email}</span>
         <LazyLoadImage
           effect="blur"
-          src={generateAvatar("admin@gmail.com")}
+          src={generateAvatar(user && user.email)}
           className="ml-2 w-[40px] h-[40px] rounded-full"
         />
       </div>

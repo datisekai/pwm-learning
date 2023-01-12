@@ -11,6 +11,12 @@ import { AiOutlineDelete, AiOutlinePlus } from "react-icons/ai";
 import { v4 as uuidv4 } from "uuid";
 import TableProductAdmin from "../../../components/admin/products/TableProductAdmin";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import CategoryAction from "../../../actions/Category.action";
+import { CategoryModel } from "../../../models/Category.model";
+import { uploadImg } from "../../../utils";
+import { toast } from "react-hot-toast";
+import ProductAction from "../../../actions/Product.action";
+import { useRouter } from "next/router";
 
 export interface Sku {
   price: string;
@@ -20,7 +26,15 @@ export interface Sku {
   skuPhanLoai: string;
 }
 
-const AddProduct = () => {
+interface AddProductProps {
+  categories: CategoryModel[];
+}
+
+const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
+  
+  useEffect(() => {
+  },[])
+
   const {
     control,
     formState: { errors },
@@ -46,6 +60,7 @@ const AddProduct = () => {
     {
       id: uuidv4(),
       text: "",
+      attributeId:groupClassify[0].id
     },
   ]);
 
@@ -53,11 +68,14 @@ const AddProduct = () => {
     {
       id: uuidv4(),
       text: "",
+      attributeId:groupClassify.length > 1 && groupClassify[1].id
     },
   ]);
 
+  const router = useRouter()
+
   const [thumbnail, setThumbnail] = useState<any>();
-  const [preview, setPreview] = useState('');
+  const [preview, setPreview] = useState("");
 
   const [skus, setSkus] = useState<Sku[]>([]);
 
@@ -65,7 +83,70 @@ const AddProduct = () => {
 
   const name = watch("name");
 
-  const handleAdd = (data: any) => {};
+  const handleAdd = async (data: any) => {
+    const newProduct:any = {
+      categoryId: data.category,
+      name: data.name,
+      description: data.description,
+      thumbnail: "",
+      attributes: groupClassify
+        .filter((item) => item.text != "")
+        .map((item) => ({ ...item, name: item.text, text: undefined })),
+      skuValue: [],
+    };
+
+    if(!thumbnail){
+      toast.error("Vui lòng chọn ảnh chính");
+      return;
+    }
+
+    if(newProduct.attributes.length === 0){
+      toast.error("Vui lòng nhập nhóm phân loại")
+      return;
+    }
+
+    if(classify1.length === 0){
+      toast.error("Vui lòng nhập chi tiết phân loại")
+      return;
+    }
+    
+    if(newProduct.attributes.length === 2){
+      if(classify2.length === 0){
+        toast.error("Vui lòng nhập chi tiết phân loại")
+        return;
+      }
+    }
+
+    if(skus.some((item:any) => item.file == null || item.price == "" || item.discount == "" || item.sku == "")){
+      toast.error("Vui lòng nhập đầy đủ thông tin biến thể")
+      return;
+    }
+
+    newProduct.thumbnail = await uploadImg(thumbnail)
+
+    const images = await Promise.all(skus.map((item) => uploadImg(item.file)));
+
+    dataTable.forEach((item:any,index:number) => {
+      newProduct.skuValue.push({
+        detailAttributes:item.map((element:any) => ({attributeId:element.attributeId, name:element.text})),
+        price:skus[index].price,
+        discount:skus[index].discount,
+        sku:skus[index].skuPhanLoai,
+        image:images[index]
+      })
+    })
+    
+    if(!newProduct.thumbnail){
+      toast.error("Ảnh chính chưa hợp lệ, vui lòng chọn ảnh khác")
+      return;
+    }
+
+    const result = await ProductAction.add(newProduct);
+    if(result && result.success){
+     return router.push('/admin/product')
+    }
+
+  };
 
   const isExistElement = (array: any) => {
     if (array.length > 0 && array[0].text != "") {
@@ -103,6 +184,7 @@ const AddProduct = () => {
 
     return data;
   }, [classify1, classify2]);
+
 
   return (
     <>
@@ -200,7 +282,10 @@ const AddProduct = () => {
                         }}
                         control={control}
                         className="px-4 h-[34px] outline-none border rounded-md w-full"
-                        data={[{ value: 0, text: "Nhẫn kim cương" }]}
+                        data={categories.map((item) => ({
+                          value: item.id,
+                          text: item.name,
+                        }))}
                       />
                     </div>
                   </div>
@@ -215,12 +300,12 @@ const AddProduct = () => {
                           minLength: {
                             value: 100,
                             message:
-                              "Tên sản phẩm của bạn quá ngắn. Vui lòng nhập ít nhất 100 kí tự",
+                              "Mô tả sản phẩm của bạn quá ngắn. Vui lòng nhập ít nhất 100 kí tự",
                           },
                           maxLength: {
                             value: 3000,
                             message:
-                              "Tên sản phẩm của bạn quá dài. Vui lòng nhập tối đa 3000 kí tự",
+                              "Mô tả sản phẩm của bạn quá dài. Vui lòng nhập tối đa 3000 kí tự",
                           },
                         }}
                         name="description"
@@ -313,6 +398,7 @@ const AddProduct = () => {
                                               setClassify1([
                                                 ...classify1,
                                                 {
+                                                  attributeId:classify1[0].attributeId,
                                                   id: uuidv4(),
                                                   text: "",
                                                 },
@@ -372,6 +458,7 @@ const AddProduct = () => {
                                                 {
                                                   id: uuidv4(),
                                                   text: "",
+                                                  attributeId:classify2[0].attributeId
                                                 },
                                               ])
                                             }
@@ -402,13 +489,18 @@ const AddProduct = () => {
                       {groupClassify.length === 1 && (
                         <button
                           onClick={() =>
-                            setGroupClassify([
-                              ...groupClassify,
-                              {
-                                id: uuidv4(),
-                                text: "",
-                              },
-                            ])
+                            {
+                              const newId = uuidv4()
+                              setGroupClassify([
+                                ...groupClassify,
+                                {
+                                  id: newId,
+                                  text: "",
+                                },
+                              ])
+
+                              setClassify2(classify2.map(item => ({...item, attributeId:newId})))
+                            }
                           }
                           className="mt-2 border rounded-sm px-4 py-1 text-primary hover:cursor-pointer hover:bg-gray-100"
                         >
@@ -457,3 +549,13 @@ const AddProduct = () => {
 };
 
 export default AddProduct;
+
+export const getServerSideProps = async () => {
+  const categories = await CategoryAction.getAll();
+
+  return {
+    props: {
+      categories,
+    },
+  };
+};

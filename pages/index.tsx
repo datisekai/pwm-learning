@@ -9,6 +9,7 @@ import Section2 from "../components/sections/Section2";
 import Section3 from "../components/sections/Section3";
 import Section5 from "../components/sections/Section5";
 import Section6 from "../components/sections/Section6";
+import { getCookie } from "cookies-next";
 
 const inter = Inter({ subsets: ["latin"] });
 

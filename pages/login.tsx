@@ -2,7 +2,11 @@ import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import TextField from "../../components/customs/TextField";
+import UserAction from "../actions/User.action";
+import TextField from "../components/customs/TextField";
+import { toast } from "react-hot-toast";
+import { setCookie } from "cookies-next";
+import { useRouter } from "next/router";
 
 const LoginAdmin = () => {
   const {
@@ -16,7 +20,17 @@ const LoginAdmin = () => {
     },
   });
 
-  const handleLogin = (data: any) => {};
+  const router = useRouter()
+
+  const handleLogin = async(data: any) => {
+      const result = await UserAction.login(data.email, data.password);
+      console.log(result)
+      if(result){
+        setCookie('token', result.token)
+        toast.success("Đăng nhập thành công")
+        router.push('/admin')
+      }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f5f5f5]">
@@ -52,6 +66,7 @@ const LoginAdmin = () => {
               control={control}
               error={errors}
               name="password"
+              type="password"
               placeholder="Nhập mật khẩu..."
               rules={{
                 required: "Vui lòng không bỏ trống",

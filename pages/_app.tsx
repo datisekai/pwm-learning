@@ -4,8 +4,10 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import "swiper/css/scrollbar";
 import NextNProgress from "nextjs-progressbar";
-import 'react-lazy-load-image-component/src/effects/blur.css';
+import "react-lazy-load-image-component/src/effects/blur.css";
 import type { AppProps } from "next/app";
+import AuthContextProvider from "../components/context";
+import { Toaster } from "react-hot-toast";
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
@@ -17,7 +19,10 @@ export default function App({ Component, pageProps }: AppProps) {
           showSpinner: false,
         }}
       />
-      <Component {...pageProps} />
+      <AuthContextProvider>
+        <Component {...pageProps} />
+        <Toaster />
+      </AuthContextProvider>
     </>
   );
 }

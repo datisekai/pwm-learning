@@ -1,9 +1,15 @@
-import React from "react";
+import dayjs from "dayjs";
+import React, { FC } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { CategoryModel } from "../../../models/Category.model";
 import AdminLayout from "../../layouts/AdminLayout";
 
-const PCategoryAdmin = () => {
+interface PCategoryAdminProps{
+  data:CategoryModel[]
+}
+
+const PCategoryAdmin:FC<PCategoryAdminProps> = ({data}) => {
   return (
       <div className="mt-5">
         <div className="flex items-center justify-between">
@@ -42,9 +48,9 @@ const PCategoryAdmin = () => {
                 </tr>
               </thead>
               <tbody>
-                {[1, 2, 3, 4, 5].map((item) => (
+                {data?.map((item) => (
                   <tr
-                    key={item}
+                    key={item.id}
                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                   >
                     <th
@@ -53,9 +59,9 @@ const PCategoryAdmin = () => {
                     >
                      1
                     </th>
-                    <td className="py-4 px-6">Nhẫn kim cương</td>
-                    <td className="py-4 px-6">Trang sức cưới</td>
-                    <td className="py-4 px-6">31/12/2022</td>
+                    <td className="py-4 px-6">{item.name}</td>
+                    <td className="py-4 px-6">{item.species.name}</td>
+                    <td className="py-4 px-6">{dayjs(item.createdAt).format('DD/MM/YYYY')}</td>
                     <td className="py-4 px-6">
                       <div className="flex">
                         <div className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer">
