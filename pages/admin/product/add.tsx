@@ -17,6 +17,7 @@ import { uploadImg } from "../../../utils";
 import { toast } from "react-hot-toast";
 import ProductAction from "../../../actions/Product.action";
 import { useRouter } from "next/router";
+import { useMutation } from "@tanstack/react-query";
 
 export interface Sku {
   price: string;
@@ -31,9 +32,7 @@ interface AddProductProps {
 }
 
 const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
-  
-  useEffect(() => {
-  },[])
+  useEffect(() => {}, []);
 
   const {
     control,
@@ -60,7 +59,7 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
     {
       id: uuidv4(),
       text: "",
-      attributeId:groupClassify[0].id
+      attributeId: groupClassify[0].id,
     },
   ]);
 
@@ -68,11 +67,11 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
     {
       id: uuidv4(),
       text: "",
-      attributeId:groupClassify.length > 1 && groupClassify[1].id
+      attributeId: groupClassify.length > 1 && groupClassify[1].id,
     },
   ]);
 
-  const router = useRouter()
+  const router = useRouter();
 
   const [thumbnail, setThumbnail] = useState<any>();
   const [preview, setPreview] = useState("");
@@ -83,8 +82,18 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
 
   const name = watch("name");
 
+  const { mutate, isLoading } = useMutation(ProductAction.add, {
+    onSuccess: () => {
+      toast.success("Thêm thành công");
+      router.push("/admin/product");
+    },
+    onError: () => {
+      toast.error("Có lỗi xảy ra, vui lòng thử lại");
+    },
+  });
+
   const handleAdd = async (data: any) => {
-    const newProduct:any = {
+    const newProduct: any = {
       categoryId: data.category,
       name: data.name,
       description: data.description,
@@ -95,57 +104,64 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
       skuValue: [],
     };
 
-    if(!thumbnail){
+    if (!thumbnail) {
       toast.error("Vui lòng chọn ảnh chính");
       return;
     }
 
-    if(newProduct.attributes.length === 0){
-      toast.error("Vui lòng nhập nhóm phân loại")
+    if (newProduct.attributes.length === 0) {
+      toast.error("Vui lòng nhập nhóm phân loại");
       return;
     }
 
-    if(classify1.length === 0){
-      toast.error("Vui lòng nhập chi tiết phân loại")
+    if (classify1.length === 0) {
+      toast.error("Vui lòng nhập chi tiết phân loại");
       return;
     }
-    
-    if(newProduct.attributes.length === 2){
-      if(classify2.length === 0){
-        toast.error("Vui lòng nhập chi tiết phân loại")
+
+    if (newProduct.attributes.length === 2) {
+      if (classify2.length === 0) {
+        toast.error("Vui lòng nhập chi tiết phân loại");
         return;
       }
     }
 
-    if(skus.some((item:any) => item.file == null || item.price == "" || item.discount == "" || item.sku == "")){
-      toast.error("Vui lòng nhập đầy đủ thông tin biến thể")
+    if (
+      skus.some(
+        (item: any) =>
+          item.file == null ||
+          item.price == "" ||
+          item.discount == "" ||
+          item.sku == ""
+      )
+    ) {
+      toast.error("Vui lòng nhập đầy đủ thông tin biến thể");
       return;
     }
 
-    newProduct.thumbnail = await uploadImg(thumbnail)
+    newProduct.thumbnail = await uploadImg(thumbnail);
 
     const images = await Promise.all(skus.map((item) => uploadImg(item.file)));
 
-    dataTable.forEach((item:any,index:number) => {
+    dataTable.forEach((item: any, index: number) => {
       newProduct.skuValue.push({
-        detailAttributes:item.map((element:any) => ({attributeId:element.attributeId, name:element.text})),
-        price:skus[index].price,
-        discount:skus[index].discount,
-        sku:skus[index].skuPhanLoai,
-        image:images[index]
-      })
-    })
-    
-    if(!newProduct.thumbnail){
-      toast.error("Ảnh chính chưa hợp lệ, vui lòng chọn ảnh khác")
+        detailAttributes: item.map((element: any) => ({
+          attributeId: element.attributeId,
+          name: element.text,
+        })),
+        price: skus[index].price,
+        discount: skus[index].discount,
+        sku: skus[index].skuPhanLoai,
+        image: images[index],
+      });
+    });
+
+    if (!newProduct.thumbnail) {
+      toast.error("Ảnh chính chưa hợp lệ, vui lòng chọn ảnh khác");
       return;
     }
 
-    const result = await ProductAction.add(newProduct);
-    if(result && result.success){
-     return router.push('/admin/product')
-    }
-
+    mutate(newProduct);
   };
 
   const isExistElement = (array: any) => {
@@ -184,7 +200,6 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
 
     return data;
   }, [classify1, classify2]);
-
 
   return (
     <>
@@ -398,7 +413,8 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
                                               setClassify1([
                                                 ...classify1,
                                                 {
-                                                  attributeId:classify1[0].attributeId,
+                                                  attributeId:
+                                                    classify1[0].attributeId,
                                                   id: uuidv4(),
                                                   text: "",
                                                 },
@@ -458,7 +474,8 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
                                                 {
                                                   id: uuidv4(),
                                                   text: "",
-                                                  attributeId:classify2[0].attributeId
+                                                  attributeId:
+                                                    classify2[0].attributeId,
                                                 },
                                               ])
                                             }
@@ -488,20 +505,23 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
                       ]}
                       {groupClassify.length === 1 && (
                         <button
-                          onClick={() =>
-                            {
-                              const newId = uuidv4()
-                              setGroupClassify([
-                                ...groupClassify,
-                                {
-                                  id: newId,
-                                  text: "",
-                                },
-                              ])
+                          onClick={() => {
+                            const newId = uuidv4();
+                            setGroupClassify([
+                              ...groupClassify,
+                              {
+                                id: newId,
+                                text: "",
+                              },
+                            ]);
 
-                              setClassify2(classify2.map(item => ({...item, attributeId:newId})))
-                            }
-                          }
+                            setClassify2(
+                              classify2.map((item) => ({
+                                ...item,
+                                attributeId: newId,
+                              }))
+                            );
+                          }}
                           className="mt-2 border rounded-sm px-4 py-1 text-primary hover:cursor-pointer hover:bg-gray-100"
                         >
                           Thêm nhóm phân loại 2

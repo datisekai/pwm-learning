@@ -31,8 +31,6 @@ axiosClient.interceptors.response.use(
   (error) => {
     console.log(error);
     if (error?.response?.status === 401) {
-      deleteCookie("token");
-      setCookie("token", "");
       if (typeof window !== "undefined") {
         window.location.href = "/admin/login";
       }

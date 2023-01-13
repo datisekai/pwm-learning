@@ -5,10 +5,8 @@ import React from "react";
 import { AiFillPlusCircle, AiOutlinePlus } from "react-icons/ai";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { LazyLoadImage } from "react-lazy-load-image-component";
 import { ProductModel } from "../../../models/Product.model";
 import { getImageServer } from "../../../utils";
-import Confirm from "../../Confirm";
 import ModalUpdateProduct from "./ModalUpdateProduct";
 
 interface ProductAdminProps{
@@ -39,7 +37,7 @@ const ProductAdmin:React.FC<ProductAdminProps> = ({data}) => {
           style={{
             boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
           }}
-          className="mt-10 bg-white rounded-3xl p-4"
+          className="mt-10 bg-white rounded-3xl p-4 max-h-[500px] overflow-y-scroll"
         >
           <div className="overflow-x-auto relative">
             <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">

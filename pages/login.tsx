@@ -7,6 +7,8 @@ import TextField from "../components/customs/TextField";
 import { toast } from "react-hot-toast";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/router";
+import { useMutation } from "@tanstack/react-query";
+import { GetServerSideProps } from "next";
 
 const LoginAdmin = () => {
   const {
@@ -20,16 +22,21 @@ const LoginAdmin = () => {
     },
   });
 
-  const router = useRouter()
+  const router = useRouter();
 
-  const handleLogin = async(data: any) => {
-      const result = await UserAction.login(data.email, data.password);
-      console.log(result)
-      if(result){
-        setCookie('token', result.token)
-        toast.success("Đăng nhập thành công")
-        router.push('/admin')
-      }
+  const { mutate, isLoading } = useMutation(UserAction.login, {
+    onSuccess: (data) => {
+      setCookie("token", data.token);
+      toast.success("Đăng nhập thành công");
+      router.push("/admin");
+    },
+    onError: (err: any) => {
+      err && err?.message && toast.error(err.message);
+    },
+  });
+
+  const handleLogin = async (data: any) => {
+    mutate(data);
   };
 
   return (
@@ -74,6 +81,7 @@ const LoginAdmin = () => {
               className="px-4 py-2 mt-1 bg-[#f5f5f5] outline-none w-full border rounded-sm"
             />
             <button
+              disabled={isLoading}
               type="submit"
               className="bg-primary mt-4 hover:bg-primaryHover transition-all text-white px-4 py-2 rounded-sm w-full"
             >
@@ -87,3 +95,19 @@ const LoginAdmin = () => {
 };
 
 export default LoginAdmin;
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const token = req.cookies["token"];
+
+  if (token) {
+    return {
+      redirect: {
+        destination: "/admin",
+      },
+      props: {},
+    };
+  }
+  return {
+    props: {},
+  };
+};

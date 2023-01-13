@@ -13,6 +13,10 @@ import CategoryAction from "../../../actions/Category.action";
 import SpeciesAction from "../../../actions/Species.action";
 import { CategoryModel } from "../../../models/Category.model";
 import { SpeciesModel } from "../../../models/Species.model";
+import { deleteCookie, getCookie } from "cookies-next";
+import { useRouter } from "next/router";
+import SkuAction from "../../../actions/Sku.action";
+import { SkuModel } from "../../../models/Sku.model";
 
 const dataTab = [
   {
@@ -33,14 +37,22 @@ const dataTab = [
   },
 ];
 
-interface ProductAdminMnProps{
-  products:ProductModel[],
-  categories:CategoryModel[],
-  species:SpeciesModel[]
+interface ProductAdminMnProps {
+  products: ProductModel[];
+  categories: CategoryModel[];
+  species: SpeciesModel[];
+  tab: string;
+  skus:SkuModel[]
 }
 
-const ProductAdminManager:NextPage<ProductAdminMnProps> = ({products,categories,species}) => {
-  const [tab, setTab] = useState(0);
+const ProductAdminManager: NextPage<ProductAdminMnProps> = ({
+  products,
+  categories,
+  species,
+  tab,
+  skus
+}) => {
+  const router = useRouter();
   return (
     <AdminLayout>
       <div className="mt-5">
@@ -49,12 +61,12 @@ const ProductAdminManager:NextPage<ProductAdminMnProps> = ({products,categories,
             dataTab.map((item, index) => (
               <li
                 key={item.id}
-                onClick={() => setTab(item.id)}
+                onClick={() => router.push(`/admin/product?tab=${index}`)}
                 className="mr-2 cursor-pointer"
               >
                 <span
                   className={`inline-block p-4 rounded-t-lg  ${
-                    item.id === tab
+                    item.id === +tab
                       ? "text-primary bg-gray-100"
                       : "hover:bg-gray-100 hover:text-primary"
                   }`}
@@ -66,10 +78,10 @@ const ProductAdminManager:NextPage<ProductAdminMnProps> = ({products,categories,
           ]}
         </ul>
         <div>
-          {tab === 0 && <ProductAdmin data={products}/>}
-          {tab === 1 && <SkuAdmin/>}
-          {tab === 2 && <SpeciesAdmin data={species}/>}
-          {tab === 3 && <PCategoryAdmin data={categories}/>}
+          {+tab === 0 && <ProductAdmin data={products} />}
+          {+tab === 1 && <SkuAdmin data={skus}/>}
+          {+tab === 2 && <SpeciesAdmin data={species} />}
+          {+tab === 3 && <PCategoryAdmin species={species} data={categories} />}
         </div>
       </div>
     </AdminLayout>
@@ -78,14 +90,21 @@ const ProductAdminManager:NextPage<ProductAdminMnProps> = ({products,categories,
 
 export default ProductAdminManager;
 
-export const getServerSideProps = async() => {
-  const data = await Promise.all([ProductAction.getAll(), CategoryAction.getAll(), SpeciesAction.getAll()])
-
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const data = await Promise.all([
+    ProductAction.getAll(),
+    CategoryAction.getAll(),
+    SpeciesAction.getAll(),
+    SkuAction.getAll(),
+  ]);
+  const tab = query.tab as string;
   return {
-    props:{
-      products:data[0],
-      categories:data[1],
-      species:data[2]
-    }
-  }
-}
+    props: {
+      products: data[0],
+      categories: data[1],
+      species: data[2],
+      skus: data[3],
+      tab: tab || 0,
+    },
+  };
+};
