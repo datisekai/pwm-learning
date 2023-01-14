@@ -5,6 +5,7 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { FcAddImage } from "react-icons/fc";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import ProductAction from "../../../actions/Product.action";
 import { CategoryModel } from "../../../models/Category.model";
 import { ProductModel } from "../../../models/Product.model";
@@ -106,7 +107,7 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
               />
               <label htmlFor="mainImage">
                 {preview ? (
-                  <Image alt="" width={60} height="60" src={preview} />
+                  <LazyLoadImage alt="" width={60} height="60" src={preview} />
                 ) : (
                   <FcAddImage fontSize={40} />
                 )}

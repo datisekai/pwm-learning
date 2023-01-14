@@ -5,6 +5,7 @@ import React from "react";
 import { AiFillPlusCircle, AiOutlinePlus } from "react-icons/ai";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import { CategoryModel } from "../../../models/Category.model";
 import { ProductModel } from "../../../models/Product.model";
 import { getImageServer } from "../../../utils";
@@ -78,7 +79,7 @@ const ProductAdmin: React.FC<ProductAdminProps> = ({ data, categories }) => {
                       scope="row"
                       className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                     >
-                      <Image
+                      <LazyLoadImage
                         src={getImageServer(item.thumbnail)}
                         alt="123"
                         width={50}
