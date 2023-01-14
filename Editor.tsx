@@ -6,9 +6,10 @@ import 'suneditor/dist/css/suneditor.min.css'
 import 'katex/dist/katex.min.css'
 import 'codemirror/mode/htmlmixed/htmlmixed'
 import 'codemirror/lib/codemirror.css'
+import { FC } from 'react'
 
 
-const Editor = ({ name:any, onChange:any, props:any }) => {
+const Editor = ({ name, onChange, props }:any) => {
   const options = {
     plugins: plugins,
     height: 250,
@@ -100,5 +101,5 @@ const Editor = ({ name:any, onChange:any, props:any }) => {
     />
   )
 }
-
-export default Editor
+}
+export default Editor;
