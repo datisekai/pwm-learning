@@ -14,7 +14,7 @@ const SkuAction = {
     return result;
   },
   update:async(data:any) => {
-    const result = await axiosClient.put(`/sku/${data.id}`,data)
+    const result = await axiosClient.put(`/sku/${data.id}`,{...data, id:undefined})
     return result.data
   }
 };

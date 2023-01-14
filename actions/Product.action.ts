@@ -14,6 +14,10 @@ const ProductAction = {
       console.log(error);
     }
   },
+  update:async(data:any) => {
+    const result = await axiosClient.put(`/product/${data.id}`,{...data, id:undefined});
+    return result.data
+  }
 };
 
 export default ProductAction;

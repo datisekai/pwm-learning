@@ -11,7 +11,7 @@ import SpeciesAction from "../../../actions/Species.action";
 import { CategoryModel } from "../../../models/Category.model";
 import { SkuModel } from "../../../models/Sku.model";
 import { SpeciesModel } from "../../../models/Species.model";
-import { getImageServer } from "../../../utils";
+import { getImageServer, uploadImg } from "../../../utils";
 import Select from "../../customs/Select";
 import TextField from "../../customs/TextField";
 
@@ -65,8 +65,12 @@ const ModalUpdateSku: React.FC<ModalUpdateSkuProps> = ({
     },
   });
 
-  const handleUpdate = (data: any) => {
-    mutate({ ...data, id: current?.id });
+  const handleUpdate = async(data: any) => {
+    let image = preview;
+    if(file){
+      image = await uploadImg(file);
+    }
+    mutate({ ...data, id: current?.id, image: image.split('images/')[1] });
   };
 
   return (

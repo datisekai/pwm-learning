@@ -78,7 +78,7 @@ const ProductAdminManager: NextPage<ProductAdminMnProps> = ({
           ]}
         </ul>
         <div>
-          {+tab === 0 && <ProductAdmin data={products} />}
+          {+tab === 0 && <ProductAdmin data={products} categories={categories}/>}
           {+tab === 1 && <SkuAdmin data={skus}/>}
           {+tab === 2 && <SpeciesAdmin data={species} />}
           {+tab === 3 && <PCategoryAdmin species={species} data={categories} />}

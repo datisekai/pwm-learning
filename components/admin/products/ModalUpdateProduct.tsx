@@ -1,7 +1,14 @@
+import { useMutation } from "@tanstack/react-query";
 import Image from "next/image";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 import { FcAddImage } from "react-icons/fc";
+import ProductAction from "../../../actions/Product.action";
+import { CategoryModel } from "../../../models/Category.model";
+import { ProductModel } from "../../../models/Product.model";
+import { getImageServer, uploadImg } from "../../../utils";
 import Select from "../../customs/Select";
 import TextArea from "../../customs/TextArea";
 import TextField from "../../customs/TextField";
@@ -9,11 +16,15 @@ import TextField from "../../customs/TextField";
 interface ModalUpdateProductProps {
   open: boolean;
   handleClose: () => void;
+  current: ProductModel;
+  categories: CategoryModel[];
 }
 
 const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
   handleClose,
   open,
+  current,
+  categories,
 }) => {
   const [file, setFile] = React.useState<any>();
 
@@ -25,15 +36,50 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
     handleSubmit,
     getValues,
     watch,
+    setValue,
   } = useForm({
     defaultValues: {
       name: "",
-      category: "",
+      categoryId: 0,
       description: "",
     },
   });
 
-  const handleUpdate = (data: any) => {};
+  useEffect(() => {
+    if (current) {
+      setValue("name", current.name);
+      setValue("categoryId", current.categoryId);
+      setValue("description", current.description);
+      setPreview(getImageServer(current.thumbnail));
+    }
+  }, [current]);
+
+  const router = useRouter();
+
+  const { mutate, isLoading } = useMutation(ProductAction.update, {
+    onSuccess: () => {
+      toast.success("Cập nhật thành công");
+      handleClose();
+      router.replace(router.asPath);
+    },
+    onError: (err) => {
+      console.log(err);
+      toast.error("Có lỗi xảy ra, vui lòng thử lại");
+    },
+  });
+
+  const handleUpdate = async (data: any) => {
+    let image = "";
+    if (file) {
+      image = await uploadImg(file);
+    }else{
+      image = preview.split('images/')[1]
+    }
+
+
+    mutate({ ...data, id: current.id, thumbnail: image
+  });
+  };
 
   return (
     <div className={`${!open && "hidden"} `}>
@@ -50,20 +96,17 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
               <input
                 type="file"
                 onChange={(e) => {
-                  setFile(e.target && e.target.files && e.target.files[0]);
+                  const files = e.target && e.target.files && e.target.files[0];
+                  setFile(files);
+                  files && setPreview(URL.createObjectURL(files));
                 }}
                 className="hidden"
                 accept="image/*"
                 id="mainImage"
               />
               <label htmlFor="mainImage">
-                {file ? (
-                  <Image
-                  alt=""
-                    width={60}
-                    height="60"
-                    src={URL.createObjectURL(file)}
-                  />
+                {preview ? (
+                  <Image alt="" width={60} height="60" src={preview} />
                 ) : (
                   <FcAddImage fontSize={40} />
                 )}
@@ -76,7 +119,7 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
               control={control}
               error={errors}
               name="name"
-              className={'css-field'}
+              className={"css-field"}
               placeholder="Nhập vào"
               rules={{
                 required: "Không được để trống ô",
@@ -97,10 +140,13 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
             <label>Thể loại</label>
             <Select
               control={control}
-              data={[{ text: "Chọn thể loại", value: "" }]}
+              data={categories?.map((item) => ({
+                text: item.name,
+                value: item.id,
+              }))}
               error={errors}
-              name="category"
-              className={'css-field'}
+              name="categoryId"
+              className={"css-field"}
             />
           </div>
           <div className="space-y-2">
@@ -109,7 +155,7 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
               control={control}
               error={errors}
               name="description"
-              className={'css-field'}
+              className={"css-field"}
               placeholder="Nhập vào"
               rules={{
                 required: "Không được để trống ô",

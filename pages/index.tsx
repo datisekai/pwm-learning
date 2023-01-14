@@ -1,15 +1,12 @@
-import Head from "next/head";
-import Image from "next/image";
 import { Inter } from "@next/font/google";
-import styles from "../styles/Home.module.css";
+import Head from "next/head";
 import MainLayout from "../components/layouts/MainLayout";
-import Slider from "../components/Slider";
 import Section1 from "../components/sections/Section1";
 import Section2 from "../components/sections/Section2";
 import Section3 from "../components/sections/Section3";
 import Section5 from "../components/sections/Section5";
 import Section6 from "../components/sections/Section6";
-import { getCookie } from "cookies-next";
+import Slider from "../components/Slider";
 
 const inter = Inter({ subsets: ["latin"] });
 

@@ -5,19 +5,21 @@ import React from "react";
 import { AiFillPlusCircle, AiOutlinePlus } from "react-icons/ai";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { CategoryModel } from "../../../models/Category.model";
 import { ProductModel } from "../../../models/Product.model";
 import { getImageServer } from "../../../utils";
 import ModalUpdateProduct from "./ModalUpdateProduct";
 
-interface ProductAdminProps{
-  data:ProductModel[]
+interface ProductAdminProps {
+  data: ProductModel[];
+  categories: CategoryModel[];
 }
 
-const ProductAdmin:React.FC<ProductAdminProps> = ({data}) => {
+const ProductAdmin: React.FC<ProductAdminProps> = ({ data, categories }) => {
   const [openModal, setOpenModal] = React.useState(false);
   const [openConfirm, setOpenConfirm] = React.useState(false);
+  const [current, setCurrent] = React.useState<any>();
 
-  console.log(data)
 
   return (
     <>
@@ -83,22 +85,25 @@ const ProductAdmin:React.FC<ProductAdminProps> = ({data}) => {
                         height={50}
                       />
                     </th>
-                    <td className="py-4 px-6">
-                      {item.name}
-                    </td>
+                    <td className="py-4 px-6">{item.name}</td>
                     <td className="py-4 px-6">{item.category.name}</td>
                     <td className="py-4 px-6">{item.skus.length}</td>
-                    <td className="py-4 px-6">{dayjs(item.createdAt).format('DD/MM/YYYY')}</td>
+                    <td className="py-4 px-6">
+                      {dayjs(item.createdAt).format("DD/MM/YYYY")}
+                    </td>
                     <td className="py-4 px-6">{item.user.email}</td>
                     <td className="py-4 px-6">
                       <div className="flex space-x-2">
-                      <div
+                        {/* <div
                           className="bg-green-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-green-700 cursor-pointer"
                         >
                           <AiOutlinePlus fontSize={24} />
-                        </div>
+                        </div> */}
                         <div
-                          onClick={() => setOpenModal(true)}
+                          onClick={() => {
+                            setCurrent(item);
+                            setOpenModal(true)
+                          }}
                           className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
                         >
                           <CiEdit fontSize={24} />
@@ -109,7 +114,6 @@ const ProductAdmin:React.FC<ProductAdminProps> = ({data}) => {
                         >
                           <RiDeleteBin6Line fontSize={24} />
                         </div>
-                        
                       </div>
                     </td>
                   </tr>
@@ -120,8 +124,10 @@ const ProductAdmin:React.FC<ProductAdminProps> = ({data}) => {
         </div>
       </div>
       <ModalUpdateProduct
+        current={current}
         handleClose={() => setOpenModal(false)}
         open={openModal}
+        categories={categories}
       />
     </>
   );
