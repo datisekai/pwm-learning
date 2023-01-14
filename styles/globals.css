@@ -115,3 +115,96 @@ body {
 .h-sectioncart {
     height: 700px;
 }
+
+.table-home::-webkit-scrollbar {
+    display: none;
+}
+
+.formAttachedPermission {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    z-index: 30;
+    animation-name: example;
+    animation-duration: 2s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes example {
+    from {
+        top: 0;
+    }
+    to {
+        top: 50%;
+        /* transform: translateY(-50%); */
+    }
+}
+
+
+/* The switch - the box around the slider */
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 53px;
+    height: 18px;
+}
+
+
+/* Hide default HTML checkbox */
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+
+/* The slider */
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    -webkit-transition: .4s;
+    transition: .4s;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 18px;
+    width: 26px;
+    left: 0px;
+    bottom: 0px;
+    background-color: darkblue;
+    transition: .4s;
+}
+
+input:checked+.slider {
+    background-color: lightblue;
+}
+
+input:focus+.slider {
+    background-color: lightblue;
+}
+
+input:checked+.slider:before {
+    -webkit-transform: translateX(26px);
+    -ms-transform: translateX(26px);
+    transform: translateX(26px);
+}
+
+.slider.round {
+    border-radius: 34px;
+}
+
+.slider.round:before {
+    border-radius: 50%;
+}

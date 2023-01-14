@@ -12,6 +12,7 @@ const SectionCart = () => {
           <tr>
             <td className="px-10">
               <LazyLoadImage
+              effect="blur"
                 src={"../images/2.jpg"}
                 className="w-28 m-auto"
               />

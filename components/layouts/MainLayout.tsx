@@ -15,7 +15,7 @@ const MainLayout: FC<MainLayoutProps> = ({ children }) => {
   return (
     <>
       <Header handleOpenSearch={() => setIsSearch(!isSearch)} handleOpen={() =>  setIsOpen(true)}/>
-      <div className="min-h-screen">{children}</div>
+      <div className="min-h-screen relative">{children}</div>
       <Footer />
       <Sidebar open={isOpen} handleHide={() => setIsOpen(false)}/>
       <Search open={isSearch} handleHide={() =>  setIsSearch(false)}/>

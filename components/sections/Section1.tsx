@@ -49,7 +49,7 @@ const Section1 = () => {
         >
           {data.map((item) => (
             <SwiperSlide key={item}>
-              <LazyLoadImage src={item} className="w-full aspect-[16/9] object-fill" />
+              <img src={item} className="w-full aspect-[16/9] object-fill" />
             </SwiperSlide>
           ))}
         </Swiper>

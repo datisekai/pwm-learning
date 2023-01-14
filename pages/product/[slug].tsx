@@ -18,10 +18,10 @@ const ProductDetail = () => {
       />
       <MainLayout>
         <div className="max-w-[1200px] mx-auto py-4 px-2">
-          <Breadcumb current="Kim cương viên"/>
+          <Breadcumb current="Kim cương viên" />
           <div className="flex items-center flex-col md:flex-row">
             <div className="flex w-full md:w-[60%]  flex-col-reverse md:flex-row items-center">
-              <div className="w-full  md:w-[110px] flex flex-row md:flex-col overflow-x-scroll list-image" >
+              <div className="w-full  md:w-[110px] flex flex-row md:flex-col overflow-x-scroll list-image">
                 {[0, 1, 2, 3].map((item) => (
                   <LazyLoadImage
                     key={item}
@@ -73,22 +73,24 @@ const ProductDetail = () => {
                 </div>
               </div>
 
-              <div className="flex  mt-4 justify-center w-full">
-                <button className="w-full hover:bg-primaryHover transition-all uppercase border-none outline-none bg-primary rounded-lg text-white px-2 py-2">
-                  Hotline 1900 111 111
-                </button>
-              </div>
+              <a href="#">
+                <div className="flex  mt-4 justify-center w-full">
+                  <button className="w-full hover:bg-primaryHover transition-all uppercase border-none outline-none bg-primary rounded-lg text-white px-2 py-2">
+                    Hotline 1900 111 111
+                  </button>
+                </div>
+              </a>
               <div className="mt-4">
                 <div className="flex items-center">
-                  <LazyLoadImage src="/images/list-style.gif" />
+                  <LazyLoadImage effect="blur" src="/images/list-style.gif" />
                   <span>Giá sản phẩm thay đổi theo trọng lượng vàng và đá</span>
                 </div>
                 <div className="flex items-center">
-                  <LazyLoadImage src="/images/list-style.gif" />
+                  <LazyLoadImage effect="blur" src="/images/list-style.gif" />
                   <span>Đổi sản phẩm trong 48h tại hệ thống cửa hàng PWM</span>
                 </div>
                 <div className="flex items-center">
-                  <LazyLoadImage src="/images/list-style.gif" />
+                  <LazyLoadImage effect="blur" src="/images/list-style.gif" />
                   <span>Miễn phí giao nhanh toàn quốc 1 - 7 ngày</span>
                 </div>
               </div>

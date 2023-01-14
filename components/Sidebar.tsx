@@ -6,6 +6,7 @@ import { MdContactSupport } from "react-icons/md";
 import { AiTwotoneShop } from "react-icons/ai";
 import { BsCartDash, BsFillMoonStarsFill, BsFillSunFill } from "react-icons/bs";
 import Switch from "react-switch";
+import Link from "next/link";
 
 interface SidebarProps {
   open: boolean;
@@ -23,11 +24,7 @@ const data = [
     title: "Hệ thống cửa hàng",
     icon: AiTwotoneShop,
   },
-  {
-    url: "/",
-    title: "Giỏ hàng",
-    icon: BsCartDash,
-  },
+  
 ];
 
 const tools = [
@@ -54,9 +51,11 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
           open ? "translate-x-0" : " translate-x-[-100%]"
         }`}
       >
-        <div className="py-6 border-b-2">
-          <LazyLoadImage src="/images/logo.png" className="mx-auto" />
+       <Link href={'/'}>
+       <div className="py-6 border-b-2">
+          <LazyLoadImage effect="blur" src="/images/logo.png" className="mx-auto" />
         </div>
+       </Link>
         <div className="px-4 border-b-2 py-2">
           {data.map((item, index) => {
             const Icon = item.icon;
@@ -68,17 +67,7 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
             );
           })}
         </div>
-        <div className="px-4 border-b-2 py-2">
-          {tools.map((item, index) => {
-            const Icon = item.icon;
-            return (
-              <div key={index} className="flex items-center py-3">
-                <Icon fontSize={24} className='text-primary'/>
-                <span className="ml-2">{item.title}</span>
-              </div>
-            );
-          })}
-        </div>
+       
         <div className="flex items-center py-4 px-4">
           <div>
             <Switch

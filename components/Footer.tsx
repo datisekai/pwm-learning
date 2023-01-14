@@ -7,7 +7,7 @@ const Footer = () => {
   return (
     <div className="pt-4 bg-[#2D3641]">
       <div className="pb-4 max-w-[1200px] w-[calc(100%-16px)] mx-auto flex flex-col md:flex-row  md:items-start md:justify-between">
-        <div className="flex-1 flex flex-col items-center md:items-start">
+        <div className="flex-1 flex flex-col items-center md:items-start px-2">
           <p className="text-white mt-2 text-sm md:text-md">
             Lorem ipsum dolor amet consectetur adipisicing elit sed eiusm tempor
             incididunt labore dolore magna aliqua enim.

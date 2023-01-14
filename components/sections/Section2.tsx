@@ -13,7 +13,7 @@ const Section2 = () => {
         <div className="flex justify-center md:justify-start">
           <div className="flex flex-col items-center">
             <h1 className="uppercase text-2xl md:text-3xl font-bold">kim cương</h1>
-            <LazyLoadImage src="/images/sep-section2.png" className="mt-2" />
+            <LazyLoadImage effect="blur" src="/images/sep-section2.png" className="mt-2" />
             <p className="max-w-[320px]  text-center mt-4 text-sm font-thin italic">
             &quot; Kim cương, đá quý đáng ngưỡng mộ nhất, là viên đá quý duy nhất có
             chỉ một thành phần. Chỉ có carbon trong cấu trúc hóa học của nó và
@@ -24,7 +24,7 @@ const Section2 = () => {
          
         </div>
         <div className="hidden md:block absolute top-[-45px] right-0">
-            <LazyLoadImage src="/images/kc-section2.png"/>
+            <LazyLoadImage effect="blur" src="/images/kc-section2.png"/>
         </div>
       </div>
     </div>

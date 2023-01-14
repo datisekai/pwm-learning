@@ -1,10 +1,11 @@
 import React from "react";
-import Breadcumb from "../../components/Breadcumb";
-import BlogCard from "../../components/cards/BlogCard";
-import BlogCard2 from "../../components/cards/BlogCard2";
-import BlogCard3 from "../../components/cards/BlogCard3";
-import MainLayout from "../../components/layouts/MainLayout";
-import Meta from "../../components/Meta";
+import Breadcumb from "../../../components/Breadcumb";
+import BlogCard from "../../../components/cards/BlogCard";
+import BlogCard2 from "../../../components/cards/BlogCard2";
+import BlogCard3 from "../../../components/cards/BlogCard3";
+import MainLayout from "../../../components/layouts/MainLayout";
+import Meta from "../../../components/Meta";
+
 
 const Blog = () => {
   return (

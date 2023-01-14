@@ -22,7 +22,7 @@ const Slider = () => {
         pagination={{ clickable: true }}
       >
         {data.map(item => <SwiperSlide key={item}>
-            <LazyLoadImage src={item} className='w-full '/>
+            <LazyLoadImage effect="blur" src={item} className='w-full '/>
         </SwiperSlide>)}
       </Swiper>
     </div>
