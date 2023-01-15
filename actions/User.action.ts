@@ -11,6 +11,26 @@ const UserAction = {
       const result = await axiosClient.get("/user/me");
       return result.data;
   },
+  update:async(data:any) => {
+    const result = await axiosClient.put(`/user/${data.id}`, {...data, id:undefined});
+    return result.data;
+  },
+  delete:async(id:number | string) => {
+    const result = await axiosClient.delete(`/user/${id}`);
+    return result.data;
+  },
+  add:async(data:any) => {
+    const result = await axiosClient.post('/user/register',data);
+    return result.data;
+  },
+  getAll:async() => {
+    try {
+      const result = await axiosClient.get('/user');
+      return result.data
+    } catch (error) {
+      console.log(error)
+    }
+  }
 };
 
 export default UserAction;
