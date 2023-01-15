@@ -60,7 +60,7 @@ const SkuAdmin: FC<SkuAdminProps> = ({ data }) => {
           style={{
             boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
           }}
-          className="mt-10 bg-white rounded-3xl p-4 max-h-[500px] overflow-y-scroll"
+          className="mt-10 bg-white rounded-3xl p-4 max-h-[450px] overflow-y-scroll"
         >
           <div className="overflow-x-auto relative">
             <table className="w-full text-sm text-left  text-gray-500 dark:text-gray-400">
@@ -110,7 +110,6 @@ const SkuAdmin: FC<SkuAdminProps> = ({ data }) => {
                     types += " ";
                   }
 
-                  console.log(types);
                   return (
                     <tr
                       key={item.id}

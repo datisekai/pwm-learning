@@ -4,7 +4,10 @@ import { RiDeleteBin6Line } from "react-icons/ri";
 import AdminLayout from "../../../components/layouts/AdminLayout";
 import BCategoryAdmin from "../../../components/admin/blogs/BCategoryAdmin";
 import BlogAdmin from "../../../components/admin/blogs/BlogAdmin";
-
+import { GetServerSideProps, NextPage } from "next";
+import { useRouter } from "next/router";
+import CategoryBlogAction from "../../../actions/CategoryBlog.action";
+import { CategoryBlogModel } from "../../../models/CategoryBlog.model";
 
 const dataTab = [
   {
@@ -14,11 +17,17 @@ const dataTab = [
   {
     id: 1,
     title: "Danh mục Blog",
-  }
+  },
 ];
 
-const BlogAdminManager = () => {
-  const [tab, setTab] = useState(0);
+interface BlogAdminProps {
+  tab: string;
+  categoriesBlog:CategoryBlogModel[]
+}
+
+const BlogAdminManager: NextPage<BlogAdminProps> = ({ tab, categoriesBlog }) => {
+  const router = useRouter();
+
   return (
     <AdminLayout>
       <div className="mt-5">
@@ -27,12 +36,12 @@ const BlogAdminManager = () => {
             dataTab.map((item, index) => (
               <li
                 key={item.id}
-                onClick={() => setTab(item.id)}
+                onClick={() => router.push(`/admin/blog?tab=${item.id}`)}
                 className="mr-2 cursor-pointer"
               >
                 <span
                   className={`inline-block p-4 rounded-t-lg  ${
-                    item.id === tab
+                    item.id === +tab
                       ? "text-primary bg-gray-100"
                       : "hover:bg-gray-100 hover:text-primary"
                   }`}
@@ -44,8 +53,8 @@ const BlogAdminManager = () => {
           ]}
         </ul>
         <div>
-           {tab === 0 && <BlogAdmin/>}
-          {tab === 1 && <BCategoryAdmin/>}        
+          {+tab === 0 && <BlogAdmin />}
+          {+tab === 1 && <BCategoryAdmin data={categoriesBlog} />}
         </div>
       </div>
     </AdminLayout>
@@ -53,3 +62,12 @@ const BlogAdminManager = () => {
 };
 
 export default BlogAdminManager;
+
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const tab = query.tab || "0";
+  const data = await Promise.all([CategoryBlogAction.getAll()])
+
+  return {
+    props: { tab, categoriesBlog:data[0] },
+  };
+};

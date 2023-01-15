@@ -1,11 +1,15 @@
+import { useMutation } from "@tanstack/react-query";
 import dayjs from "dayjs";
-import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
-import { AiFillPlusCircle, AiOutlinePlus } from "react-icons/ai";
+import { toast } from "react-hot-toast";
+import { AiFillPlusCircle } from "react-icons/ai";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import swal from "sweetalert";
+import ProductAction from "../../../actions/Product.action";
 import { CategoryModel } from "../../../models/Category.model";
 import { ProductModel } from "../../../models/Product.model";
 import { getImageServer } from "../../../utils";
@@ -18,10 +22,34 @@ interface ProductAdminProps {
 
 const ProductAdmin: React.FC<ProductAdminProps> = ({ data, categories }) => {
   const [openModal, setOpenModal] = React.useState(false);
-  const [openConfirm, setOpenConfirm] = React.useState(false);
   const [current, setCurrent] = React.useState<any>();
 
+  const router = useRouter();
 
+  const { mutate, isLoading } = useMutation(ProductAction.delete, {
+    onSuccess: () => {
+      toast.success("Đã chuyển vào thùng rác");
+      router.replace(router.asPath);
+    },
+    onError: (err) => {
+      console.log(err);
+      toast.error("Có lỗi xảy ra, vui lòng thử lại");
+    },
+  });
+
+  const handleDelete = (id: number | string) => {
+    swal({
+      title: "Bạn có chắc chắn muốn xóa?",
+      text: "Khi xóa, đối tượng sẽ được chuyển vào thùng rác",
+      icon: "warning",
+      buttons: ["Hủy", "Xóa"],
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        mutate(id);
+      }
+    });
+  };
   return (
     <>
       <div className="mt-5">
@@ -103,14 +131,14 @@ const ProductAdmin: React.FC<ProductAdminProps> = ({ data, categories }) => {
                         <div
                           onClick={() => {
                             setCurrent(item);
-                            setOpenModal(true)
+                            setOpenModal(true);
                           }}
                           className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
                         >
                           <CiEdit fontSize={24} />
                         </div>
                         <div
-                          onClick={() => setOpenConfirm(true)}
+                          onClick={() => handleDelete(item.id)}
                           className=" bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
                         >
                           <RiDeleteBin6Line fontSize={24} />

@@ -17,6 +17,10 @@ const ProductAction = {
   update:async(data:any) => {
     const result = await axiosClient.put(`/product/${data.id}`,{...data, id:undefined});
     return result.data
+  },
+  delete:async(id: number | string) => {
+    const result = await axiosClient.delete(`/product/${id}`);
+    return result.data;
   }
 };
 
