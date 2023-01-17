@@ -2,7 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useContext } from "react";
 import { toast } from "react-hot-toast";
 import { AiFillPlusCircle } from "react-icons/ai";
 import { CiEdit } from "react-icons/ci";
@@ -13,6 +13,7 @@ import ProductAction from "../../../actions/Product.action";
 import { CategoryModel } from "../../../models/Category.model";
 import { ProductModel } from "../../../models/Product.model";
 import { getImageServer } from "../../../utils";
+import { AuthContext } from "../../context";
 import ModalUpdateProduct from "./ModalUpdateProduct";
 
 interface ProductAdminProps {
@@ -23,6 +24,8 @@ interface ProductAdminProps {
 const ProductAdmin: React.FC<ProductAdminProps> = ({ data, categories }) => {
   const [openModal, setOpenModal] = React.useState(false);
   const [current, setCurrent] = React.useState<any>();
+
+  const { user } = useContext(AuthContext);
 
   const router = useRouter();
 
@@ -57,12 +60,14 @@ const ProductAdmin: React.FC<ProductAdminProps> = ({ data, categories }) => {
           <h1 className="text-white bg-primary px-4 py-2 inline rounded-lg">
             Quản lý sản phẩm
           </h1>
-          <Link href={"/admin/product/add"}>
-            <div className="flex items-center px-2 py-2 rounded-lg bg-green-500 hover:bg-green-700">
-              <AiFillPlusCircle fontSize={24} className="text-white" />
-              <button className=" text-white ml-2">Thêm sản phẩm</button>
-            </div>
-          </Link>
+          {user?.detailActions.includes("product:add") && (
+            <Link href={"/admin/product/add"}>
+              <div className="flex items-center px-2 py-2 rounded-lg bg-green-500 hover:bg-green-700">
+                <AiFillPlusCircle fontSize={24} className="text-white" />
+                <button className=" text-white ml-2">Thêm sản phẩm</button>
+              </div>
+            </Link>
+          )}
         </div>
         <div
           style={{
@@ -92,9 +97,12 @@ const ProductAdmin: React.FC<ProductAdminProps> = ({ data, categories }) => {
                   <th scope="col" className="py-3 px-6">
                     Người đăng
                   </th>
-                  <th scope="col" className="py-3 px-6">
-                    Hành động
-                  </th>
+                  {(user?.detailActions.includes("product:update") ||
+                    user?.detailActions.includes("product:delete")) && (
+                    <th scope="col" className="py-3 px-6">
+                      Hành động
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -128,21 +136,25 @@ const ProductAdmin: React.FC<ProductAdminProps> = ({ data, categories }) => {
                         >
                           <AiOutlinePlus fontSize={24} />
                         </div> */}
-                        <div
-                          onClick={() => {
-                            setCurrent(item);
-                            setOpenModal(true);
-                          }}
-                          className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
-                        >
-                          <CiEdit fontSize={24} />
-                        </div>
-                        <div
-                          onClick={() => handleDelete(item.id)}
-                          className=" bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
-                        >
-                          <RiDeleteBin6Line fontSize={24} />
-                        </div>
+                        {user?.detailActions.includes("product:update") && (
+                          <div
+                            onClick={() => {
+                              setCurrent(item);
+                              setOpenModal(true);
+                            }}
+                            className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
+                          >
+                            <CiEdit fontSize={24} />
+                          </div>
+                        )}
+                        {user?.detailActions.includes("product:delete") && (
+                          <div
+                            onClick={() => handleDelete(item.id)}
+                            className=" bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
+                          >
+                            <RiDeleteBin6Line fontSize={24} />
+                          </div>
+                        )}
                       </div>
                     </td>
                   </tr>

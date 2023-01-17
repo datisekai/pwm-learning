@@ -4,4 +4,6 @@ export interface PermissionModel {
   note?: any;
   createdAt: Date;
   updatedAt: Date;
+  status: boolean;
+  perDetailActions: { detailActionId: number }[];
 }

@@ -10,7 +10,9 @@ import AuthContextProvider from "../components/context";
 import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { refetchOnWindowFocus: false } },
+});
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

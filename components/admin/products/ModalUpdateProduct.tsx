@@ -88,7 +88,7 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
         className="fixed inset-0 bg-[rgba(0,0,0,0.6)] z-[60]"
         onClick={handleClose}
       ></div>
-      <div className="w-[90%] md:w-[500px] p-4 rounded-lg bg-white fixed z-[70] top-[25%] translate-x-[-50%] left-[50%] ">
+      <div className="w-[90%] md:w-[500px] p-4 rounded-lg bg-white fixed z-[70] top-[50%] translate-y-[-50%] translate-x-[-50%] left-[50%] ">
         <h2 className="font-bold">Cập nhật sản phẩm</h2>
         <div className="mt-4 space-y-2">
           <div className="flex items-center space-x-2 mb-2">

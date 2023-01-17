@@ -16,7 +16,8 @@ import { toast } from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 import BlogAction from "../../../actions/Blog.action";
 import { useRouter } from "next/router";
-import { uploadImg } from "../../../utils";
+import { getImageServer, uploadImg } from "../../../utils";
+import { BlogModel } from "../../../models/Blog.model";
 import Meta from "../../../components/Meta";
 
 const TranslationArea = dynamic(
@@ -26,17 +27,19 @@ const TranslationArea = dynamic(
   }
 );
 
-interface AddBlogProps {
+interface UpdateBlogProps {
   categoriesBlog: CategoryBlogModel[];
+  data: BlogModel;
 }
 
-const AddBlog: NextPage<AddBlogProps> = ({ categoriesBlog }) => {
+const UpdateBlog: NextPage<UpdateBlogProps> = ({ categoriesBlog, data }) => {
   const {
     control,
     formState: { errors },
     handleSubmit,
     getValues,
     watch,
+    setValue,
   } = useForm({
     defaultValues: {
       name: "",
@@ -54,44 +57,54 @@ const AddBlog: NextPage<AddBlogProps> = ({ categoriesBlog }) => {
 
   const name = watch("name");
 
-  const router = useRouter()
+  const router = useRouter();
 
-  const {mutate, isLoading} = useMutation(BlogAction.add, {
-    onSuccess:() => {
-      toast.success("Thêm thành công");
-      router.push('/admin/blog');
+  useEffect(() => {
+    if (data) {
+      setValue("name", data.name);
+      setValue("categoriesBlogId", data.categoriesBlogId.toString());
+      setValue("slug", data.slug);
+      setValue("description", data.description);
+      setContent(data.content);
+      setPreview(getImageServer(data.thumbnail));
+    }
+  }, [data]);
+
+  const { mutate, isLoading } = useMutation(BlogAction.update, {
+    onSuccess: () => {
+      toast.success("Cập nhật thành công");
+      router.push("/admin/blog");
     },
-    onError:(err) => {
+    onError: (err) => {
       console.log(err);
-      toast.error("Có lỗi xảy ra, vui lòng thử lại")
-    }
-  })
+      toast.error("Có lỗi xảy ra, vui lòng thử lại");
+    },
+  });
 
-  const handleAdd = async(data: any) => {
-    if (!thumbnail) {
-      toast.error("Vui lòng chọn ảnh");
-      return;
-    }
-
-    if(content.length < 200){
+  const handleAdd = async (dataForm: any) => {
+    
+    if (content.length < 200) {
       toast.error("Nội dung quá ngắn, không được dưới 200 kí tự");
       return;
     }
 
-    const image = await uploadImg(thumbnail);
+    let image = data.thumbnail
 
-    mutate({...data, thumbnail:image, content})
-    
+    if(thumbnail){
+        image = await uploadImg(thumbnail);
+    }
+
+    mutate({ ...dataForm, thumbnail: image, content, id:data.id });
   };
 
   return (
     <>
-    <Meta image="/images/logo.png" title="Thêm Blog | Admin" description="" />
+     <Meta image="/images/logo.png" title="Cập nhật Blog | Admin" description="" />
       <AdminLayout>
         <div className="mt-5">
           <div className="flex items-center justify-between">
             <h1 className="text-white bg-primary px-4 py-2 inline rounded-lg">
-              Thêm bài đăng
+              Cập nhật bài đăng
             </h1>
           </div>
           <div className="flex flex-col md:flex-row mt-10">
@@ -237,13 +250,12 @@ const AddBlog: NextPage<AddBlogProps> = ({ categoriesBlog }) => {
                         maxWidth: "100%",
                       }}
                     >
-                      <TranslationArea onChange={setContent} />
+                      <TranslationArea  initialContent={content} onChange={setContent} />
                     </div>
                   </div>
 
                   <div className="mt-4 flex justify-end">
                     <button
-                    disabled={isLoading}
                       onClick={handleSubmit(handleAdd)}
                       className="text-white bg-primary  py-1 rounded-md w-[150px]"
                     >
@@ -260,14 +272,18 @@ const AddBlog: NextPage<AddBlogProps> = ({ categoriesBlog }) => {
   );
 };
 
-export default AddBlog;
+export default UpdateBlog;
 
 export const getServerSideProps: GetServerSideProps = async ({ query,req }) => {
-  const data = await Promise.all([CategoryBlogAction.getAll()]);
+  const id = query.id as string;
+  const data = await Promise.all([
+    CategoryBlogAction.getAll(),
+    BlogAction.getById(id),
+  ]);
 
   const detailActions = JSON.parse(req.cookies["detailActions"] || "[]");
 
-  if(!detailActions.includes('blog:add')){
+  if(!detailActions.includes('blog:update')){
     return {
       props:{},
       redirect:{
@@ -279,6 +295,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query,req }) => {
   return {
     props: {
       categoriesBlog: data[0],
+      data: data[1],
     },
   };
 };

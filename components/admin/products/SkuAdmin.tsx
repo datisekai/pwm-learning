@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import React, { FC, useState } from "react";
+import React, { FC, useContext, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -12,6 +12,7 @@ import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
 import swal from "sweetalert";
 import ModalUpdateSku from "./ModalUpdateSku";
+import { AuthContext } from "../../context";
 
 interface SkuAdminProps {
   data: SkuModel[];
@@ -47,6 +48,8 @@ const SkuAdmin: FC<SkuAdminProps> = ({ data }) => {
       }
     });
   };
+
+  const { user } = useContext(AuthContext);
 
   return (
     <>
@@ -84,9 +87,9 @@ const SkuAdmin: FC<SkuAdminProps> = ({ data }) => {
                   <th scope="col" className="py-3 px-6">
                     SKU
                   </th>
-                  <th scope="col" className="py-3 px-6">
+                  {user?.detailActions.includes('product:update') && <th scope="col" className="py-3 px-6">
                     Hành động
-                  </th>
+                  </th>}
                 </tr>
               </thead>
               <tbody>
@@ -135,15 +138,17 @@ const SkuAdmin: FC<SkuAdminProps> = ({ data }) => {
                       <td className="py-4 px-6">{item.sku}</td>
                       <td className="py-4 px-6">
                         <div className="flex">
-                          <div
-                            onClick={() => {
-                              setCurrent(item);
-                              setOpenModalUpdate(true);
-                            }}
-                            className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
-                          >
-                            <CiEdit fontSize={24} />
-                          </div>
+                          {user?.detailActions.includes("product:update") && (
+                            <div
+                              onClick={() => {
+                                setCurrent(item);
+                                setOpenModalUpdate(true);
+                              }}
+                              className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
+                            >
+                              <CiEdit fontSize={24} />
+                            </div>
+                          )}
                           {/* <div
                             onClick={() => handleDelete(item.id)}
                             className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"

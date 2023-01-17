@@ -1,7 +1,7 @@
 import { useMutation } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
-import { FC, useState } from "react";
+import { FC, useContext, useState } from "react";
 import { toast } from "react-hot-toast";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
@@ -9,6 +9,7 @@ import swal from "sweetalert";
 import CategoryAction from "../../../actions/Category.action";
 import { CategoryModel } from "../../../models/Category.model";
 import { SpeciesModel } from "../../../models/Species.model";
+import { AuthContext } from "../../context";
 import ModalAddCategory from "./ModalAddCategory";
 import ModalUpdateCategory from "./ModalUpdateCategory";
 
@@ -49,6 +50,8 @@ const PCategoryAdmin: FC<PCategoryAdminProps> = ({ data, species }) => {
     });
   };
 
+  const { user } = useContext(AuthContext);
+
   return (
     <>
       <div className="mt-5">
@@ -56,12 +59,14 @@ const PCategoryAdmin: FC<PCategoryAdminProps> = ({ data, species }) => {
           <h1 className="text-white bg-primary px-4 py-2 inline rounded-lg">
             Quản lý thể loại
           </h1>
-          <button
-            onClick={() => setOpenModalAdd(true)}
-            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700"
-          >
-            Thêm thể loại
-          </button>
+          {user?.detailActions.includes("category:add") && (
+            <button
+              onClick={() => setOpenModalAdd(true)}
+              className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700"
+            >
+              Thêm thể loại
+            </button>
+          )}
         </div>
         <div
           style={{
@@ -85,9 +90,12 @@ const PCategoryAdmin: FC<PCategoryAdminProps> = ({ data, species }) => {
                   <th scope="col" className="py-3 px-6">
                     Ngày cập nhật
                   </th>
-                  <th scope="col" className="py-3 px-6">
-                    Hành động
-                  </th>
+                  {(user?.detailActions.includes("category:update") ||
+                    user?.detailActions.includes("category:delete")) && (
+                    <th scope="col" className="py-3 px-6">
+                      Hành động
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -109,18 +117,25 @@ const PCategoryAdmin: FC<PCategoryAdminProps> = ({ data, species }) => {
                     </td>
                     <td className="py-4 px-6">
                       <div className="flex">
-                        <div onClick={() => {
-                          setCurrent(item);
-                          setOpenModalUpdate(true);
-                        }} className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer">
-                          <CiEdit fontSize={24} />
-                        </div>
-                        <div
-                          onClick={() => handleDelete(item.id)}
-                          className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
-                        >
-                          <RiDeleteBin6Line fontSize={24} />
-                        </div>
+                        {user?.detailActions.includes("category:update") && (
+                          <div
+                            onClick={() => {
+                              setCurrent(item);
+                              setOpenModalUpdate(true);
+                            }}
+                            className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
+                          >
+                            <CiEdit fontSize={24} />
+                          </div>
+                        )}
+                        {user?.detailActions.includes("category:delete") && (
+                          <div
+                            onClick={() => handleDelete(item.id)}
+                            className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
+                          >
+                            <RiDeleteBin6Line fontSize={24} />
+                          </div>
+                        )}
                       </div>
                     </td>
                   </tr>
@@ -136,10 +151,10 @@ const PCategoryAdmin: FC<PCategoryAdminProps> = ({ data, species }) => {
         data={species}
       />
       <ModalUpdateCategory
-      open={openModalUpdate}
-      handleClose={() => setOpenModalUpdate(false)}
-      data={species}
-      current={current}
+        open={openModalUpdate}
+        handleClose={() => setOpenModalUpdate(false)}
+        data={species}
+        current={current}
       />
     </>
   );

@@ -4,4 +4,5 @@ export interface CategoryBlogModel {
   createdAt: Date;
   updatedAt: Date;
   status: boolean;
+  slug:string
 }

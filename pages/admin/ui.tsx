@@ -97,7 +97,7 @@ const UIAdmin = () => {
                 <span className="w-[150px]">Demo</span>
               </div>
               <div className="items-center mt-5 w-full h-auto border-solid border-2 border-black-500 pointer-events-none">
-                      <HomeAdmin/>
+                      {/* <HomeAdmin/> */}
               </div>
             </div>
           </div>

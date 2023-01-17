@@ -1,44 +1,52 @@
-import { GetServerSideProps } from "next";
+import { GetServerSideProps, NextPage } from "next";
 import React from "react";
 import { AiOutlineEye } from "react-icons/ai";
 import { BiNews } from "react-icons/bi";
 import { TbDiamond } from "react-icons/tb";
 import AdminLayout from "../../components/layouts/AdminLayout";
 import { GrUserManager } from "react-icons/gr";
-import { formatNumber, formatPrices } from "../../utils";
+import { formatNumber, formatPrices, getImageServer } from "../../utils";
 import { BsPeople } from "react-icons/bs";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import Link from "next/link";
 import { getCookie } from "cookies-next";
+import StatisticAction from "../../actions/Statistic.action";
+import { StatisticCount, StatisticLatest } from "../../models/Statistic.model";
+import dayjs from "dayjs";
+import Meta from "../../components/Meta";
 
-const dataSection1 = [
-  {
-    value: 7112,
-    title: "Lượt xem",
-    icon: AiOutlineEye,
-  },
-  {
-    value: 50,
-    title: "Sản phẩm",
-    icon: TbDiamond,
-  },
-  {
-    value: 12,
-    title: "Bài đăng",
-    icon: BiNews,
-  },
-  {
-    value: 4,
-    title: "Người dùng",
-    icon: BsPeople,
-  },
-];
+interface HomeAdminProps {
+  count: StatisticCount;
+  latest: StatisticLatest;
+}
 
-
-const HomeAdmin = () => {
+const HomeAdmin: NextPage<HomeAdminProps> = ({ count, latest }) => {
+  const dataSection1 = [
+    {
+      value: count.views,
+      title: "Lượt xem",
+      icon: AiOutlineEye,
+    },
+    {
+      value: count.products,
+      title: "Sản phẩm",
+      icon: TbDiamond,
+    },
+    {
+      value: count.blogs,
+      title: "Bài đăng",
+      icon: BiNews,
+    },
+    {
+      value: count.users,
+      title: "Người dùng",
+      icon: BsPeople,
+    },
+  ];
 
   return (
     <>
+      <Meta image="/images/logo.png" title="Trang chủ | Admin" description="" />
       <AdminLayout>
         <>
           <div className="grid mt-5 grid-cols-2 md:grid-cols-4 gap-4">
@@ -46,7 +54,7 @@ const HomeAdmin = () => {
               const Icon = item.icon;
               return (
                 <div
-                key={index}
+                  key={index}
                   style={{
                     boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
                   }}
@@ -83,21 +91,23 @@ const HomeAdmin = () => {
               <div className="mt-4">
                 <div className="font-bold flex justify-between overflow-x-scroll table-home text-sm">
                   <div className="w-[150px]">Tên sản phẩm</div>
-                  <div className="w-[100px]">Loại</div>
-                  <div className="w-[80px]">Giá</div>
+                  <div className="w-[100px]">Danh mục</div>
+                  <div className="w-[80px]">Ngày đăng</div>
                   <div className="w-[80px]">Trạng thái</div>
                 </div>
               </div>
-              {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
-                <div key={item} className="mt-2">
+              {latest?.product?.map((item) => (
+                <div key={item.id} className="mt-2">
                   <div className=" flex justify-between overflow-x-scroll table-home text-sm">
-                    <div className="w-[150px] line-clamp-2">
-                      Nhẫn kim cương {item}
+                    <div className="w-[150px] line-clamp-2">{item.name}</div>
+                    <div className="w-[100px]">{item.category.name}</div>
+                    <div className="w-[80px]">
+                      {dayjs(item.createdAt).format("DD/MM/YYYY")}
                     </div>
-                    <div className="w-[100px]">Màu Đỏ, Size L</div>
-                    <div className="w-[80px]">{formatPrices(20000000)}</div>
-                    <div className="w-[80px] bg-green-500 px-1 rounded-md text-white text-center">
-                      Hoạt động
+                    <div className="w-[80px] rounded-md text-white text-center">
+                      <div className=" bg-green-500 px-1 rounded-md">
+                        {item.status ? "Hoạt động" : "Đã xóa"}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -118,16 +128,18 @@ const HomeAdmin = () => {
                 </Link>
               </div>
               <div className="mt-4">
-                {[11, 12, 13, 14].map((item) => (
-                  <div key={item} className="flex items-center mt-2 first:mt-0">
+                {latest.blog.map((item, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center mt-2 first:mt-0"
+                  >
                     <LazyLoadImage
                       effect="blur"
-                      src="/images/test.jpg"
-                      className="w-[70px]"
+                      src={getImageServer(item.thumbnail)}
+                      className="w-[50px] h-[50px] rounded-sm"
                     />
                     <span className="ml-2 line-clamp-2 font-bold text-sm">
-                      Trao gửi yêu thương - Time for gifts ♥️ Ưu đãi ngay 15%
-                      cho trang sức kim cương
+                      {item.name}
                     </span>
                   </div>
                 ))}
@@ -144,19 +156,25 @@ export default HomeAdmin;
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const token = req.cookies["token"];
+  const data = await Promise.all([
+    StatisticAction.count(),
+    StatisticAction.latest(),
+  ]);
 
   if (token) {
     return {
-      props: {},
+      props: {
+        count: data[0],
+        latest: data[1],
+      },
     };
   }
 
   return {
     props: {},
     redirect: {
-      destination: "/admin/login",
+      destination: "/login",
       permanent: false,
     },
   };
-
 };

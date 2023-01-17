@@ -1,3 +1,4 @@
+import { setCookie } from "cookies-next";
 import React, { FC, useEffect, useState, useContext } from "react";
 import UserAction from "../../actions/User.action";
 import { AuthContext } from "../context";
@@ -17,6 +18,7 @@ const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
       const result = await UserAction.myInfo();
       if (result) {
         setUser(result);
+        setCookie('detailActions',result?.detailActions)
       } else {
         setUser(undefined);
       }

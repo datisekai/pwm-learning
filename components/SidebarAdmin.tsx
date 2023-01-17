@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import { AiOutlineHome, AiOutlineInfoCircle } from "react-icons/ai";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { BsPeople } from "react-icons/bs";
@@ -8,44 +8,9 @@ import { VscTools } from "react-icons/vsc";
 import { MdOutlineFaceRetouchingNatural } from "react-icons/md";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { AuthContext } from "./context";
 
-const data = [
-  {
-    url: "/admin",
-    title: "Trang chủ",
-    icon: AiOutlineHome,
-  },
-  {
-    url: "/admin/user",
-    title: "Người dùng",
-    icon: BsPeople,
-  },
-  {
-    url: "/admin/product",
-    title: "Sản phẩm",
-    icon: TbDiamond,
-  },
-  {
-    url: "/admin/blog",
-    title: "Bài đăng",
-    icon: BiNews,
-  },
-  {
-    url: "/admin/info",
-    title: "Giới thiệu",
-    icon: AiOutlineInfoCircle,
-  },
-  {
-    url: "/admin/permission",
-    title: "Phân quyền",
-    icon: VscTools,
-  },
-  {
-    url: "/admin/ui",
-    title: "Giao diện",
-    icon: MdOutlineFaceRetouchingNatural,
-  },
-];
+
 
 interface SidebarAdminProps {
   show: boolean;
@@ -55,6 +20,52 @@ interface SidebarAdminProps {
 const SidebarAdmin: FC<SidebarAdminProps> = ({ handleClose, show }) => {
   const router = useRouter();
 
+  const {user} = useContext(AuthContext)
+
+  console.log(user)
+
+
+  const data = [
+    {
+      url: "/admin",
+      title: "Trang chủ",
+      icon: AiOutlineHome,
+    },
+    {
+      url: "/admin/user",
+      title: "Người dùng",
+      icon: BsPeople,
+      isHide: !user?.detailActions.includes('user:view')
+    },
+    {
+      url: "/admin/product",
+      title: "Sản phẩm",
+      icon: TbDiamond,
+      isHide: !user?.detailActions.includes('product:view')
+    },
+    {
+      url: "/admin/blog",
+      title: "Bài đăng",
+      icon: BiNews,
+      isHide: !user?.detailActions.includes('blog:view')
+    },
+    {
+      url: "/admin/info",
+      title: "Giới thiệu",
+      icon: AiOutlineInfoCircle,
+    },
+    {
+      url: "/admin/permission",
+      title: "Phân quyền",
+      icon: VscTools,
+      isHide: !user?.detailActions.includes('permission:view')
+    },
+    {
+      url: "/admin/ui",
+      title: "Giao diện",
+      icon: MdOutlineFaceRetouchingNatural,
+    },
+  ];
 
   return (
     <>
@@ -75,7 +86,8 @@ const SidebarAdmin: FC<SidebarAdminProps> = ({ handleClose, show }) => {
         </div>
         <div className="mt-10 px-2">
           {data.map((item, index) => {
-            const Icon = item.icon;
+            if(!item.isHide){
+              const Icon = item.icon;
             return (
               <Link key={index} href={item.url}>
                 <div
@@ -86,6 +98,7 @@ const SidebarAdmin: FC<SidebarAdminProps> = ({ handleClose, show }) => {
                 </div>
               </Link>
             );
+            }
           })}
         </div>
       </div>

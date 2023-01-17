@@ -19,6 +19,7 @@ const HeaderAdmin: FC<HeaderAdminProps> = ({ handleShow, show }) => {
   const handleLogout = () => {
     setUser(undefined)
     deleteCookie('token');
+    deleteCookie('detailActions');
     router.push('/login')
   }
 

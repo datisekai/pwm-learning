@@ -18,6 +18,8 @@ import { toast } from "react-hot-toast";
 import ProductAction from "../../../actions/Product.action";
 import { useRouter } from "next/router";
 import { useMutation } from "@tanstack/react-query";
+import { GetServerSideProps } from "next";
+import Meta from "../../../components/Meta";
 
 export interface Sku {
   price: string;
@@ -203,6 +205,7 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
 
   return (
     <>
+     <Meta image="/images/logo.png" title="Thêm sản phẩm | Admin" description="" />
       <AdminLayout>
         <div className="mt-5">
           <div className="flex items-center justify-between">
@@ -570,12 +573,23 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
 
 export default AddProduct;
 
-export const getServerSideProps = async () => {
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const categories = await CategoryAction.getAll();
 
+  const detailActions = JSON.parse(req.cookies["detailActions"] || "[]");
+
+  if (detailActions.includes("product:add")) {
+    return {
+      props: {
+        categories,
+      },
+    };
+  }
+
   return {
-    props: {
-      categories,
+    props: {},
+    redirect: {
+      destination: "/admin",
     },
   };
 };

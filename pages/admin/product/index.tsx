@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import AdminLayout from "../../../components/layouts/AdminLayout";
@@ -17,7 +17,27 @@ import { deleteCookie, getCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import SkuAction from "../../../actions/Sku.action";
 import { SkuModel } from "../../../models/Sku.model";
+import { AuthContext } from "../../../components/context";
+import Meta from "../../../components/Meta";
 
+
+interface ProductAdminMnProps {
+  products: ProductModel[];
+  categories: CategoryModel[];
+  species: SpeciesModel[];
+  tab: string;
+  skus:SkuModel[]
+}
+
+const ProductAdminManager: NextPage<ProductAdminMnProps> = ({
+  products,
+  categories,
+  species,
+  tab,
+  skus
+}) => {
+
+  
 const dataTab = [
   {
     id: 0,
@@ -37,23 +57,10 @@ const dataTab = [
   },
 ];
 
-interface ProductAdminMnProps {
-  products: ProductModel[];
-  categories: CategoryModel[];
-  species: SpeciesModel[];
-  tab: string;
-  skus:SkuModel[]
-}
-
-const ProductAdminManager: NextPage<ProductAdminMnProps> = ({
-  products,
-  categories,
-  species,
-  tab,
-  skus
-}) => {
   const router = useRouter();
   return (
+   <>
+    <Meta image="/images/logo.png" title="Sản phẩm | Admin" description="" />
     <AdminLayout>
       <div className="mt-5">
         <ul className="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400">
@@ -84,7 +91,7 @@ const ProductAdminManager: NextPage<ProductAdminMnProps> = ({
           {+tab === 3 && <PCategoryAdmin species={species} data={categories} />}
         </div>
       </div>
-    </AdminLayout>
+    </AdminLayout></>
   );
 };
 

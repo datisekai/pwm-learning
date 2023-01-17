@@ -1,26 +1,23 @@
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import CategoryAction from "../../../actions/Category.action";
-import { CategoryModel } from "../../../models/Category.model";
+import PermissionAction from "../../../actions/Permission.action";
+import SpeciesAction from "../../../actions/Species.action";
 import { SpeciesModel } from "../../../models/Species.model";
 import Select from "../../customs/Select";
 import TextField from "../../customs/TextField";
 
-interface ModalUpdateCategoryProps {
+interface ModalAddPermissionProps {
   open: boolean;
   handleClose: () => void;
-  data: SpeciesModel[];
-  current:CategoryModel
 }
 
-const ModalUpdateCategory: React.FC<ModalUpdateCategoryProps> = ({
+const ModalAddPermission: React.FC<ModalAddPermissionProps> = ({
   handleClose,
   open,
-  data,
-  current
 }) => {
   const {
     control,
@@ -28,26 +25,23 @@ const ModalUpdateCategory: React.FC<ModalUpdateCategoryProps> = ({
     handleSubmit,
     getValues,
     watch,
-    setValue
+    setValue,
+    reset,
   } = useForm({
     defaultValues: {
       name: "",
-      speciesId: "",
+      note: "",
     },
   });
 
-  useEffect(() => {
-    setValue('name',current?.name)
-    setValue('speciesId',current?.speciesId.toString());
-  },[current])
-
   const router = useRouter();
 
-  const { mutate, isLoading } = useMutation(CategoryAction.update, {
+  const { mutate, isLoading } = useMutation(PermissionAction.add, {
     onSuccess: () => {
-      toast.success("Cập nhật thành công");
+      toast.success("Thêm thành công");
       handleClose();
       router.replace(router.asPath);
+      reset();
     },
     onError: (err) => {
       console.log(err);
@@ -56,7 +50,7 @@ const ModalUpdateCategory: React.FC<ModalUpdateCategoryProps> = ({
   });
 
   const handleUpdate = (data: any) => {
-    mutate({...data, id:current?.id});
+    mutate(data);
   };
 
   return (
@@ -66,10 +60,10 @@ const ModalUpdateCategory: React.FC<ModalUpdateCategoryProps> = ({
         onClick={handleClose}
       ></div>
       <div className="w-[90%] md:w-[500px] p-4 rounded-lg bg-white fixed z-[70] top-[50%] translate-y-[-50%] translate-x-[-50%] left-[50%] ">
-        <h2 className="font-bold">Cập nhật thể loại</h2>
+        <h2 className="font-bold">Thêm quyền</h2>
         <div className="mt-4 space-y-2">
           <div className="space-y-2">
-            <label>Tên thể loại</label>
+            <label>Tên quyền</label>
             <TextField
               control={control}
               error={errors}
@@ -78,28 +72,17 @@ const ModalUpdateCategory: React.FC<ModalUpdateCategoryProps> = ({
               placeholder="Nhập vào"
               rules={{
                 required: "Không được để trống ô",
-                minLength: {
-                  value: 5,
-                  message:
-                    "Tên thể loại của bạn quá ngắn. Vui lòng nhập ít nhất 5 kí tự",
-                },
-                maxLength: {
-                  value: 120,
-                  message:
-                    "Tên thể loại của bạn quá dài. Vui lòng nhập tối đa 120 kí tự",
-                },
               }}
             />
           </div>
           <div className="space-y-2">
-            <label>Chủng loại</label>
-            <Select
+            <label>Ghi chú</label>
+            <TextField
               control={control}
-              data={data?.map((item) => ({ text: item.name, value: item.id }))}
-              rules={{ required: "Không được để trống ô" }}
               error={errors}
-              name="speciesId"
+              name="note"
               className={"css-field"}
+              placeholder="Nhập vào"
             />
           </div>
         </div>
@@ -126,4 +109,4 @@ const ModalUpdateCategory: React.FC<ModalUpdateCategoryProps> = ({
   );
 };
 
-export default ModalUpdateCategory;
+export default ModalAddPermission;
