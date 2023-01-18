@@ -7,13 +7,36 @@ import { BiMenuAltLeft } from "react-icons/bi";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-
+import { useTheme } from "next-themes";
+import { HiOutlineSun, HiOutlineMoon } from "react-icons/hi";
 interface HeaderProps {
   handleOpen: () => void;
   handleOpenSearch: () => void;
 }
 
 const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
+  const { systemTheme, theme, setTheme } = useTheme();
+
+  const renderThemeChanger = () => {
+    const currentTheme = theme === "system" ? systemTheme : theme;
+    if (currentTheme === "dark") {
+      return (
+        <HiOutlineSun
+          className="w-6 h-6"
+          role={"button"}
+          onClick={() => setTheme("light")}
+        />
+      );
+    } else {
+      return (
+        <HiOutlineMoon
+        className="w-6 h-6"
+          role={"button"}
+          onClick={() => setTheme("dark")}
+        />
+      );
+    }
+  };
   const [keyword, setKeyword] = useState("");
 
   const router = useRouter();
@@ -69,6 +92,8 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
                 <BsSearch fontSize={20} className="text-white" />
               </div>
             </div>
+            <div  className="hover:bg-primaryHover transition-all hover:cursor-pointer bg-primary h-[40px] w-[40px] flex items-center justify-center rounded-br-lg">{/* UI */}
+            {renderThemeChanger()}</div>
             <div className="flex items-center">
               <div className="hidden lg:flex items-center">
                 <Image

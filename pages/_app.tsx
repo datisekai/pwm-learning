@@ -9,7 +9,7 @@ import type { AppProps } from "next/app";
 import AuthContextProvider from "../components/context";
 import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
+import {ThemeProvider} from "next-themes";
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
 });
@@ -24,12 +24,14 @@ export default function App({ Component, pageProps }: AppProps) {
           showSpinner: false,
         }}
       />
+      <ThemeProvider enableSystem={true} attribute="class">
       <QueryClientProvider client={queryClient}>
         <AuthContextProvider>
           <Component {...pageProps} />
           <Toaster />
         </AuthContextProvider>
       </QueryClientProvider>
+      </ThemeProvider>
     </>
   );
 }
