@@ -12,10 +12,10 @@ interface HomeCardProps {
 const HomeCard: React.FC<HomeCardProps> = ({ data }) => {
   const minPrice = useMemo(() => {
     let min =
-      data?.skus[0].price + data.skus[0].price * data.skus[0].discount || 0;
+      data?.skus[0].price - (data.skus[0].price * data.skus[0].discount/100) || 0;
     data?.skus.forEach((item) => {
       if (item.price < min) {
-        min = item.price + item.price * item.discount;
+        min = item.price - (item.price * item.discount/100);
       }
     });
     return min;
@@ -23,10 +23,10 @@ const HomeCard: React.FC<HomeCardProps> = ({ data }) => {
 
   const maxPrice = useMemo(() => {
     let max =
-      data?.skus[0].price + data.skus[0].price * data.skus[0].discount || 0;
+    data?.skus[0].price - (data.skus[0].price * data.skus[0].discount/100) || 0;
     data?.skus.forEach((item) => {
       if (item.price > max) {
-        max = item.price + item.price * item.discount;
+        max = item.price - (item.price * item.discount/100);
       }
     });
     return max;
@@ -34,7 +34,7 @@ const HomeCard: React.FC<HomeCardProps> = ({ data }) => {
   return (
     <Link href={`/product/${data.slug}`}>
       <div className="">
-        <div className="bg-gray-200 flex items-center justify-center aspect-[1/1]  relative">
+        <div className="flex items-center justify-center aspect-[1/1]  relative">
           <LazyLoadImage
             effect="blur"
             src={getImageServer(data.thumbnail)}

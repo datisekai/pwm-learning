@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import BottomHeader from "./BottomHeader";
 import TopHeader from "./TopHeader";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -16,6 +16,7 @@ interface HeaderProps {
 
 const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
   const { systemTheme, theme, setTheme } = useTheme();
+
 
   const renderThemeChanger = () => {
     const currentTheme = theme === "system" ? systemTheme : theme;
@@ -41,9 +42,15 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
 
   const router = useRouter();
 
+  useEffect(() => {
+    if(router && router.query && router.query.name){
+      setKeyword(router.query.name.toString())
+    }
+  },[router])
+
   const handleSearch = () => {
     if (keyword.trim() !== "") {
-      router.push(`/search?keyword=${encodeURI(keyword)}`);
+      router.push(`/search?name=${encodeURI(keyword)}`);
     }
   };
 

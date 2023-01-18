@@ -264,3 +264,7 @@ li.selected a[role=button]{
     background-color: #EA8143;
     color: white;
 }
+
+.swiper-pagination-vertical{
+    right: 0 !important;
+}

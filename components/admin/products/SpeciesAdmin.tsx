@@ -11,6 +11,8 @@ import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
 import swal from "sweetalert";
 import { AuthContext } from "../../context";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import { getImageServer } from "../../../utils";
 
 interface SpeciesAdminProps {
   data: SpeciesModel[];
@@ -20,6 +22,8 @@ const SpeciesAdmin: FC<SpeciesAdminProps> = ({ data }) => {
   const [openModalAdd, setOpenModalAdd] = useState(false);
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [current, setCurrent] = useState<any>();
+
+  console.log(data)
 
   const router = useRouter();
 
@@ -77,7 +81,7 @@ const SpeciesAdmin: FC<SpeciesAdminProps> = ({ data }) => {
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="py-3 px-6">
-                    Mã chủng loại
+                    Hình ảnh
                   </th>
                   <th scope="col" className="py-3 px-6">
                     Tên chủng loại
@@ -107,7 +111,7 @@ const SpeciesAdmin: FC<SpeciesAdminProps> = ({ data }) => {
                         scope="row"
                         className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                       >
-                        {item.id}
+                        <LazyLoadImage width={60} height={60} className='rounded-md' src={getImageServer(item.thumbnail)} alt=""/>
                       </th>
                       <td className="py-4 px-6">{item.name}</td>
                       <td className="py-4 px-6">

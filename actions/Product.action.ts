@@ -39,6 +39,14 @@ const ProductAction = {
       };
     }
   },
+  detail:async(slug:string) => {
+    try {
+      const result = await axiosClient.get(`/product/detail/${slug}`);
+      return result.data      
+    } catch (error) {
+      return null
+    }
+  }
 };
 
 export default ProductAction;

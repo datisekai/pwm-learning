@@ -27,7 +27,7 @@ interface SearchProps {
 }
 
 const Search: NextPage<SearchProps> = ({ query, species, products }) => {
-  const { keyword, speciesId, categoryId, min, max } = query;
+  const { name, speciesId, categoryId, min, max } = query;
   const router = useRouter();
   return (
     <>
@@ -39,7 +39,7 @@ const Search: NextPage<SearchProps> = ({ query, species, products }) => {
 
       <MainLayout>
         <div className="max-w-[1200px] mx-auto pt-4 pb-10 px-2">
-          <Breadcumb current={keyword ? `Tìm kiếm "${keyword}"` : "Tìm kiếm"} />
+          <Breadcumb current={name ? `Tìm kiếm "${name}"` : "Tìm kiếm"} />
           <div className="flex mt-5">
             <div className="hidden md:block">
               <ToolSearch species={species} />
@@ -53,17 +53,25 @@ const Search: NextPage<SearchProps> = ({ query, species, products }) => {
                 }}
               >
                 <h1 className="uppercase font-bold">Tìm kiếm </h1>
-                {/* <div className="flex">
+                <div className="flex">
                   <div className="flex items-center text-[#666]">
                     <BsSortDown />
                     <span className="ml-1">Sắp xếp: </span>
                   </div>
-                  <select name="" id="" className="outline-none">
-                    <option value="">Mặc định</option>
-                    <option value="">Giá thấp</option>
-                    <option value="">Giá cao</option>
+                  <select
+                    onChange={(e) =>
+                      router.push({
+                        query: { ...router.query, sort: e.target.value },
+                      })
+                    }
+                    defaultValue={"default"}
+                    className="outline-none"
+                  >
+                    <option value="default">Mặc định</option>
+                    <option value="asc">Giá thấp</option>
+                    <option value="desc">Giá cao</option>
                   </select>
-                </div> */}
+                </div>
               </div>
               <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-2 gap-y-4">
                 {/* {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
@@ -102,7 +110,7 @@ export default Search;
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const data = await Promise.all([
-    SpeciesAction.getAll(),
+    SpeciesAction.getAll(1),
     ProductAction.search(query),
   ]);
 

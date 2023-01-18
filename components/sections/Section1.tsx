@@ -37,25 +37,27 @@ const Section1:FC<Section1Props> = ({data}) => {
         </div> */}
       </div>
      <div className="hidden md:block">
-     <div className="mt-2 section1 ">
-        {data?.map((item) => (
-          <div onClick={() => router.push(`/product/${item.product.slug}`)} className="section1-item" key={item.id}>x
-            <LazyLoadImage
-              src={getImageServer(item.product.thumbnail)}
-              className="w-full h-full object-fill rounded-lg"
-            />
-          </div>
-        ))}
-      </div>
+     
      </div>
 
-      <div className="mt-2 block md:hidden">
+      <div className="mt-2">
         <Swiper
           modules={[Navigation, Pagination]}
           spaceBetween={50}
           slidesPerView={1}
           navigation
           pagination={{ clickable: true }}
+          breakpoints={{
+            480:{
+              slidesPerView:1.5,
+            },
+            640:{
+              slidesPerView:2.5,
+            },
+            1024:{
+              slidesPerView:3
+            }
+          }}
         >
           {data.map((item) => (
             <SwiperSlide key={item.id}>
