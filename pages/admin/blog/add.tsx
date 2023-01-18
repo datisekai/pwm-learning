@@ -7,27 +7,30 @@ import TextArea from "../../../components/customs/TextArea";
 import { v4 as uuidv4 } from "uuid";
 import dynamic from "next/dynamic";
 import "suneditor/dist/css/suneditor.min.css"; // Import Sun Editor's CSS File
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import { FcAddImage } from "react-icons/fc";
+import { GetServerSideProps, NextPage } from "next";
+import CategoryBlogAction from "../../../actions/CategoryBlog.action";
+import { CategoryBlogModel } from "../../../models/CategoryBlog.model";
+import { toast } from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
+import BlogAction from "../../../actions/Blog.action";
+import { useRouter } from "next/router";
+import { uploadImg } from "../../../utils";
+import Meta from "../../../components/Meta";
 
-const SunEditor = dynamic(() => import("suneditor-react"), {
-  ssr: false,
-});
-export interface Sku {
-  price: string;
-  discount: string;
-  file?: File;
-  preview: string;
-  skuPhanLoai: string;
+const TranslationArea = dynamic(
+  () => import("../../../components/TranslationArea"),
+  {
+    ssr: false,
+  }
+);
+
+interface AddBlogProps {
+  categoriesBlog: CategoryBlogModel[];
 }
 
-const AddBlog = () => {
-  const editor = useRef(null);
-  const [content, setContent] = useState("");
-  const [addData, setVal] = useState("");
-  const [addedData, showData] = useState(0);
-  const handleChange = (e: any, editor: any) => {
-    const data = editor.getData();
-    setVal(data);
-  };
+const AddBlog: NextPage<AddBlogProps> = ({ categoriesBlog }) => {
   const {
     control,
     formState: { errors },
@@ -37,82 +40,53 @@ const AddBlog = () => {
   } = useForm({
     defaultValues: {
       name: "",
-      category: "",
+      categoriesBlogId: "",
       description: "",
+      slug: "",
     },
   });
 
-  const [groupClassify, setGroupClassify] = useState([
-    {
-      id: uuidv4(),
-      text: "",
-    },
-  ]);
-
-  const [classify1, setClassify1] = useState([
-    {
-      id: uuidv4(),
-      text: "",
-    },
-  ]);
-
-  const [classify2, setClassify2] = useState([
-    {
-      id: uuidv4(),
-      text: "",
-    },
-  ]);
-
-  const [thumbnail, setThumbnail] = useState<any>();
+  const [content, setContent] = useState("");
+  const [thumbnail, setThumbnail] = useState<File>();
   const [preview, setPreview] = useState("");
-
-  const [skus, setSkus] = useState<Sku[]>([]);
 
   const maxLength = 120;
 
   const name = watch("name");
 
-  const handleAdd = (data: any) => {};
+  const router = useRouter()
 
-  const isExistElement = (array: any) => {
-    if (array.length > 0 && array[0].text != "") {
-      return true;
+  const {mutate, isLoading} = useMutation(BlogAction.add, {
+    onSuccess:() => {
+      toast.success("Thêm thành công");
+      router.push('/admin/blog');
+    },
+    onError:(err) => {
+      console.log(err);
+      toast.error("Có lỗi xảy ra, vui lòng thử lại")
+    }
+  })
+
+  const handleAdd = async(data: any) => {
+    if (!thumbnail) {
+      toast.error("Vui lòng chọn ảnh");
+      return;
     }
 
-    return false;
+    if(content.length < 200){
+      toast.error("Nội dung quá ngắn, không được dưới 200 kí tự");
+      return;
+    }
+
+    const image = await uploadImg(thumbnail);
+
+    mutate({...data, thumbnail:image, content})
+    
   };
-
-  const dataTable = useMemo(() => {
-    const data: any = [];
-    classify1.forEach((item) => {
-      if (item.text != "") {
-        if (!isExistElement(classify2)) {
-          data.push([item]);
-        } else {
-          classify2.forEach((element) => {
-            if (element.text != "") {
-              data.push([item, element]);
-            }
-          });
-        }
-      }
-    });
-
-    setSkus(
-      data.map(() => ({
-        price: "",
-        discount: "",
-        preview: "",
-        file: null,
-        skuPhanLoai: "",
-      }))
-    );
-
-    return data;
-  }, [classify1, classify2]);
 
   return (
     <>
+    <Meta image="/images/logo.png" title="Thêm Blog | Admin" description="" />
       <AdminLayout>
         <div className="mt-5">
           <div className="flex items-center justify-between">
@@ -131,21 +105,38 @@ const AddBlog = () => {
                 <h2 className="font-bold">Thông tin cơ bản</h2>
 
                 <div className="mt-5">
-                  <div className="mt-2 flex items-center">
-                    <span className="w-[150px]">Danh mục blog</span>
-                    <div className="ml-4 flex-1">
-                      <Select
-                        error={errors}
-                        name="category"
-                        rules={{
-                          required: "Không được để trống ô",
+                  <div className="flex items-center">
+                    <span className="w-[150px]">Hình ảnh chính</span>
+                    <div className="ml-4 ">
+                      <input
+                        type="file"
+                        onChange={(e) => {
+                          const file: any = e.target.files
+                            ? e.target.files[0]
+                            : null;
+                          if (file) {
+                            setPreview(URL.createObjectURL(file));
+                            setThumbnail(file);
+                          }
                         }}
-                        control={control}
-                        className="px-4 h-[34px] outline-none border rounded-md w-full"
-                        data={[{ value: 0, text: "Blog trang sức" }]}
+                        className="hidden"
+                        name=""
+                        id="mainImage"
                       />
+                      <label htmlFor="mainImage" className="cursor-pointer ">
+                        {preview ? (
+                          <LazyLoadImage
+                            src={preview}
+                            className="w-[40px] h-[40px]"
+                            effect="blur"
+                          />
+                        ) : (
+                          <FcAddImage fontSize={40} />
+                        )}
+                      </label>
                     </div>
                   </div>
+
                   <div className="flex items-center mt-2 ">
                     <span className="w-[150px]">Tiêu đề</span>
                     <div className="flex-1 ml-4 ">
@@ -180,7 +171,38 @@ const AddBlog = () => {
                       </p>
                     </div>
                   </div>
+                  <div className="flex items-center mt-2 ">
+                    <span className="w-[150px]">Slug</span>
+                    <div className="flex-1 ml-4 ">
+                      <TextField
+                        control={control}
+                        error={errors}
+                        showError={false}
+                        name="slug"
+                        placeholder="kham-pha-y-nghia-ngon-tay-deo-nhan-nam"
+                        className="w-full px-4 py-1 border rounded-md outline-none"
+                      />
+                    </div>
+                  </div>
 
+                  <div className="mt-2 flex items-center">
+                    <span className="w-[150px]">Danh mục blog</span>
+                    <div className="ml-4 flex-1">
+                      <Select
+                        error={errors}
+                        name="categoriesBlogId"
+                        rules={{
+                          required: "Không được để trống ô",
+                        }}
+                        control={control}
+                        className="px-4 h-[34px] outline-none border rounded-md w-full"
+                        data={categoriesBlog?.map((item) => ({
+                          text: item.name,
+                          value: item.id,
+                        }))}
+                      />
+                    </div>
+                  </div>
                   <div className="mt-2 flex items-center">
                     <span className="w-[150px]">Mô tả</span>
                     <div className="ml-4 flex-1">
@@ -212,52 +234,20 @@ const AddBlog = () => {
                       className="ml-4 flex-1"
                       style={{
                         display: "inline-block",
-                        textAlign: "left",
-                        maxWidth: "850px",
+                        maxWidth: "100%",
                       }}
                     >
-                      <SunEditor                        
-                        setOptions={{
-                          buttonList: [
-                            ["undo", "redo"],
-                            ["font", "fontSize", "formatBlock"],
-                            ["paragraphStyle", "blockquote"],
-                            [
-                              "bold",
-                              "underline",
-                              "italic",
-                              "strike",
-                              "subscript",
-                              "superscript",
-                            ],
-                            ["fontColor", "hiliteColor", "textStyle"],
-                            ["removeFormat"],
-                            "/", // Line break
-                            ["outdent", "indent"],
-                            ["align", "horizontalRule", "list", "lineHeight"],
-                            [
-                              "table",
-                              "link",
-                              "image",
-                              "video",
-                              "audio" /** ,'math' */,
-                            ], // You must add the 'katex' library at options to use the 'math' plugin.
-                            /** ['imageGallery'] */ // You must add the "imageGalleryUrl".
-                            ["fullScreen", "showBlocks", "codeView"],
-                            ["preview", "print"],
-                            ["save", "template"],
-                          ],
-                        }}
-                      />
+                      <TranslationArea onChange={setContent} />
                     </div>
                   </div>
 
                   <div className="mt-4 flex justify-end">
                     <button
+                    disabled={isLoading}
                       onClick={handleSubmit(handleAdd)}
                       className="text-white bg-primary  py-1 rounded-md w-[150px]"
                     >
-                      Lưu sản phẩm
+                      Lưu bài viết
                     </button>
                   </div>
                 </div>
@@ -271,3 +261,24 @@ const AddBlog = () => {
 };
 
 export default AddBlog;
+
+export const getServerSideProps: GetServerSideProps = async ({ query,req }) => {
+  const data = await Promise.all([CategoryBlogAction.getAll()]);
+
+  const detailActions = JSON.parse(req.cookies["detailActions"] || "[]");
+
+  if(!detailActions.includes('blog:add')){
+    return {
+      props:{},
+      redirect:{
+        destination:'/admin'
+      }
+    }
+  }
+
+  return {
+    props: {
+      categoriesBlog: data[0],
+    },
+  };
+};

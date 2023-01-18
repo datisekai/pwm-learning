@@ -116,6 +116,13 @@ body {
     height: 700px;
 }
 
+.table-home::-webkit-scrollbar{
+    display: none;
+}
+
+.css-field{
+    @apply outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
+}
 .table-home::-webkit-scrollbar {
     display: none;
 }
@@ -207,4 +214,19 @@ input:checked+.slider:before {
 
 .slider.round:before {
     border-radius: 50%;
+}
+
+.tool-user::after{
+    content: "";
+    width: 70px;
+    height: 10px;
+    background-color: transparent;
+    position: absolute;
+    display: block;
+    right:0;
+    margin-top: 44px;
+}
+
+.tool-user:hover .child-tool-user{
+    display: block;
 }

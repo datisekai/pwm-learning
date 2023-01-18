@@ -2,7 +2,13 @@ import Link from "next/link";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import TextField from "../../components/customs/TextField";
+import UserAction from "../actions/User.action";
+import TextField from "../components/customs/TextField";
+import { toast } from "react-hot-toast";
+import { setCookie } from "cookies-next";
+import { useRouter } from "next/router";
+import { useMutation } from "@tanstack/react-query";
+import { GetServerSideProps } from "next";
 
 const LoginAdmin = () => {
   const {
@@ -16,7 +22,22 @@ const LoginAdmin = () => {
     },
   });
 
-  const handleLogin = (data: any) => {};
+  const router = useRouter();
+
+  const { mutate, isLoading } = useMutation(UserAction.login, {
+    onSuccess: (data) => {
+      setCookie("token", data.token);
+      toast.success("Đăng nhập thành công");
+      router.push("/admin");
+    },
+    onError: (err: any) => {
+      err && err?.message && toast.error(err.message);
+    },
+  });
+
+  const handleLogin = async (data: any) => {
+    mutate(data);
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f5f5f5]">
@@ -52,6 +73,7 @@ const LoginAdmin = () => {
               control={control}
               error={errors}
               name="password"
+              type="password"
               placeholder="Nhập mật khẩu..."
               rules={{
                 required: "Vui lòng không bỏ trống",
@@ -59,6 +81,7 @@ const LoginAdmin = () => {
               className="px-4 py-2 mt-1 bg-[#f5f5f5] outline-none w-full border rounded-sm"
             />
             <button
+              disabled={isLoading}
               type="submit"
               className="bg-primary mt-4 hover:bg-primaryHover transition-all text-white px-4 py-2 rounded-sm w-full"
             >
@@ -72,3 +95,19 @@ const LoginAdmin = () => {
 };
 
 export default LoginAdmin;
+
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const token = req.cookies["token"];
+
+  if (token) {
+    return {
+      redirect: {
+        destination: "/admin",
+      },
+      props: {},
+    };
+  }
+  return {
+    props: {},
+  };
+};

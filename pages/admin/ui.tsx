@@ -5,28 +5,11 @@ import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import Image from "next/image";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { FcAddImage } from "react-icons/fc";
-import TextField from "../../components/customs/TextField";
-import { useForm } from "react-hook-form";
-import  HomeAdmin from "./index";
-const UIAdmin = () => {
-  const {
-    control,
-    formState: { errors },
-    handleSubmit,
-    getValues,
-    watch,
-  } = useForm({
-    defaultValues: {
-      name: "",
-      category: "",
-      description: "",
-    },
-  });
-  const [thumbnail, setThumbnail] = useState<any>();
-  const [preview, setPreview] = useState("");
+import { useTheme } from "next-themes";
 
-  const name = watch("name");
+const UIAdmin = () => {
+  const { systemTheme, theme, setTheme } = useTheme();
+  const currentTheme = theme === "system" ? systemTheme : theme;
   return (
     <AdminLayout>
       <div className="mt-5">
@@ -35,13 +18,13 @@ const UIAdmin = () => {
             Giao diện
           </h1>
         </div>
-        <div
+        {/* <div
           style={{
             boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
           }}
           className="mt-10 bg-white rounded-3xl p-4"
-        >
-          <div className="overflow-x-auto relative">
+        > */}
+        {/* <div className="overflow-x-auto relative">
             <div className="mt-5">
               <div className="flex items-center mt-2 ">
                 <span className="w-[150px]">Màu sắc</span>
@@ -97,12 +80,35 @@ const UIAdmin = () => {
                 <span className="w-[150px]">Demo</span>
               </div>
               <div className="items-center mt-5 w-full h-auto border-solid border-2 border-black-500 pointer-events-none">
-                      <HomeAdmin/>
+               
               </div>
-            </div>
+            </div> */}
+        <div className="flex mt-20">
+          <div className="w-1/2 mr-5 text-center">
+            <LazyLoadImage src="../../../images/lightMode.jpg" effect="blur" />
+            <h1 className="text-orange-600 font-bold my-5">Light Mode</h1>
+            <input
+              type="radio"
+              value="light"
+              name="ui"
+              checked={currentTheme === "light"}
+              onClick={() => setTheme("light")}
+            />
+          </div>
+          <div className="w-1/2 mr-5 text-center">
+            <LazyLoadImage src="../../../images/darkMode.jpg" effect="blur" />
+            <h1 className="text-orange-600 font-bold my-5">Dark Mode</h1>
+            <input
+              type="radio"
+              value="dark"
+              name="ui"
+              checked={currentTheme === "dark"}
+              onClick={() => setTheme("dark")}
+            />
           </div>
         </div>
       </div>
+      {/* </div> */}
     </AdminLayout>
   );
 };

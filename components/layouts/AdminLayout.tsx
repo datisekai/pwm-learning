@@ -1,4 +1,7 @@
-import React, { FC, useState } from "react";
+import { setCookie } from "cookies-next";
+import React, { FC, useEffect, useState, useContext } from "react";
+import UserAction from "../../actions/User.action";
+import { AuthContext } from "../context";
 import HeaderAdmin from "../Header/HeaderAdmin";
 import SidebarAdmin from "../SidebarAdmin";
 
@@ -8,6 +11,21 @@ interface AdminLayoutProps {
 
 const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
   const [isShowMenu, setIsShowMenu] = useState(false);
+  const { user, setUser } = useContext(AuthContext);
+
+  useEffect(() => {
+    const getMyInfo = async () => {
+      const result = await UserAction.myInfo();
+      if (result) {
+        setUser(result);
+        setCookie('detailActions',result?.detailActions)
+      } else {
+        setUser(undefined);
+      }
+    };
+    getMyInfo();
+  }, []);
+
   return (
     <>
       <div className="min-h-screen flex">

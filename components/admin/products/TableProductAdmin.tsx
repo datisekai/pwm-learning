@@ -63,7 +63,6 @@ const TableProductAdmin: React.FC<TableProductProps> = ({
     },
   ];
 
-  console.log("dataTable", dataTable);
 
   const handleChangeData = (position: number, key: string, value: any) => {
     const data = skus.map((item, index) => {
@@ -137,7 +136,7 @@ const TableProductAdmin: React.FC<TableProductProps> = ({
           <tbody>
             {dataTable?.map((item: any, index: number) => (
               <tr
-                key={item.id}
+                key={`${item.id}${index}`}
                 className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
               >
                 <td
