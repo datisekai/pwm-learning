@@ -62,7 +62,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
             <BiMenuAltLeft
               onClick={handleOpen}
               fontSize={30}
-              className="block md:hidden"
+              className="block md:hidden dark:text-black"
             />
 
             <Link href={"/"}>
@@ -92,7 +92,8 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
                 <BsSearch fontSize={20} className="text-white" />
               </div>
             </div>
-            <div  className="hover:bg-primaryHover transition-all hover:cursor-pointer bg-primary h-[40px] w-[40px] flex items-center justify-center rounded-br-lg">{/* UI */}
+            <div  className="block md:hidden  hover:bg-primaryHover transition-all hover:cursor-pointer bg-primary h-[40px] w-[40px] flex items-center justify-center rounded-full">
+              {/* UI */}
             {renderThemeChanger()}</div>
             <div className="flex items-center">
               <div className="hidden lg:flex items-center">
@@ -102,7 +103,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
                   height={36}
                   src="/images/supporticon.png"
                 />
-                <span className="ml-2 hover:text-primary transition-all hover:cursor-pointer text-md font-extralight">
+                <span className="ml-2 hover:text-primary dark:text-black transition-all hover:cursor-pointer text-md font-extralight">
                   Hỗ trợ khách hàng
                 </span>
               </div>
@@ -113,7 +114,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
                   alt="Icon"
                   src="/images/system-ecommerce.png"
                 />
-                <span className="ml-2 hover:text-primary transition-all hover:cursor-pointer text-md font-extralight">
+                <span className="ml-2 hover:text-primary dark:text-black transition-all hover:cursor-pointer text-md font-extralight">
                   Hệ thống cửa hàng
                 </span>
               </div>
@@ -140,7 +141,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
             <BsSearch
               onClick={handleOpenSearch}
               fontSize={20}
-              className="block md:hidden"
+              className="block md:hidden dark:text-black"
             />
           </div>
         </div>

@@ -6,6 +6,7 @@ module.exports = {
     ],
     darkMode: 'class',
     theme: {
+        typography: (theme) => ({}),
         extend: {
             colors: {
                 primary: '#EA8143',

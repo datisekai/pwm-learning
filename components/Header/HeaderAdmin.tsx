@@ -46,7 +46,7 @@ const HeaderAdmin: FC<HeaderAdminProps> = ({ handleShow, show }) => {
         >
           <div onClick={handleLogout} className="hover:text-primary cursor-pointer flex items-center space-x-2">
             <BiLogOut className="text-primary" fontSize={20}/>
-            <span>Đăng xuất</span>
+            <span className="text-black">Đăng xuất</span>
           </div>
         </div>
       </div>

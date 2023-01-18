@@ -26,7 +26,7 @@ const SkuAdmin: FC<SkuAdminProps> = ({ data }) => {
 
   const { mutate, isLoading } = useMutation(SkuAction.delete, {
     onSuccess: () => {
-      toast.success("Đã xóa thành công");
+      toast.success("Đã chuyển vào thùng rác");
       router.replace(router.asPath);
     },
     onError: (err) => {
@@ -66,30 +66,32 @@ const SkuAdmin: FC<SkuAdminProps> = ({ data }) => {
           className="mt-10 bg-white rounded-3xl p-4 max-h-[450px] overflow-y-scroll"
         >
           <div className="overflow-x-auto relative">
-            <table className="w-full text-sm text-left  text-gray-500 dark:text-gray-400">
+            <table className="table-fixed w-full text-sm text-left  text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 sticky uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
-                  <th scope="col" className="py-3 px-6">
+                  <th scope="col" className="py-2 md:py-3 px-3 md:px-6">
                     Hình ảnh
                   </th>
-                  <th scope="col" className="py-3 px-6">
+                  <th scope="col" className="py-2 md:py-3 px-3 md:px-6">
                     Tên sản phẩm
                   </th>
-                  <th scope="col" className="py-3 px-6">
+                  <th scope="col" className="py-2 md:py-3 px-3 md:px-6">
                     Loại
                   </th>
-                  <th scope="col" className="py-3 px-6">
+                  <th scope="col" className="py-2 md:py-3 px-3 md:px-6">
                     Giá
                   </th>
-                  <th scope="col" className="py-3 px-6">
+                  <th scope="col" className="py-2 md:py-3 px-3 md:px-6">
                     % Giảm
                   </th>
-                  <th scope="col" className="py-3 px-6">
+                  <th scope="col" className="py-2 md:py-3 px-3 md:px-6">
                     SKU
                   </th>
-                  {user?.detailActions.includes('product:update') && <th scope="col" className="py-3 px-6">
-                    Hành động
-                  </th>}
+                  {user?.detailActions.includes("product:update") && (
+                    <th scope="col" className="py-3 px-6">
+                      Hành động
+                    </th>
+                  )}
                 </tr>
               </thead>
               <tbody>
@@ -120,7 +122,7 @@ const SkuAdmin: FC<SkuAdminProps> = ({ data }) => {
                     >
                       <th
                         scope="row"
-                        className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                        className="py-2 md:py-4 px-3 md:px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                       >
                         <LazyLoadImage
                           src={getImageServer(item.image)}
@@ -129,14 +131,14 @@ const SkuAdmin: FC<SkuAdminProps> = ({ data }) => {
                           height={50}
                         />
                       </th>
-                      <td className="py-4 px-6">{item.product.name}</td>
-                      <td className="py-4 px-6">
+                      <td className="py-2 md:py-4 px-3 md:px-6">{item.product.name}</td>
+                      <td className="py-2 md:py-4 px-3 md:px-6">
                         {types.trim().replace("  ", " , ")}
                       </td>
-                      <td className="py-4 px-6">{formatPrices(item.price)}</td>
-                      <td className="py-4 px-6">{item.discount}%</td>
-                      <td className="py-4 px-6">{item.sku}</td>
-                      <td className="py-4 px-6">
+                      <td className="py-2 md:py-4 px-3 md:px-6">{formatPrices(item.price)}</td>
+                      <td className="py-2 md:py-4 px-3 md:px-6">{item.discount}%</td>
+                      <td className="py-2 md:py-4 px-3 md:px-6">{item.sku}</td>
+                      <td className="py-2 md:py-4 px-3 md:px-6">
                         <div className="flex">
                           {user?.detailActions.includes("product:update") && (
                             <div
@@ -149,12 +151,14 @@ const SkuAdmin: FC<SkuAdminProps> = ({ data }) => {
                               <CiEdit fontSize={24} />
                             </div>
                           )}
-                          {/* <div
-                            onClick={() => handleDelete(item.id)}
-                            className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
-                          >
-                            <RiDeleteBin6Line fontSize={24} />
-                          </div> */}
+                          {user?.detailActions.includes("product:delete") && (
+                            <div
+                              onClick={() => handleDelete(item.id)}
+                              className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
+                            >
+                              <RiDeleteBin6Line fontSize={24} />
+                            </div>
+                          )}
                         </div>
                       </td>
                     </tr>

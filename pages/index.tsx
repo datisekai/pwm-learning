@@ -29,6 +29,7 @@ export default function Home() {
           <Section6/>
         </div>
       </MainLayout>
+     
     </>
   );
 }

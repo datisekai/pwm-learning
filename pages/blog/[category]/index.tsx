@@ -5,9 +5,13 @@ import BlogCard2 from "../../../components/cards/BlogCard2";
 import BlogCard3 from "../../../components/cards/BlogCard3";
 import MainLayout from "../../../components/layouts/MainLayout";
 import Meta from "../../../components/Meta";
-
-
-const Blog = () => {
+import { GetServerSideProps, NextPage } from "next";
+import { BlogModel } from "../../../models/Blog.model";
+import BlogAction from "../../../actions/Blog.action";
+interface BlogProps {
+  blogs:BlogModel[],
+}
+const Blog: NextPage<BlogProps> = ({blogs}) => {
   return (
     <>
       <Meta
@@ -20,13 +24,13 @@ const Blog = () => {
           <Breadcumb current="Tin tức" />
           <div className="flex items-center flex-col md:flex-row mt-4">
             <div className="flex-1">
-              <BlogCard />
+              <BlogCard data={blogs}/>
             </div>
             <div className="flex-1 mt-2 md:mt-0 grid grid-cols-2 gap-2 md:ml-2">
-              <BlogCard />
-              <BlogCard />
-              <BlogCard />
-              <BlogCard />
+              <BlogCard data={blogs}/>
+              <BlogCard data={blogs}/>
+              <BlogCard data={blogs}/>
+              <BlogCard data={blogs}/>
             </div>
           </div>
 
@@ -54,3 +58,12 @@ const Blog = () => {
 };
 
 export default Blog;
+export const getServerSideProps: GetServerSideProps = async () => {
+  const data = await BlogAction.getAll();
+  return {
+    props: {
+      data
+    },
+  };
+};
+
