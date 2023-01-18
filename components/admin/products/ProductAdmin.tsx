@@ -9,6 +9,7 @@ import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import swal from "sweetalert";
+import PopularAction from "../../../actions/Popular.action";
 import ProductAction from "../../../actions/Product.action";
 import { CategoryModel } from "../../../models/Category.model";
 import { ProductModel } from "../../../models/Product.model";
@@ -53,6 +54,18 @@ const ProductAdmin: React.FC<ProductAdminProps> = ({ data, categories }) => {
       }
     });
   };
+
+  const {mutate:handlePopular, isLoading:loadingPopular} = useMutation(PopularAction.popular,{
+    onSuccess:() => {
+      toast.success("Cập nhật sản phẩm nổi bật thành công")
+      router.replace(router.asPath)
+    },
+    onError:(err) => {
+      console.log(err)
+      toast.error("Có lỗi xảy ra, vui lòng thử lại")
+    }
+  })
+
   return (
     <>
       <div className="mt-5">
@@ -97,6 +110,9 @@ const ProductAdmin: React.FC<ProductAdminProps> = ({ data, categories }) => {
                   <th scope="col" className="py-3 px-6">
                     Người đăng
                   </th>
+                  <th scope="col" className="py-3 px-6">
+                    Nổi bật
+                  </th>
                   {(user?.detailActions.includes("product:update") ||
                     user?.detailActions.includes("product:delete")) && (
                     <th scope="col" className="py-3 px-6">
@@ -129,13 +145,20 @@ const ProductAdmin: React.FC<ProductAdminProps> = ({ data, categories }) => {
                       {dayjs(item.createdAt).format("DD/MM/YYYY")}
                     </td>
                     <td className="py-4 px-6">{item.user.email}</td>
+                    <td className="py-4 px-4">
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={item.popular !== null}
+                          onChange={() => handlePopular(item.id)}
+                          className="sr-only peer"
+                          disabled={loadingPopular}
+                        />
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
+                      </label>
+                    </td>
                     <td className="py-4 px-6">
                       <div className="flex space-x-2">
-                        {/* <div
-                          className="bg-green-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-green-700 cursor-pointer"
-                        >
-                          <AiOutlinePlus fontSize={24} />
-                        </div> */}
                         {user?.detailActions.includes("product:update") && (
                           <div
                             onClick={() => {

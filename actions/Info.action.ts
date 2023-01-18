@@ -7,6 +7,7 @@ const InfoAction = {
       return result.data;
     } catch (error) {        
       console.log(error);
+      return []
     }
   },
   add: async (data: any) => {

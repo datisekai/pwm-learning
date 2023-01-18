@@ -7,6 +7,7 @@ const SpeciesAction = {
       return result.data;
     } catch (error) {
       console.log(error);
+      return []
     }
   },
   add: async (name: string) => {
@@ -21,6 +22,14 @@ const SpeciesAction = {
     const result = await axiosClient.delete(`/species/${id}`);
     return result.data;
   },
+  home:async() => {
+    try {
+      const result = await axiosClient.get('/species/user?limit=8')
+      return result.data
+    } catch (error) {
+      return []
+    }
+  }
 };
 
 export default SpeciesAction;

@@ -7,6 +7,7 @@ const SkuAction = {
       return result.data;
     } catch (error) {
       console.log(error);
+      return []
     }
   },
   delete:async(id:number | string) => {

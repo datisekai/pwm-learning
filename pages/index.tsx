@@ -1,5 +1,8 @@
 import { Inter } from "@next/font/google";
+import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
+import PopularAction from "../actions/Popular.action";
+import SpeciesAction from "../actions/Species.action";
 import MainLayout from "../components/layouts/MainLayout";
 import Section1 from "../components/sections/Section1";
 import Section2 from "../components/sections/Section2";
@@ -7,10 +10,17 @@ import Section3 from "../components/sections/Section3";
 import Section5 from "../components/sections/Section5";
 import Section6 from "../components/sections/Section6";
 import Slider from "../components/Slider";
+import { HomeModel } from "../models/Home.model";
+import { PopularModel } from "../models/Popular.model";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export default function Home() {
+interface HomeProps {
+  populars: PopularModel[];
+  species: HomeModel;
+}
+
+const Home: NextPage<HomeProps> = ({ populars, species }) => {
   return (
     <>
       <Head>
@@ -22,13 +32,39 @@ export default function Home() {
       <MainLayout>
         <div className="pb-10">
           <Slider />
-          <Section1 />
+          <Section1 data={populars} />
           <Section2 />
-          <Section3 title="Kim cương" />
-          <Section5  />
-          <Section6/>
+          {species?.species.map((item, index) => species?.products[index].length > 0 && (
+            <Section3
+              key={index}
+              title={item.name}
+              dataCategory={item}
+              dataProduct={species.products[index]}
+            />
+          ))}
+          {/* <Section5 /> */}
+          <Section6 data={species.species}/>
         </div>
       </MainLayout>
     </>
   );
-}
+};
+
+export default Home;
+
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  query,
+}) => {
+  const data = await Promise.all([
+    PopularAction.getAll(),
+    SpeciesAction.home(),
+  ]);
+
+  return {
+    props: {
+      populars: data[0],
+      species: data[1],
+    },
+  };
+};

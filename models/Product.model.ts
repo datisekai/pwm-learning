@@ -8,6 +8,7 @@ interface User {
   updatedAt: Date;
 }
 
+
 interface Attribute {
   id: number;
   name: string;
@@ -27,6 +28,13 @@ interface Sku {
   updatedAt: Date;
 }
 
+interface Popular {
+  id: number;
+  productId: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export interface ProductModel {
   id: number;
   name: string;
@@ -41,4 +49,6 @@ export interface ProductModel {
   user: User;
   attributes: Attribute[];
   skus: Sku[];
+  popular?:Popular | null
+  slug:string
 }

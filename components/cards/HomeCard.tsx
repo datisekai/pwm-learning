@@ -1,20 +1,43 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { formatPrices } from "../../utils";
+import { formatPrices, getImageServer } from "../../utils";
 import { AiFillPlusCircle } from "react-icons/ai";
 import Link from "next/link";
+import { ProductModel } from "../../models/Product.model";
+import { da } from "suneditor/src/lang";
 
 interface HomeCardProps {
-  data: string;
+  data: ProductModel;
 }
 const HomeCard: React.FC<HomeCardProps> = ({ data }) => {
+  const minPrice = useMemo(() => {
+    let min =
+      data?.skus[0].price + data.skus[0].price * data.skus[0].discount || 0;
+    data?.skus.forEach((item) => {
+      if (item.price < min) {
+        min = item.price + item.price * item.discount;
+      }
+    });
+    return min;
+  }, [data]);
+
+  const maxPrice = useMemo(() => {
+    let max =
+      data?.skus[0].price + data.skus[0].price * data.skus[0].discount || 0;
+    data?.skus.forEach((item) => {
+      if (item.price > max) {
+        max = item.price + item.price * item.discount;
+      }
+    });
+    return max;
+  }, [data]);
   return (
-    <Link href={"/product/kim-cuong-vien"}>
+    <Link href={`/product/${data.slug}`}>
       <div className="">
         <div className="bg-gray-200 flex items-center justify-center aspect-[1/1]  relative">
           <LazyLoadImage
-          effect="blur"
-            src={data}
+            effect="blur"
+            src={getImageServer(data.thumbnail)}
             className="aspect-[1/1] rounded-sm w-full object-cover"
           />
           <button className="absolute text-sm md:text-md  bottom-0 w-full bg-[rgba(0,0,0,0.6)] text-white hover:bg-primary hover:text-white transition-all  px-4 py-2  mt-2">
@@ -22,9 +45,11 @@ const HomeCard: React.FC<HomeCardProps> = ({ data }) => {
           </button>
         </div>
         <div className="mt-2 text-center">
-          <h3 className="font-bold text-sm md:text-md">Kim cương viên</h3>
+          <h3 className="font-bold text-sm md:text-md">{data.name}</h3>
           <p className="font-bold text-sm md:text-md text-primary">
-            {formatPrices(11000000)}
+            {minPrice === maxPrice
+              ? formatPrices(minPrice)
+              : `${formatPrices(minPrice)} - ${formatPrices(maxPrice)}`}
           </p>
         </div>
       </div>

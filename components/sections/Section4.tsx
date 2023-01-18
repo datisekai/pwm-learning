@@ -19,9 +19,9 @@ const Section4: FC<Section4> = ({ title }) => {
         {title}
       </h2>
       <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-x-2 gap-y-8">
-        {data.map((item) => (
+        {/* {data.map((item) => (
           <HomeCard data={item} key={item} />
-        ))}
+        ))} */}
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ const CategoryBlogAction = {
       return result.data;
     } catch (error) {
       console.log(error);
+      return []
     }
   },
   add: async (name: string) => {

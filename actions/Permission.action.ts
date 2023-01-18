@@ -7,7 +7,7 @@ const PermissionAction = {
       return result.data;
     } catch (error) {
       console.log(error);
-      return null
+      return []
     }
   },
   add: async (data: any) => {
