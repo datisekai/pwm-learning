@@ -8,7 +8,7 @@ interface BoxSearchProps {
 
 const BoxSearch: React.FC<BoxSearchProps> = ({ data, title, name }) => {
   return (
-    <div className="border-b-2 pb-2 last:border-none">
+    <div className="border-b-2 pb-2 md:last:border-none">
       <h2 className="font-bold uppercase">{title}</h2>
       <div className="mt-4">
         {data.map((item, index) => (

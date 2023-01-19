@@ -7,10 +7,11 @@ import Section3 from "../components/sections/Section3";
 import Section5 from "../components/sections/Section5";
 import Section6 from "../components/sections/Section6";
 import Slider from "../components/Slider";
-
+import React, { useState } from "react";
 const inter = Inter({ subsets: ["latin"] });
 
 export default function Home() {
+  const [isOpen, setIsOpen] = useState(false)
   return (
     <>
       <Head>
@@ -24,7 +25,7 @@ export default function Home() {
           <Slider />
           <Section1 />
           <Section2 />
-          <Section3 title="Kim cương" />
+          <Section3 title="Kim cương"/>
           <Section5  />
           <Section6/>
         </div>

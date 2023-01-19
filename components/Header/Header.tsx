@@ -58,7 +58,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
       >
         {/* <TopHeader /> */}
         <div className="bg-grey">
-          <div className="max-w-[1200px]  mx-auto py-4 w-[calc(100%-16px)] flex items-center justify-between">
+          <div className="max-w-[1200px] mx-auto py-4 w-[calc(100%-16px)] flex items-center justify-between">
             <BiMenuAltLeft
               onClick={handleOpen}
               fontSize={30}

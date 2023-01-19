@@ -25,8 +25,8 @@ const Search: NextPage<SearchProps> = ({ query }) => {
       <MainLayout>
         <div className="max-w-[1200px] mx-auto pt-4 pb-10 px-2">
           <Breadcumb current={keyword ? `Tìm kiếm "${keyword}"` : "Tìm kiếm"} />
-          <div className="flex mt-5">
-            <div className="hidden md:block">
+          <div className="md:flex block mt-5">
+            <div>
               <ToolSearch />
             </div>
             <div className="flex-1 md:ml-5">

@@ -21,31 +21,39 @@ const dataPrice = [
 ];
 
 const dataCategory = [
-    {
-      value: "1",
-      text: "Kim cương",
-    },
-    {
-      value: "2",
-      text: "Nhẫn",
-    },
-    {
-      value: "3",
-      text: "Hoa tai",
-    },
-    {
-      value: "4",
-      text: "Mặt dây",
-    },
-  ];
+  {
+    value: "1",
+    text: "Kim cương",
+  },
+  {
+    value: "2",
+    text: "Nhẫn",
+  },
+  {
+    value: "3",
+    text: "Hoa tai",
+  },
+  {
+    value: "4",
+    text: "Mặt dây",
+  },
+];
 
 const ToolSearch = () => {
   return (
-    <div className="w-[250px] border-2 rounded-lg grid grid-cols-1 gap-y-4 p-4">
-      <BoxSearch data={dataPrice} name="price" title="Mức giá" />
-      <BoxSearch data={dataCategory} name="category" title="Thể loại" />
-      <BoxSearch data={dataPrice} name="price" title="Mức giá" />
-      <BoxSearch data={dataCategory} name="category" title="Thể loại" />
+    <div>
+      <div className="hidden md:block w-[250px] border-2 rounded-lg grid grid-cols-1 gap-y-4 p-4">
+        <BoxSearch data={dataPrice} name="price" title="Mức giá" />
+        <BoxSearch data={dataCategory} name="category" title="Thể loại" />
+        <BoxSearch data={dataPrice} name="price" title="Mức giá" />
+        <BoxSearch data={dataCategory} name="category" title="Thể loại" />
+      </div>
+      <div className="md:hidden block w-full border-2 rounded-lg grid grid-cols-2 gap-y-4 p-4">
+        <BoxSearch data={dataPrice} name="price" title="Mức giá" />
+        <BoxSearch data={dataCategory} name="category" title="Thể loại" />
+        <BoxSearch data={dataPrice} name="price" title="Mức giá" />
+        <BoxSearch data={dataCategory} name="category" title="Thể loại" />
+      </div>
     </div>
   );
 };
