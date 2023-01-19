@@ -46,9 +46,19 @@ const Search: NextPage<SearchProps> = ({ query, species, products }) => {
       <MainLayout>
         <div className="max-w-[1200px] mx-auto pt-4 pb-10 px-2">
           <Breadcumb current={name ? `Tìm kiếm "${name}"` : "Tìm kiếm"} />
-          <div className="flex mt-5">
-            <div className="hidden md:block">
-              <ToolSearch species={species} />
+          <div className="md:flex block mt-5">
+            <button
+              onClick={handleClick}
+              className="md:hidden block bg-primary py-2 px-3 font-bold rounded mb-4 ml-1"
+            >
+              Tìm kiếm
+            </button>
+
+            <div className="md:hidden block">
+              {showOptions && <ToolSearch species={species} />}
+            </div>
+            <div className="md:block hidden">
+             <ToolSearch species={species} />
             </div>
             <div className="flex-1 md:ml-5">
               <div
