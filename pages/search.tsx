@@ -1,5 +1,4 @@
 import { GetServerSideProps, NextPage } from "next";
-import React from "react";
 import { BsSortDown } from "react-icons/bs";
 import Breadcumb from "../components/Breadcumb";
 import HomeCard from "../components/cards/HomeCard";
@@ -7,12 +6,17 @@ import MainLayout from "../components/layouts/MainLayout";
 import Meta from "../components/Meta";
 import { Pagination } from "../components/Pagination";
 import ToolSearch from "../components/ToolSearch";
-
+import React, { useState } from "react";
 interface SearchProps {
   query: any;
 }
 
 const Search: NextPage<SearchProps> = ({ query }) => {
+  const [showOptions, setShowOptions] = useState(false);
+  const handleClick = () =>
+  {
+    setShowOptions(!showOptions);
+  }
   const { keyword } = query;
   return (
     <>
@@ -26,9 +30,12 @@ const Search: NextPage<SearchProps> = ({ query }) => {
         <div className="max-w-[1200px] mx-auto pt-4 pb-10 px-2">
           <Breadcumb current={keyword ? `Tìm kiếm "${keyword}"` : "Tìm kiếm"} />
           <div className="md:flex block mt-5">
+            <button onClick={handleClick} className="bg-primary py-2 px-3 font-bold rounded mb-4 ml-1">Tìm kiếm</button>          
+            {showOptions && (
             <div>
               <ToolSearch />
             </div>
+            )}
             <div className="flex-1 md:ml-5">
               <div
                 className="flex items-center justify-between py-2 px-4"
