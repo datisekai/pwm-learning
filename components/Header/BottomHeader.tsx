@@ -1,39 +1,29 @@
+import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
-import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
+import { Navigation, Pagination } from "swiper";
 
 import { Swiper, SwiperSlide } from "swiper/react";
-
-const data = [
-  {
-    url: "/",
-    title: "Trang chủ",
-  },
-  {
-    url: "/search?keyword=nhan-kim-cuong",
-    title: "Nhẫn kim cương",
-  },
-  {
-    url: "/search?keyword=trang-suc-kim-cuong",
-    title: "Trang sức kim cương",
-  },
-  {
-    url: "/blog/tips-hay",
-    title: "Tips hay",
-  },
-  {
-    url: "/blog/tin-tuc",
-    title: "Tin tức",
-  },
-  {
-    url: "/blog/nghien-cuu-chuyen-sau",
-    title: "Nghiên cứu chuyên sâu",
-  },
-];
+import CategoryBlogAction from "../../actions/CategoryBlog.action";
+import SpeciesAction from "../../actions/Species.action";
 
 const BottomHeader = () => {
   const router = useRouter();
+
+  const {data:dataSpecies} = useQuery(['species'], SpeciesAction.home)
+  const {data:dataCategoryBlog} = useQuery(['category-blog'],CategoryBlogAction.getByUser);
+
+  const [data, setData] = React.useState([{url:'/',title:"Trang chủ"}])
+
+
+  
+  React.useEffect(() => {
+    if(dataCategoryBlog && dataSpecies){
+      setData([...data, ...dataSpecies?.species?.map((item:any) => ({url:`/search?speciesId=${item.id}`,title:item.name})),...dataCategoryBlog?.map((item:any) => ({url:`/blog/${item.slug}`, title:item.name}))])
+    }
+  },[dataCategoryBlog, dataSpecies])
+
   return (
     <div className=" max-w-[1200px] mx-auto flex justify-center">
    

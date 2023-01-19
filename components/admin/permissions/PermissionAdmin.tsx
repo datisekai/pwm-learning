@@ -116,29 +116,36 @@ const PermissionAdmin: React.FC<PermissionAdminProps> = ({ data }) => {
                       {dayjs(item.updatedAt).format("DD/MM/YYYY")}
                     </td>
 
-                    <td className="py-4 px-6">
-                      <div className="flex">
-                        {user?.detailActions.includes("permission:update") && (
-                          <div
-                            onClick={() => {
-                              setCurrent(item);
-                              setOpenModalUpdate(true);
-                            }}
-                            className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
-                          >
-                            <CiEdit fontSize={24} />
-                          </div>
-                        )}
-                        {user?.detailActions.includes("permission:delete") && (
-                          <div
-                            onClick={() => handleDelete(item.id)}
-                            className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
-                          >
-                            <RiDeleteBin6Line fontSize={24} />
-                          </div>
-                        )}
-                      </div>
-                    </td>
+                    {(user?.detailActions.includes("permission:update") ||
+                      user?.detailActions.includes("permission:delete")) && (
+                      <td className="py-4 px-6">
+                        <div className="flex">
+                          {user?.detailActions.includes(
+                            "permission:update"
+                          ) && (
+                            <div
+                              onClick={() => {
+                                setCurrent(item);
+                                setOpenModalUpdate(true);
+                              }}
+                              className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
+                            >
+                              <CiEdit fontSize={24} />
+                            </div>
+                          )}
+                          {user?.detailActions.includes(
+                            "permission:delete"
+                          ) && (
+                            <div
+                              onClick={() => handleDelete(item.id)}
+                              className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
+                            >
+                              <RiDeleteBin6Line fontSize={24} />
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>

@@ -1,17 +1,15 @@
-import React from "react";
+import { GetServerSideProps, NextPage } from "next";
+import CategoryBlogAction from "../../../actions/CategoryBlog.action";
 import Breadcumb from "../../../components/Breadcumb";
 import BlogCard from "../../../components/cards/BlogCard";
-import BlogCard2 from "../../../components/cards/BlogCard2";
-import BlogCard3 from "../../../components/cards/BlogCard3";
 import MainLayout from "../../../components/layouts/MainLayout";
 import Meta from "../../../components/Meta";
-import { GetServerSideProps, NextPage } from "next";
-import { BlogModel } from "../../../models/Blog.model";
-import BlogAction from "../../../actions/Blog.action";
+import { CategoryBlogModel } from "../../../models/CategoryBlog.model";
 interface BlogProps {
-  blogs:BlogModel[],
+  blogs: CategoryBlogModel;
 }
-const Blog: NextPage<BlogProps> = ({blogs}) => {
+const Blog: NextPage<BlogProps> = ({ blogs }) => {
+  console.log(blogs);
   return (
     <>
       <Meta
@@ -24,33 +22,58 @@ const Blog: NextPage<BlogProps> = ({blogs}) => {
           <Breadcumb current="Tin tức" />
           <div className="flex items-center flex-col md:flex-row mt-4">
             <div className="flex-1">
-              <BlogCard data={blogs}/>
+              {blogs && blogs.blogs && blogs?.blogs?.length > 0 && (
+                <BlogCard  data={blogs.blogs[0]} />
+              )}
             </div>
             <div className="flex-1 mt-2 md:mt-0 grid grid-cols-2 gap-2 md:ml-2">
-              <BlogCard data={blogs}/>
-              <BlogCard data={blogs}/>
-              <BlogCard data={blogs}/>
-              <BlogCard data={blogs}/>
+              {blogs &&
+                blogs.blogs &&
+                blogs.blogs.length > 1 &&
+                blogs.blogs.map((item, index) => {
+                  if (index > 0 && index < 5) {
+                    return <BlogCard  key={item.id} data={item} />;
+                  }
+                })}
             </div>
           </div>
-
-          <div className="flex flex-col md:flex-row mt-4 justify-between bg-primary p-2">
-            <div className="w-full md:w-[30%]">
-                <BlogCard2/>
-                <BlogCard2/>
-                <BlogCard2/>
-                <BlogCard2/>
-                <BlogCard2/>
-                <BlogCard2/>
+          {/* {blogs && blogs.blogs && blogs.blogs.length >= 15 &&  (
+            <div className="flex flex-col md:flex-row mt-4 justify-between bg-primary p-2">
+              <div className="w-full md:w-[30%]">
+                {blogs.blogs.map((item, index) => {
+                  if (index >= 5 && index <= 10) {
+                    return <BlogCard2 key={item.id} data={item} />;
+                  }
+                })}
+              </div>
+              <div className="w-full mb-2 md:w-[40%] md:ml-2">
+                <BlogCard3 data={blogs.blogs[11]} />
+              </div>
+              <div className="w-full md:w-[30%] md:ml-2">
+                <BlogCard3
+                  aspect="16/9"
+                  data={blogs.blogs[12]}
+                  isDesc={false}
+                />
+                <BlogCard3
+                  aspect="16/9"
+                  data={blogs.blogs[13]}
+                  isDesc={false}
+                />
+              </div>
             </div>
-            <div className="w-full mb-2 md:w-[40%] md:ml-2">
-                <BlogCard3/>
+          )} */}
+          {blogs && blogs.blogs && (
+            <div className="mt-2 grid grid-cols-2  md:grid-cols-4 gap-x-2 gap-y-4">
+              {blogs &&
+                blogs.blogs &&
+                blogs.blogs.map((item, index) => {
+                  if (index >= 5) {
+                    return <BlogCard  key={item.id} data={item} />;
+                  }
+                })}
             </div>
-            <div className="w-full md:w-[30%] md:ml-2">
-                <BlogCard3 aspect="16/9" isDesc={false}/>
-                <BlogCard3 aspect="16/9" isDesc={false}/>
-            </div>
-          </div>
+          )}
         </div>
       </MainLayout>
     </>
@@ -58,12 +81,17 @@ const Blog: NextPage<BlogProps> = ({blogs}) => {
 };
 
 export default Blog;
-export const getServerSideProps: GetServerSideProps = async () => {
-  const data = await BlogAction.getAll();
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const category = query.category;
+  if (!category) {
+    return {
+      notFound: true,
+    };
+  }
+  const data = await CategoryBlogAction.getBySlug(category.toString());
   return {
     props: {
-      data
+      blogs: data,
     },
   };
 };
-

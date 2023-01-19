@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import BottomHeader from "./BottomHeader";
 import TopHeader from "./TopHeader";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -30,7 +30,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
     } else {
       return (
         <HiOutlineMoon
-        className="w-6 h-6"
+          className="w-6 h-6 text-white"
           role={"button"}
           onClick={() => setTheme("dark")}
         />
@@ -41,9 +41,15 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
 
   const router = useRouter();
 
+  useEffect(() => {
+    if (router && router.query && router.query.name) {
+      setKeyword(router.query.name.toString());
+    }
+  }, [router]);
+
   const handleSearch = () => {
     if (keyword.trim() !== "") {
-      router.push(`/search?keyword=${encodeURI(keyword)}`);
+      router.push(`/search?name=${encodeURI(keyword)}`);
     }
   };
 
@@ -76,7 +82,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
               <input
                 type="text"
                 placeholder="Tìm kiếm sản phẩm"
-                className="bg-white px-4 py-2 w-[350px] outline-none rounded-tl-lg"
+                className="bg-white px-4 py-2 w-[350px] outline-none rounded-tl-lg dark:text-black"
                 value={keyword}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
@@ -92,9 +98,10 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
                 <BsSearch fontSize={20} className="text-white" />
               </div>
             </div>
-            <div  className="block hover:bg-primaryHover transition-all hover:cursor-pointer bg-primary h-[40px] w-[40px] flex items-center justify-center rounded-full">
+            <div className="block hover:bg-primaryHover transition-all hover:cursor-pointer bg-primary h-[40px] w-[40px] flex items-center justify-center rounded-full">
               {/* UI */}
-            {renderThemeChanger()}</div>
+              {renderThemeChanger()}
+            </div>
             <div className="flex items-center">
               <div className="hidden lg:flex items-center">
                 <Image

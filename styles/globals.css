@@ -230,3 +230,49 @@ input:checked+.slider:before {
 .tool-user:hover .child-tool-user{
     display: block;
 }
+
+.emoji-404{
+
+    position: relative;
+    animation: mymove 2.5s infinite;
+  }
+  
+  @keyframes mymove {
+    33%   {top: 0px;}
+    66%  {top: 20px;}
+    100%  {top: 0px}
+  
+  
+  
+  }
+
+.animationHeight{
+    transition: max-height .25s;
+}
+
+ul[role=navigation]{
+    display: flex;
+}
+
+li a[role=button]{
+    border: 1px solid #ccc;
+    margin: 0px 1px;
+    padding: 6px 12px;
+}
+
+li.selected a[role=button]{
+    background-color: #EA8143;
+    color: white;
+}
+
+.swiper-pagination-vertical{
+    right: 0 !important;
+}
+
+span.lazy-load-image-background{
+    width: 100%;
+}
+
+.shadow-master{
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}

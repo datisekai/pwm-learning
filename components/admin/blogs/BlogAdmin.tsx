@@ -14,6 +14,7 @@ import BlogAction from "../../../actions/Blog.action";
 import { BlogModel } from "../../../models/Blog.model";
 import { getImageServer } from "../../../utils";
 import { AuthContext } from "../../context";
+import SearchAdmin from "../../SearchAdmin";
 
 interface BlogAdminProps {
   data: BlogModel[];
@@ -21,6 +22,12 @@ interface BlogAdminProps {
 
 const BlogAdmin: React.FC<BlogAdminProps> = ({ data }) => {
   const router = useRouter();
+  const [currentProduct, setCurrentProduct] = React.useState(data);
+  const [search, setSearch] = React.useState("");
+
+  React.useEffect(() => {
+    setCurrentProduct(data);
+  }, [data]);
 
   const { user } = useContext(AuthContext);
 
@@ -49,6 +56,22 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ data }) => {
     });
   };
 
+  const handleSearch = (e: any) => {
+    e.preventDefault();
+
+    setCurrentProduct(
+      currentProduct.filter(
+        (item) =>
+          item.slug.toLowerCase().indexOf(search.toLowerCase()) != -1 ||
+          item.name.toLowerCase().indexOf(search.toLowerCase()) != -1 ||
+          item.categories_blog?.name
+            .toLowerCase()
+            .indexOf(search.toLowerCase()) != -1 ||
+          item.user?.email.toLowerCase().indexOf(search.toLowerCase()) != -1
+      )
+    );
+  };
+
   return (
     <div className="mt-5">
       <div className="flex items-center justify-between">
@@ -63,12 +86,13 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ data }) => {
           </Link>
         )}
       </div>
-      <div
-        style={{
-          boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-        }}
-        className="mt-10 bg-white rounded-3xl p-4"
-      >
+      <SearchAdmin
+        handleSearch={handleSearch}
+        onChange={(e) => setSearch(e.target.value)}
+        value={search}
+        placeholder="Tìm kiếm với slug, tên, danh mục, người đăng..."
+      />
+      <div className="mt-4 bg-white rounded-3xl p-4  max-h-[450px] overflow-y-scroll shadow-master">
         <div className="overflow-x-auto relative">
           <table className="table-fixed w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -98,13 +122,16 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ data }) => {
                   Ngày cập nhật
                 </th>
 
-                <th scope="col" className="py-3 px-6">
-                  Hành động
-                </th>
+                {(user?.detailActions.includes("blog:update") ||
+                  user?.detailActions.includes("blog:delete")) && (
+                  <th scope="col" className="py-3 px-6">
+                    Hành động
+                  </th>
+                )}
               </tr>
             </thead>
             <tbody>
-              {data?.map((item) => (
+              {currentProduct?.map((item) => (
                 <tr
                   key={item.id}
                   className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 "
@@ -134,32 +161,35 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ data }) => {
                     {" "}
                     {dayjs(item.updatedAt).format("DD/MM/YYYY")}
                   </td>
-                  <td className="py-4 px-6">
-                    <div className="flex space-x-2">
-                      <Link
-                        href={`/blog/${item?.categories_blog?.slug}/${item.slug}`}
-                      >
-                        <div className="bg-slate-400 flex items-center justify-center text-white p-1 rounded-md hover:bg-slate-600 cursor-pointer">
-                          <AiFillEye fontSize={24} />
-                        </div>
-                      </Link>
-                      {user?.detailActions.includes("blog:update") && (
-                        <Link href={`/admin/blog/update?id=${item.id}`}>
-                          <div className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer">
-                            <CiEdit fontSize={24} />
+                  {(user?.detailActions.includes("blog:update") ||
+                    user?.detailActions.includes("blog:delete")) && (
+                    <td className="py-4 px-6">
+                      <div className="flex space-x-2">
+                        <Link
+                          href={`/blog/${item?.categories_blog?.slug}/${item.slug}`}
+                        >
+                          <div className="bg-slate-400 flex items-center justify-center text-white p-1 rounded-md hover:bg-slate-600 cursor-pointer">
+                            <AiFillEye fontSize={24} />
                           </div>
                         </Link>
-                      )}
-                      {user?.detailActions.includes("blog:delete") && (
-                        <div
-                          onClick={() => handleDelete(item.id)}
-                          className=" bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
-                        >
-                          <RiDeleteBin6Line fontSize={24} />
-                        </div>
-                      )}
-                    </div>
-                  </td>
+                        {user?.detailActions.includes("blog:update") && (
+                          <a href={`/admin/blog/update?id=${item.id}`}>
+                            <div className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer">
+                              <CiEdit fontSize={24} />
+                            </div>
+                          </a>
+                        )}
+                        {user?.detailActions.includes("blog:delete") && (
+                          <div
+                            onClick={() => handleDelete(item.id)}
+                            className=" bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
+                          >
+                            <RiDeleteBin6Line fontSize={24} />
+                          </div>
+                        )}
+                      </div>
+                    </td>
+                  )}
                 </tr>
               ))}
             </tbody>

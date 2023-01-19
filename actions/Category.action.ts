@@ -7,6 +7,7 @@ const CategoryAction = {
             return result.data
         } catch (error) {
             console.log(error)
+            return []
         }
     },
    add:async(data:{name:string, speciesId:string | number}) => {

@@ -12,4 +12,5 @@ export interface SpeciesModel {
     createdAt: Date;
     updatedAt: Date;
     categories: Category[];
+    thumbnail:string;
 }

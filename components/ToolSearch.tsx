@@ -1,5 +1,10 @@
-import React from "react";
+import { useRouter } from "next/router";
+import React, { FC } from "react";
+import { AiOutlineDown } from "react-icons/ai";
+import { CategoryModel } from "../models/Category.model";
+import { SpeciesModel } from "../models/Species.model";
 import BoxSearch from "./boxs/BoxSearch";
+import ItemSearch from "./boxs/ItemSearch";
 
 const dataPrice = [
   {
@@ -20,41 +25,53 @@ const dataPrice = [
   },
 ];
 
-const dataCategory = [
-  {
-    value: "1",
-    text: "Kim cương",
-  },
-  {
-    value: "2",
-    text: "Nhẫn",
-  },
-  {
-    value: "3",
-    text: "Hoa tai",
-  },
-  {
-    value: "4",
-    text: "Mặt dây",
-  },
-];
+interface ToolSearchProps {
+  species: SpeciesModel[];
+}
 
-const ToolSearch = () => {
+const ToolSearch: FC<ToolSearchProps> = ({ species }) => {
+  const router = useRouter();
   return (
-    <div>
-      <div className="hidden md:block w-[250px] border-2 rounded-lg grid grid-cols-1 gap-y-4 p-4">
+    <>
+      <div className="hidden md:grid w-[250px] border-2 rounded-lg grid-cols-1 gap-y-4 p-4">
         <BoxSearch data={dataPrice} name="price" title="Mức giá" />
-        <BoxSearch data={dataCategory} name="category" title="Thể loại" />
-        <BoxSearch data={dataPrice} name="price" title="Mức giá" />
-        <BoxSearch data={dataCategory} name="category" title="Thể loại" />
+
+        <div className="border-b-2 pb-2 last:border-none">
+          <h2 className="font-bold uppercase">Danh mục</h2>
+          <div className="mt-4">
+            {species?.map((item) => (
+              <ItemSearch key={item.id} data={item} />
+            ))}
+          </div>
+        </div>
+
+        <button
+          onClick={() => router.push({ query: {} })}
+          className="py-2 px-4 dark:text-black rounded-md bg-slate-200 hover:bg-slate-400"
+        >
+          Xóa bộ lọc
+        </button>
       </div>
       <div className="md:hidden block w-full border-2 rounded-lg grid grid-cols-2 gap-y-4 p-4">
         <BoxSearch data={dataPrice} name="price" title="Mức giá" />
-        <BoxSearch data={dataCategory} name="category" title="Thể loại" />
-        <BoxSearch data={dataPrice} name="price" title="Mức giá" />
-        <BoxSearch data={dataCategory} name="category" title="Thể loại" />
+
+        <div className="border-b-2 pb-2 last:border-none">
+          <h2 className="font-bold uppercase">Danh mục</h2>
+          <div className="mt-4">
+            {species?.map((item) => (
+              <ItemSearch key={item.id} data={item} />
+            ))}
+          </div>
+        </div>
+
+        <button
+          onClick={() => router.push({ query: {} })}
+          className="col-end-3 py-2 px-4 dark:text-black rounded-md bg-slate-200 hover:bg-slate-400"
+        >
+          Xóa bộ lọc
+        </button>
       </div>
-    </div>
+    </>
   );
 };
 

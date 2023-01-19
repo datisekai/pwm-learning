@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import swal from "sweetalert";
 import ModalUpdateSku from "./ModalUpdateSku";
 import { AuthContext } from "../../context";
+import SearchAdmin from "../../SearchAdmin";
 
 interface SkuAdminProps {
   data: SkuModel[];
@@ -21,8 +22,13 @@ interface SkuAdminProps {
 const SkuAdmin: FC<SkuAdminProps> = ({ data }) => {
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [current, setCurrent] = useState<any>();
-
+  const [search, setSearch] = useState("");
+  const [currentProduct, setCurrentProduct] = useState(data);
   const router = useRouter();
+
+  React.useEffect(() => {
+    setCurrentProduct(data);
+  }, [data]);
 
   const { mutate, isLoading } = useMutation(SkuAction.delete, {
     onSuccess: () => {
@@ -51,6 +57,18 @@ const SkuAdmin: FC<SkuAdminProps> = ({ data }) => {
 
   const { user } = useContext(AuthContext);
 
+  const handleSearch = (e: any) => {
+    e.preventDefault();
+
+    setCurrentProduct(
+      currentProduct.filter(
+        (item) =>
+          item.product.name.toLowerCase().indexOf(search.toLowerCase()) != -1 ||
+          item.sku.toLowerCase().indexOf(search.toLowerCase()) != -1
+      )
+    );
+  };
+
   return (
     <>
       <div className="mt-5">
@@ -59,12 +77,13 @@ const SkuAdmin: FC<SkuAdminProps> = ({ data }) => {
             Quản lý hàng hóa
           </h1>
         </div>
-        <div
-          style={{
-            boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-          }}
-          className="mt-10 bg-white rounded-3xl p-4 max-h-[450px] overflow-y-scroll"
-        >
+        <SearchAdmin
+          handleSearch={handleSearch}
+          onChange={(e) => setSearch(e.target.value)}
+          value={search}
+          placeholder={"Tìm kiếm theo tên, mã sku..."}
+        />
+        <div className="mt-4 bg-white rounded-3xl p-4 max-h-[450px] overflow-y-scroll shadow-master">
           <div className="overflow-x-auto relative">
             <table className="table-fixed w-full text-sm text-left  text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 sticky uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -87,7 +106,8 @@ const SkuAdmin: FC<SkuAdminProps> = ({ data }) => {
                   <th scope="col" className="py-2 md:py-3 px-3 md:px-6">
                     SKU
                   </th>
-                  {user?.detailActions.includes("product:update") && (
+                  {(user?.detailActions.includes("product:update") ||
+                    user?.detailActions.includes("product:delete")) && (
                     <th scope="col" className="py-3 px-6">
                       Hành động
                     </th>
@@ -95,7 +115,7 @@ const SkuAdmin: FC<SkuAdminProps> = ({ data }) => {
                 </tr>
               </thead>
               <tbody>
-                {data?.map((item) => {
+                {currentProduct?.map((item) => {
                   const groupByAttribute: any = item.skuvalues.reduce(
                     (group: any, product) => {
                       const { attributeId } = product;
@@ -131,36 +151,45 @@ const SkuAdmin: FC<SkuAdminProps> = ({ data }) => {
                           height={50}
                         />
                       </th>
-                      <td className="py-2 md:py-4 px-3 md:px-6">{item.product.name}</td>
+                      <td className="py-2 md:py-4 px-3 md:px-6">
+                        {item.product.name}
+                      </td>
                       <td className="py-2 md:py-4 px-3 md:px-6">
                         {types.trim().replace("  ", " , ")}
                       </td>
-                      <td className="py-2 md:py-4 px-3 md:px-6">{formatPrices(item.price)}</td>
-                      <td className="py-2 md:py-4 px-3 md:px-6">{item.discount}%</td>
-                      <td className="py-2 md:py-4 px-3 md:px-6">{item.sku}</td>
                       <td className="py-2 md:py-4 px-3 md:px-6">
-                        <div className="flex">
-                          {user?.detailActions.includes("product:update") && (
-                            <div
-                              onClick={() => {
-                                setCurrent(item);
-                                setOpenModalUpdate(true);
-                              }}
-                              className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
-                            >
-                              <CiEdit fontSize={24} />
-                            </div>
-                          )}
-                          {user?.detailActions.includes("product:delete") && (
-                            <div
-                              onClick={() => handleDelete(item.id)}
-                              className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
-                            >
-                              <RiDeleteBin6Line fontSize={24} />
-                            </div>
-                          )}
-                        </div>
+                        {formatPrices(item.price)}
                       </td>
+                      <td className="py-2 md:py-4 px-3 md:px-6">
+                        {item.discount}%
+                      </td>
+                      <td className="py-2 md:py-4 px-3 md:px-6">{item.sku}</td>
+                      {(user?.detailActions.includes("product:update") ||
+                        user?.detailActions.includes("product:delete")) && (
+                        <td className="py-2 md:py-4 px-3 md:px-6">
+                          <div className="flex">
+                            {user?.detailActions.includes("product:update") && (
+                              <div
+                                onClick={() => {
+                                  setCurrent(item);
+                                  setOpenModalUpdate(true);
+                                }}
+                                className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
+                              >
+                                <CiEdit fontSize={24} />
+                              </div>
+                            )}
+                            {user?.detailActions.includes("product:delete") && (
+                              <div
+                                onClick={() => handleDelete(item.id)}
+                                className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
+                              >
+                                <RiDeleteBin6Line fontSize={24} />
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      )}
                     </tr>
                   );
                 })}

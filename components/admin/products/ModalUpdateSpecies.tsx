@@ -3,10 +3,13 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
+import { FcAddImage } from "react-icons/fc";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import CategoryAction from "../../../actions/Category.action";
 import SpeciesAction from "../../../actions/Species.action";
 import { CategoryModel } from "../../../models/Category.model";
 import { SpeciesModel } from "../../../models/Species.model";
+import { getImageServer, uploadImg } from "../../../utils";
 import Select from "../../customs/Select";
 import TextField from "../../customs/TextField";
 
@@ -34,8 +37,14 @@ const ModalUpdateSpecies: React.FC<ModalUpdateSpeciesProps> = ({
     },
   });
 
+  const [thumbnail, setThumbnail] = React.useState<File>();
+  const [preview, setPreview] = React.useState<string>("");
+
   useEffect(() => {
     setValue("name", current?.name);
+    if (current?.thumbnail) {
+      setPreview(getImageServer(current.thumbnail));
+    }
   }, [current]);
 
   const router = useRouter();
@@ -52,8 +61,15 @@ const ModalUpdateSpecies: React.FC<ModalUpdateSpeciesProps> = ({
     },
   });
 
-  const handleUpdate = (data: any) => {
-    mutate({ ...data, id: current?.id });
+  const handleUpdate = async (data: any) => {
+    let image = "";
+    if (thumbnail) {
+      image = await uploadImg(thumbnail);
+    } else {
+      image = preview.split("images/")[1];
+    }
+
+    mutate({ ...data, id: current?.id, thumbnail: image });
   };
 
   return (
@@ -65,6 +81,29 @@ const ModalUpdateSpecies: React.FC<ModalUpdateSpeciesProps> = ({
       <div className="w-[90%] md:w-[500px] p-4 rounded-lg bg-white fixed z-[70] top-[50%] translate-y-[-50%] translate-x-[-50%] left-[50%] ">
         <h2 className="font-bold">Cập nhật chủng loại</h2>
         <div className="mt-4 space-y-2">
+          <div className="flex items-center space-x-2 mb-2">
+            <span>Hình ảnh</span>
+            <div className="">
+              <input
+                type="file"
+                onChange={(e) => {
+                  const files = e.target && e.target.files && e.target.files[0];
+                  setThumbnail(files || undefined);
+                  files && setPreview(URL.createObjectURL(files));
+                }}
+                className="hidden"
+                accept="image/*"
+                id="mainImage"
+              />
+              <label htmlFor="mainImage">
+                {preview ? (
+                  <LazyLoadImage alt="" width={60} height="60" src={preview} />
+                ) : (
+                  <FcAddImage fontSize={40} />
+                )}
+              </label>
+            </div>
+          </div>
           <div className="space-y-2">
             <label>Tên chủng loại</label>
             <TextField

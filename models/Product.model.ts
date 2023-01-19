@@ -8,12 +8,33 @@ interface User {
   updatedAt: Date;
 }
 
+interface Detailattribute {
+  id: number;
+  name: string;
+  productId: number;
+  attributeId: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+interface SkuValues {
+  id: number;
+  productId: number;
+  attributeId: number;
+  detailAttributeId: number;
+  skuId: number;
+  createdAt: Date;
+  updatedAt: Date;
+  detailattributeId: number;
+}
+
 interface Attribute {
   id: number;
   name: string;
   productId: number;
   createdAt: Date;
   updatedAt: Date;
+  detailattributes?: Detailattribute[];
 }
 
 interface Sku {
@@ -25,7 +46,16 @@ interface Sku {
   image: string;
   createdAt: Date;
   updatedAt: Date;
+  skuvalues:SkuValues[]
 }
+
+interface Popular {
+  id: number;
+  productId: number;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 
 export interface ProductModel {
   id: number;
@@ -41,4 +71,6 @@ export interface ProductModel {
   user: User;
   attributes: Attribute[];
   skus: Sku[];
+  popular?:Popular | null
+  slug:string
 }

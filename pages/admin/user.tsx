@@ -122,36 +122,41 @@ const UserAdmin: NextPage<UserAdminProps> = ({ users, permissions }) => {
                         >
                           {item.email}
                         </th>
-                        <td className="px-2 py-3 md:py-4 md:px-6">{item.permission.name}</td>
+                        <td className="px-2 py-3 md:py-4 md:px-6">
+                          {item.permission.name}
+                        </td>
                         <td className="px-2 py-3 md:py-4 md:px-6">
                           {dayjs(item.createdAt).format("DD/MM/YYYY")}
                         </td>
                         <td className="px-2 py-3 md:py-4 md:px-6">
                           {dayjs(item.updatedAt).format("DD/MM/YYYY")}
                         </td>
-                        <td className="px-2 py-3 md:py-4 md:px-6">
-                          <div className="flex">
-                            {user?.detailActions.includes("user:update") && (
-                              <div
-                                onClick={() => {
-                                  setCurrent(item);
-                                  setOpenModalUpdate(true);
-                                }}
-                                className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
-                              >
-                                <CiEdit fontSize={24} />
-                              </div>
-                            )}
-                            {user?.detailActions.includes("user:delete") && (
-                              <div
-                                onClick={() => handleDelete(item.id)}
-                                className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
-                              >
-                                <RiDeleteBin6Line fontSize={24} />
-                              </div>
-                            )}
-                          </div>
-                        </td>
+                        {(user?.detailActions.includes("user:update") ||
+                          user?.detailActions.includes("user:delete")) && (
+                          <td className="px-2 py-3 md:py-4 md:px-6">
+                            <div className="flex">
+                              {user?.detailActions.includes("user:update") && (
+                                <div
+                                  onClick={() => {
+                                    setCurrent(item);
+                                    setOpenModalUpdate(true);
+                                  }}
+                                  className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
+                                >
+                                  <CiEdit fontSize={24} />
+                                </div>
+                              )}
+                              {user?.detailActions.includes("user:delete") && (
+                                <div
+                                  onClick={() => handleDelete(item.id)}
+                                  className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
+                                >
+                                  <RiDeleteBin6Line fontSize={24} />
+                                </div>
+                              )}
+                            </div>
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>

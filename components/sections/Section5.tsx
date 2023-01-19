@@ -28,9 +28,9 @@ const Section5 = () => {
           <LazyLoadImage effect="blur" src="/images/section5.png" />
         </div>
         <div className="flex-1 mt-2 md:mt-0 md:ml-4 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-3 gap-x-2 gap-y-8">
-          {data.map((item) => (
+          {/* {data.map((item) => (
             <HomeCard data={item} key={item} />
-          ))}
+          ))} */}
         </div>
       </div>
     </div>

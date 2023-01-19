@@ -1,11 +1,14 @@
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
+import { FcAddImage } from "react-icons/fc";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import CategoryAction from "../../../actions/Category.action";
 import SpeciesAction from "../../../actions/Species.action";
 import { SpeciesModel } from "../../../models/Species.model";
+import { uploadImg } from "../../../utils";
 import Select from "../../customs/Select";
 import TextField from "../../customs/TextField";
 
@@ -25,7 +28,7 @@ const ModalAddSpecies: React.FC<ModalAddSpeciesProps> = ({
     getValues,
     watch,
     setValue,
-    reset
+    reset,
   } = useForm({
     defaultValues: {
       name: "",
@@ -34,12 +37,15 @@ const ModalAddSpecies: React.FC<ModalAddSpeciesProps> = ({
 
   const router = useRouter();
 
+  const [thumbnail, setThumbnail] = useState<File>();
+  const [preview, setPreview] = useState<string>("");
+
   const { mutate, isLoading } = useMutation(SpeciesAction.add, {
     onSuccess: () => {
       toast.success("Thêm thành công");
       handleClose();
       router.replace(router.asPath);
-      reset()
+      reset();
     },
     onError: (err) => {
       console.log(err);
@@ -47,8 +53,15 @@ const ModalAddSpecies: React.FC<ModalAddSpeciesProps> = ({
     },
   });
 
-  const handleUpdate = (data: any) => {
-    mutate(data.name);
+  const handleUpdate = async (data: any) => {
+    if (!thumbnail) {
+      toast.error("Vui lòng chọn ảnh");
+      return;
+    }
+
+    const image = await uploadImg(thumbnail);
+
+    mutate({ ...data, thumbnail: image });
   };
 
   return (
@@ -60,6 +73,31 @@ const ModalAddSpecies: React.FC<ModalAddSpeciesProps> = ({
       <div className="w-[90%] md:w-[500px] p-4 rounded-lg bg-white fixed z-[70] top-[50%] translate-y-[-50%] translate-x-[-50%] left-[50%] ">
         <h2 className="font-bold">Thêm chủng loại</h2>
         <div className="mt-4 space-y-2">
+          <div className="flex items-center space-x-2 mb-2">
+            <span>Hình ảnh</span>
+            <div className="">
+              <input
+                type="file"
+                onChange={(e) => {
+                  const files =
+                    (e.target && e.target.files && e.target.files[0]) ||
+                    undefined;
+                  setThumbnail(files);
+                  files && setPreview(URL.createObjectURL(files));
+                }}
+                className="hidden"
+                accept="image/*"
+                id="mainImage"
+              />
+              <label htmlFor="mainImage">
+                {preview ? (
+                  <LazyLoadImage alt="" width={60} height="60" src={preview} />
+                ) : (
+                  <FcAddImage fontSize={40} />
+                )}
+              </label>
+            </div>
+          </div>
           <div className="space-y-2">
             <label>Tên chủng loại</label>
             <TextField
@@ -83,7 +121,6 @@ const ModalAddSpecies: React.FC<ModalAddSpeciesProps> = ({
               }}
             />
           </div>
-         
         </div>
 
         <div className="mt-4 flex items-center justify-between">

@@ -70,12 +70,7 @@ const InfoAdmin: NextPage<InfoAdminProps> = ({ infos }) => {
           </button>
           {/* )} */}
         </div>
-        <div
-          style={{
-            boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-          }}
-          className="mt-10 bg-white rounded-3xl p-4"
-        >
+        <div className="mt-10 bg-white rounded-3xl p-4 shadow-master  max-h-[450px] overflow-y-scroll">
           <div className="overflow-x-auto relative">
             <table className="table-fixed w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -117,9 +112,9 @@ const InfoAdmin: NextPage<InfoAdminProps> = ({ infos }) => {
                         {item.title}
                       </th>
                       <td className="py-4 px-6">
-                      {item.content.length < 20
-                      ? item.content
-                      : item.content.slice(0, 20) + "..."}
+                        {item.content.length < 20
+                          ? item.content
+                          : item.content.slice(0, 20) + "..."}
                       </td>
                       <td className="py-4 px-6">
                         <LazyLoadImage

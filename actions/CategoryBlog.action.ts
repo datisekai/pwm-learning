@@ -7,6 +7,7 @@ const CategoryBlogAction = {
       return result.data;
     } catch (error) {
       console.log(error);
+      return []
     }
   },
   add: async (name: string) => {
@@ -20,6 +21,19 @@ const CategoryBlogAction = {
   delete:async(id: number | string) => {
     const result = await axiosClient.delete(`/category-blog/${id}`);
     return result.data;
+  },
+  getBySlug:async(slug:string) => {
+    try {
+        const result = await axiosClient.get(`/category-blog/search?slug=${slug}`)
+        return result.data      
+    } catch (error) {
+      console.log(error)
+      return null
+    }
+  },
+  getByUser:async() => {
+      const result = await axiosClient.get("/category-blog/user");
+      return result.data;
   }
 };
 
