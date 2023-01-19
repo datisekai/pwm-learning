@@ -268,3 +268,11 @@ li.selected a[role=button]{
 .swiper-pagination-vertical{
     right: 0 !important;
 }
+
+span.lazy-load-image-background{
+    width: 100%;
+}
+
+.shadow-master{
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}

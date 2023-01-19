@@ -46,7 +46,7 @@ const ToolSearch: FC<ToolSearchProps> = ({ species }) => {
 
       <button
         onClick={() => router.push({ query: {} })}
-        className="py-2 px-4 rounded-md bg-slate-200 hover:bg-slate-400"
+        className="py-2 px-4 dark:text-black rounded-md bg-slate-200 hover:bg-slate-400"
       >
         Xóa bộ lọc
       </button>

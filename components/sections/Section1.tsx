@@ -43,7 +43,7 @@ const Section1:FC<Section1Props> = ({data}) => {
       <div className="mt-2">
         <Swiper
           modules={[Navigation, Pagination]}
-          spaceBetween={50}
+          spaceBetween={10}
           slidesPerView={1}
           navigation
           pagination={{ clickable: true }}

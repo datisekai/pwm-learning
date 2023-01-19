@@ -73,10 +73,8 @@ const HomeAdmin: NextPage<HomeAdminProps> = ({ count, latest }) => {
           </div>
           <div className="mt-10 flex flex-col md:flex-row">
             <div
-              className="dark:bg-neutral-200 w-full md:w-[60%] p-4 rounded-3xl"
-              style={{
-                boxShadow: "rgba(255, 255, 255, 0.35) 0px 5px 15px",
-              }}
+              className="dark:bg-neutral-200 w-full md:w-[60%] p-4 rounded-3xl shadow-master"
+              
             >
               <div className="flex items-center justify-between">
                 <h1 className="font-bold text-primary text-lg">
@@ -99,8 +97,12 @@ const HomeAdmin: NextPage<HomeAdminProps> = ({ count, latest }) => {
               {latest?.product?.map((item) => (
                 <div key={item.id} className="mt-2">
                   <div className=" flex justify-between overflow-x-scroll table-home text-sm">
-                    <div className="w-[150px] line-clamp-2 dark:text-black">{item.name}</div>
-                    <div className="w-[100px] dark:text-black">{item.category.name}</div>
+                    <div className="w-[150px] line-clamp-2 dark:text-black">
+                      {item.name}
+                    </div>
+                    <div className="w-[100px] dark:text-black">
+                      {item.category.name}
+                    </div>
                     <div className="w-[80px] dark:text-black">
                       {dayjs(item.createdAt).format("DD/MM/YYYY")}
                     </div>
@@ -113,12 +115,7 @@ const HomeAdmin: NextPage<HomeAdminProps> = ({ count, latest }) => {
                 </div>
               ))}
             </div>
-            <div
-              className="dark:bg-neutral-200 flex-1 md:ml-4 rounded-3xl p-4 mt-4 md:mt-0"
-              style={{
-                boxShadow: "rgba(255, 255, 255, 0.35) 0px 5px 15px",
-              }}
-            >
+            <div className="dark:bg-neutral-200 flex-1 md:ml-4 rounded-3xl p-4 mt-4 md:mt-0 shadow-master">
               <div className="flex items-center justify-between">
                 <h1 className="font-bold text-primary text-lg">Bài đăng</h1>
                 <Link href={"/admin/blog"}>
@@ -127,18 +124,20 @@ const HomeAdmin: NextPage<HomeAdminProps> = ({ count, latest }) => {
                   </button>
                 </Link>
               </div>
-              <div className="mt-4">
+              <div className="mt-4 space-y-2">
                 {latest.blog.map((item, index) => (
                   <div
                     key={index}
                     className="flex items-center mt-2 first:mt-0"
                   >
-                    <LazyLoadImage
-                      effect="blur"
-                      src={getImageServer(item.thumbnail)}
-                      className="w-[50px] h-[50px] rounded-sm"
-                    />
-                    <span className="ml-2 line-clamp-2 font-bold text-sm dark:text-black">
+                    <div className="w-[50px] h-[50px]">
+                      <LazyLoadImage
+                        effect="blur"
+                        src={getImageServer(item.thumbnail)}
+                        className="w-full h-[50px] rounded-sm"
+                      />
+                    </div>
+                    <span className="ml-2 flex-1 line-clamp-2 font-bold text-sm dark:text-black">
                       {item.name}
                     </span>
                   </div>

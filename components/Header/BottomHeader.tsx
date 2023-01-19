@@ -12,7 +12,7 @@ const BottomHeader = () => {
   const router = useRouter();
 
   const {data:dataSpecies} = useQuery(['species'], SpeciesAction.home)
-  const {data:dataCategoryBlog} = useQuery(['category-blog'],CategoryBlogAction.getAll);
+  const {data:dataCategoryBlog} = useQuery(['category-blog'],CategoryBlogAction.getByUser);
 
   const [data, setData] = React.useState([{url:'/',title:"Trang chủ"}])
 

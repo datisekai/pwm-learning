@@ -18,7 +18,6 @@ interface ProductDetailProps {
 }
 
 const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
-
   const { data } = useQuery(["recommend-product", detail.id], () =>
     ProductAction.search({ categoryId: detail.categoryId })
   );
@@ -84,7 +83,7 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
       <MainLayout>
         <div className="max-w-[1200px] mx-auto py-4 px-2">
           <Breadcumb current={detail.name} />
-          <div className="flex items-center flex-col md:flex-row">
+          <div className="flex items-center mt-4 flex-col md:flex-row">
             <div className="flex w-full md:w-[60%]  flex-col-reverse md:flex-row items-center">
               <div className="relative w-full max-h-[500px] md:w-[110px] flex flex-row md:flex-col overflow-x-scroll list-image">
                 <Swiper
@@ -213,15 +212,25 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
               </a>
               <div className="mt-4">
                 <div className="flex items-center">
-                  <LazyLoadImage effect="blur" src="/images/list-style.gif" />
+                  <div>
+                    <LazyLoadImage
+                      className=""
+                      effect="blur"
+                      src="/images/list-style.gif"
+                    />
+                  </div>
                   <span>Giá sản phẩm thay đổi theo trọng lượng vàng và đá</span>
                 </div>
                 <div className="flex items-center">
-                  <LazyLoadImage effect="blur" src="/images/list-style.gif" />
+                  <div>
+                    <LazyLoadImage effect="blur" src="/images/list-style.gif" />
+                  </div>
                   <span>Đổi sản phẩm trong 48h tại hệ thống cửa hàng PWM</span>
                 </div>
                 <div className="flex items-center">
-                  <LazyLoadImage effect="blur" src="/images/list-style.gif" />
+                  <div>
+                    <LazyLoadImage effect="blur" src="/images/list-style.gif" />
+                  </div>
                   <span>Miễn phí giao nhanh toàn quốc 1 - 7 ngày</span>
                 </div>
               </div>

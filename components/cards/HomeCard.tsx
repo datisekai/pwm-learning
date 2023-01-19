@@ -33,12 +33,12 @@ const HomeCard: React.FC<HomeCardProps> = ({ data }) => {
   }, [data]);
   return (
     <Link href={`/product/${data.slug}`}>
-      <div className="">
-        <div className="flex items-center justify-center aspect-[1/1]  relative">
+      <div className="w-full">
+        <div className="flex items-center justify-center w-full  relative">
           <LazyLoadImage
             effect="blur"
             src={getImageServer(data.thumbnail)}
-            className="aspect-[1/1] rounded-sm w-full object-cover"
+            className=" rounded-sm w-full object-cover"
           />
           <button className="absolute text-sm md:text-md  bottom-0 w-full bg-[rgba(0,0,0,0.6)] text-white hover:bg-primary hover:text-white transition-all  px-4 py-2  mt-2">
             Xem chi tiết

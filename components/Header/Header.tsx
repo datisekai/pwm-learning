@@ -17,7 +17,6 @@ interface HeaderProps {
 const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
   const { systemTheme, theme, setTheme } = useTheme();
 
-
   const renderThemeChanger = () => {
     const currentTheme = theme === "system" ? systemTheme : theme;
     if (currentTheme === "dark") {
@@ -31,7 +30,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
     } else {
       return (
         <HiOutlineMoon
-        className="w-6 h-6"
+          className="w-6 h-6 text-white"
           role={"button"}
           onClick={() => setTheme("dark")}
         />
@@ -43,10 +42,10 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
   const router = useRouter();
 
   useEffect(() => {
-    if(router && router.query && router.query.name){
-      setKeyword(router.query.name.toString())
+    if (router && router.query && router.query.name) {
+      setKeyword(router.query.name.toString());
     }
-  },[router])
+  }, [router]);
 
   const handleSearch = () => {
     if (keyword.trim() !== "") {
@@ -99,9 +98,10 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
                 <BsSearch fontSize={20} className="text-white" />
               </div>
             </div>
-            <div  className="block hover:bg-primaryHover transition-all hover:cursor-pointer bg-primary h-[40px] w-[40px] flex items-center justify-center rounded-full">
+            <div className="block hover:bg-primaryHover transition-all hover:cursor-pointer bg-primary h-[40px] w-[40px] flex items-center justify-center rounded-full">
               {/* UI */}
-            {renderThemeChanger()}</div>
+              {renderThemeChanger()}
+            </div>
             <div className="flex items-center">
               <div className="hidden lg:flex items-center">
                 <Image

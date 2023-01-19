@@ -60,11 +60,7 @@ const SidebarAdmin: FC<SidebarAdminProps> = ({ handleClose, show }) => {
       icon: VscTools,
       isHide: !user?.detailActions.includes('permission:view')
     },
-    {
-      url: "/admin/ui",
-      title: "Giao diện",
-      icon: MdOutlineFaceRetouchingNatural,
-    },
+    
   ];
 
   return (

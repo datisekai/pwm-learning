@@ -28,3 +28,4 @@ export interface BlogModel {
   user?: User;
   view: { count: number };
 }
+

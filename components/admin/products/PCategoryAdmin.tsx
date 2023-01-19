@@ -68,12 +68,7 @@ const PCategoryAdmin: FC<PCategoryAdminProps> = ({ data, species }) => {
             </button>
           )}
         </div>
-        <div
-          style={{
-            boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-          }}
-          className="mt-10 bg-white rounded-3xl p-4 max-h-[500px] overflow-y-scroll"
-        >
+        <div className="mt-10 bg-white rounded-3xl p-4  max-h-[450px] overflow-y-scroll shadow-master">
           <div className="overflow-x-auto relative">
             <table className="table-fixed w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -115,29 +110,32 @@ const PCategoryAdmin: FC<PCategoryAdminProps> = ({ data, species }) => {
                     <td className="py-4 px-6">
                       {dayjs(item.createdAt).format("DD/MM/YYYY")}
                     </td>
-                    <td className="py-4 px-6">
-                      <div className="flex">
-                        {user?.detailActions.includes("category:update") && (
-                          <div
-                            onClick={() => {
-                              setCurrent(item);
-                              setOpenModalUpdate(true);
-                            }}
-                            className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
-                          >
-                            <CiEdit fontSize={24} />
-                          </div>
-                        )}
-                        {user?.detailActions.includes("category:delete") && (
-                          <div
-                            onClick={() => handleDelete(item.id)}
-                            className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
-                          >
-                            <RiDeleteBin6Line fontSize={24} />
-                          </div>
-                        )}
-                      </div>
-                    </td>
+                    {(user?.detailActions.includes("category:update") ||
+                      user?.detailActions.includes("category:delete")) && (
+                      <td className="py-4 px-6">
+                        <div className="flex">
+                          {user?.detailActions.includes("category:update") && (
+                            <div
+                              onClick={() => {
+                                setCurrent(item);
+                                setOpenModalUpdate(true);
+                              }}
+                              className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
+                            >
+                              <CiEdit fontSize={24} />
+                            </div>
+                          )}
+                          {user?.detailActions.includes("category:delete") && (
+                            <div
+                              onClick={() => handleDelete(item.id)}
+                              className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
+                            >
+                              <RiDeleteBin6Line fontSize={24} />
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>
