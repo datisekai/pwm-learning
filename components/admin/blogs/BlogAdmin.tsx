@@ -166,7 +166,7 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ data }) => {
                     <td className="py-4 px-6">
                       <div className="flex space-x-2">
                         <Link
-                          href={`/blog/${item?.categories_blog?.slug}/${item.slug}`}
+                          href={`/blog/read/${item.slug}`}
                         >
                           <div className="bg-slate-400 flex items-center justify-center text-white p-1 rounded-md hover:bg-slate-600 cursor-pointer">
                             <AiFillEye fontSize={24} />

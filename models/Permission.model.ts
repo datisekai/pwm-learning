@@ -5,5 +5,5 @@ export interface PermissionModel {
   createdAt: Date;
   updatedAt: Date;
   status: boolean;
-  perDetailActions: { detailActionId: number }[];
+  perdetailactions: { detailActionId: number }[];
 }
