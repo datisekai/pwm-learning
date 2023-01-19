@@ -9,6 +9,7 @@ import { setCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import { useMutation } from "@tanstack/react-query";
 import { GetServerSideProps } from "next";
+import Meta from "../components/Meta";
 
 const LoginAdmin = () => {
   const {
@@ -40,6 +41,8 @@ const LoginAdmin = () => {
   };
 
   return (
+   <>
+   <Meta description="Đăng nhập" title="Đăng nhập | PWM" image="/images/logo.png" />
     <div className="min-h-screen flex items-center justify-center bg-[#f5f5f5]">
       <div
         className="w-[90%] md:w-[400px] rounded-lg px-6 py-4 bg-white"
@@ -91,6 +94,7 @@ const LoginAdmin = () => {
         </form>
       </div>
     </div>
+   </>
   );
 };
 

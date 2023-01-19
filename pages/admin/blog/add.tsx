@@ -211,11 +211,6 @@ const AddBlog: NextPage<AddBlogProps> = ({ categoriesBlog }) => {
                         error={errors}
                         rules={{
                           required: "Không được để trống ô",
-                          minLength: {
-                            value: 100,
-                            message:
-                              "Mô tả của bạn quá ngắn. Vui lòng nhập ít nhất 100 kí tự",
-                          },
                           maxLength: {
                             value: 3000,
                             message:

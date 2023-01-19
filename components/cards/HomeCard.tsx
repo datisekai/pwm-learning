@@ -38,7 +38,7 @@ const HomeCard: React.FC<HomeCardProps> = ({ data }) => {
           <LazyLoadImage
             effect="blur"
             src={getImageServer(data.thumbnail)}
-            className=" rounded-sm w-full object-cover"
+            className=" rounded-sm w-full aspect-[1/1] object-cover"
           />
           <button className="absolute text-sm md:text-md  bottom-0 w-full bg-[rgba(0,0,0,0.6)] text-white hover:bg-primary hover:text-white transition-all  px-4 py-2  mt-2">
             Xem chi tiết

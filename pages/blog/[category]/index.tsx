@@ -9,7 +9,6 @@ interface BlogProps {
   blogs: CategoryBlogModel;
 }
 const Blog: NextPage<BlogProps> = ({ blogs }) => {
-  console.log(blogs);
   return (
     <>
       <Meta
