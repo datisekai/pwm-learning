@@ -82,24 +82,27 @@ const UpdateBlog: NextPage<UpdateBlogProps> = ({ categoriesBlog, data }) => {
   });
 
   const handleAdd = async (dataForm: any) => {
-    
     if (content.length < 200) {
       toast.error("Nội dung quá ngắn, không được dưới 200 kí tự");
       return;
     }
 
-    let image = data.thumbnail
+    let image = data.thumbnail;
 
-    if(thumbnail){
-        image = await uploadImg(thumbnail);
+    if (thumbnail) {
+      image = await uploadImg(thumbnail);
     }
 
-    mutate({ ...dataForm, thumbnail: image, content, id:data.id });
+    mutate({ ...dataForm, thumbnail: image, content, id: data.id });
   };
 
   return (
     <>
-     <Meta image="/images/logo.png" title="Cập nhật Blog | Admin" description="" />
+      <Meta
+        image="/images/logo.png"
+        title="Cập nhật Blog | Admin"
+        description=""
+      />
       <AdminLayout>
         <div className="mt-5">
           <div className="flex items-center justify-between">
@@ -224,11 +227,7 @@ const UpdateBlog: NextPage<UpdateBlogProps> = ({ categoriesBlog, data }) => {
                         error={errors}
                         rules={{
                           required: "Không được để trống ô",
-                          minLength: {
-                            value: 100,
-                            message:
-                              "Mô tả của bạn quá ngắn. Vui lòng nhập ít nhất 100 kí tự",
-                          },
+
                           maxLength: {
                             value: 3000,
                             message:
@@ -250,7 +249,10 @@ const UpdateBlog: NextPage<UpdateBlogProps> = ({ categoriesBlog, data }) => {
                         maxWidth: "100%",
                       }}
                     >
-                      <TranslationArea  initialContent={content} onChange={setContent} />
+                      <TranslationArea
+                        initialContent={content}
+                        onChange={setContent}
+                      />
                     </div>
                   </div>
 
@@ -274,7 +276,10 @@ const UpdateBlog: NextPage<UpdateBlogProps> = ({ categoriesBlog, data }) => {
 
 export default UpdateBlog;
 
-export const getServerSideProps: GetServerSideProps = async ({ query,req }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  query,
+  req,
+}) => {
   const id = query.id as string;
   const data = await Promise.all([
     CategoryBlogAction.getAll(),
@@ -283,13 +288,13 @@ export const getServerSideProps: GetServerSideProps = async ({ query,req }) => {
 
   const detailActions = JSON.parse(req.cookies["detailActions"] || "[]");
 
-  if(!detailActions.includes('blog:update')){
+  if (!detailActions.includes("blog:update")) {
     return {
-      props:{},
-      redirect:{
-        destination:'/admin'
-      }
-    }
+      props: {},
+      redirect: {
+        destination: "/admin",
+      },
+    };
   }
 
   return {
