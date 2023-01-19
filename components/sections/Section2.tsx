@@ -14,7 +14,7 @@ const Section2 = () => {
           <div className="flex flex-col items-center">
             <h1 className="uppercase text-2xl md:text-3xl font-bold dark:text-black">kim cương</h1>
             <LazyLoadImage effect="blur" src="/images/sep-section2.png" className="mt-2" />
-            <p className="max-w-[320px]  text-center mt-4 dark:text-black text-sm font-thin italic">
+            <p className="max-w-[320px] dark:text-black text-center mt-4 text-sm font-thin italic">
             &quot; Kim cương, đá quý đáng ngưỡng mộ nhất, là viên đá quý duy nhất có
             chỉ một thành phần. Chỉ có carbon trong cấu trúc hóa học của nó và
             các phân tử cacbon được hình thành theo cách mà chúng liên kết với

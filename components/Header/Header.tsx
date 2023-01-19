@@ -64,7 +64,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
       >
         {/* <TopHeader /> */}
         <div className="bg-grey">
-          <div className="max-w-[1200px]  mx-auto py-4 w-[calc(100%-16px)] flex items-center justify-between">
+          <div className="max-w-[1200px] mx-auto py-4 w-[calc(100%-16px)] flex items-center justify-between">
             <BiMenuAltLeft
               onClick={handleOpen}
               fontSize={30}
@@ -82,7 +82,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
               <input
                 type="text"
                 placeholder="Tìm kiếm sản phẩm"
-                className="bg-white px-4 py-2 w-[350px] outline-none rounded-tl-lg"
+                className="bg-white px-4 py-2 w-[350px] outline-none rounded-tl-lg dark:text-black"
                 value={keyword}
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {

@@ -32,25 +32,46 @@ interface ToolSearchProps {
 const ToolSearch: FC<ToolSearchProps> = ({ species }) => {
   const router = useRouter();
   return (
-    <div className="w-[250px] border-2 rounded-lg grid grid-cols-1 gap-y-4 p-4">
-      <BoxSearch data={dataPrice} name="price" title="Mức giá" />
+    <>
+      <div className="hidden md:grid w-[250px] border-2 rounded-lg grid-cols-1 gap-y-4 p-4">
+        <BoxSearch data={dataPrice} name="price" title="Mức giá" />
 
-      <div className="border-b-2 pb-2 last:border-none">
-        <h2 className="font-bold uppercase">Danh mục</h2>
-        <div className="mt-4">
-          {species?.map((item) => (
-            <ItemSearch key={item.id} data={item} />
-          ))}
+        <div className="border-b-2 pb-2 last:border-none">
+          <h2 className="font-bold uppercase">Danh mục</h2>
+          <div className="mt-4">
+            {species?.map((item) => (
+              <ItemSearch key={item.id} data={item} />
+            ))}
+          </div>
         </div>
-      </div>
 
-      <button
-        onClick={() => router.push({ query: {} })}
-        className="py-2 px-4 dark:text-black rounded-md bg-slate-200 hover:bg-slate-400"
-      >
-        Xóa bộ lọc
-      </button>
-    </div>
+        <button
+          onClick={() => router.push({ query: {} })}
+          className="py-2 px-4 dark:text-black rounded-md bg-slate-200 hover:bg-slate-400"
+        >
+          Xóa bộ lọc
+        </button>
+      </div>
+      <div className="md:hidden block w-full border-2 rounded-lg grid grid-cols-2 gap-y-4 p-4">
+        <BoxSearch data={dataPrice} name="price" title="Mức giá" />
+
+        <div className="border-b-2 pb-2 last:border-none">
+          <h2 className="font-bold uppercase">Danh mục</h2>
+          <div className="mt-4">
+            {species?.map((item) => (
+              <ItemSearch key={item.id} data={item} />
+            ))}
+          </div>
+        </div>
+
+        <button
+          onClick={() => router.push({ query: {} })}
+          className="py-2 px-4 dark:text-black rounded-md bg-slate-200 hover:bg-slate-400"
+        >
+          Xóa bộ lọc
+        </button>
+      </div>
+    </>
   );
 };
 
