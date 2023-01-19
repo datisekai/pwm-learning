@@ -58,7 +58,7 @@ const HomeAdmin: NextPage<HomeAdminProps> = ({ count, latest }) => {
                   style={{
                     boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
                   }}
-                  className="flex items-center justify-between p-4 rounded-3xl"
+                  className="flex items-center justify-between p-4 rounded-3xl dark:bg-neutral-200"
                 >
                   <div>
                     <p className="text-primary text-xl font-bold">
@@ -73,9 +73,9 @@ const HomeAdmin: NextPage<HomeAdminProps> = ({ count, latest }) => {
           </div>
           <div className="mt-10 flex flex-col md:flex-row">
             <div
-              className="w-full md:w-[60%] p-4 rounded-3xl"
+              className="dark:bg-neutral-200 w-full md:w-[60%] p-4 rounded-3xl"
               style={{
-                boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                boxShadow: "rgba(255, 255, 255, 0.35) 0px 5px 15px",
               }}
             >
               <div className="flex items-center justify-between">
@@ -90,18 +90,18 @@ const HomeAdmin: NextPage<HomeAdminProps> = ({ count, latest }) => {
               </div>
               <div className="mt-4">
                 <div className="font-bold flex justify-between overflow-x-scroll table-home text-sm">
-                  <div className="w-[150px]">Tên sản phẩm</div>
-                  <div className="w-[100px]">Danh mục</div>
-                  <div className="w-[80px]">Ngày đăng</div>
-                  <div className="w-[80px]">Trạng thái</div>
+                  <div className="w-[150px] dark:text-black">Tên sản phẩm</div>
+                  <div className="w-[100px] dark:text-black">Danh mục</div>
+                  <div className="w-[80px] dark:text-black">Ngày đăng</div>
+                  <div className="w-[80px] dark:text-black">Trạng thái</div>
                 </div>
               </div>
               {latest?.product?.map((item) => (
                 <div key={item.id} className="mt-2">
                   <div className=" flex justify-between overflow-x-scroll table-home text-sm">
-                    <div className="w-[150px] line-clamp-2">{item.name}</div>
-                    <div className="w-[100px]">{item.category.name}</div>
-                    <div className="w-[80px]">
+                    <div className="w-[150px] line-clamp-2 dark:text-black">{item.name}</div>
+                    <div className="w-[100px] dark:text-black">{item.category.name}</div>
+                    <div className="w-[80px] dark:text-black">
                       {dayjs(item.createdAt).format("DD/MM/YYYY")}
                     </div>
                     <div className="w-[80px] rounded-md text-white text-center">
@@ -114,9 +114,9 @@ const HomeAdmin: NextPage<HomeAdminProps> = ({ count, latest }) => {
               ))}
             </div>
             <div
-              className="flex-1 md:ml-4 rounded-3xl p-4 mt-4 md:mt-0"
+              className="dark:bg-neutral-200 flex-1 md:ml-4 rounded-3xl p-4 mt-4 md:mt-0"
               style={{
-                boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+                boxShadow: "rgba(255, 255, 255, 0.35) 0px 5px 15px",
               }}
             >
               <div className="flex items-center justify-between">
@@ -138,7 +138,7 @@ const HomeAdmin: NextPage<HomeAdminProps> = ({ count, latest }) => {
                       src={getImageServer(item.thumbnail)}
                       className="w-[50px] h-[50px] rounded-sm"
                     />
-                    <span className="ml-2 line-clamp-2 font-bold text-sm">
+                    <span className="ml-2 line-clamp-2 font-bold text-sm dark:text-black">
                       {item.name}
                     </span>
                   </div>

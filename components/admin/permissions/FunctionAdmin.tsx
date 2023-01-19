@@ -121,7 +121,7 @@ const FunctionAdmin: React.FC<FunctionAdminProps> = ({ data, permissions }) => {
           </div>
         </div>
       </div>
-      <div className="mt-10 bg-white   grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-6">
+      <div className="mt-10 bg-white dark:bg-black  grid grid-cols-1 md:grid-cols-3 gap-x-4 gap-y-6">
         {data?.map((item) => (
           <div
             key={item.id}

@@ -7,7 +7,7 @@ import { AiTwotoneShop } from "react-icons/ai";
 import { BsCartDash, BsFillMoonStarsFill, BsFillSunFill } from "react-icons/bs";
 import Switch from "react-switch";
 import Link from "next/link";
-
+import { useTheme } from "next-themes";
 interface SidebarProps {
   open: boolean;
   handleHide: () => void;
@@ -37,7 +37,19 @@ const tools = [
 
 const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
   const [isDark, setIsDark] = React.useState(false);
-
+  const { systemTheme, theme, setTheme } = useTheme();
+  const currentTheme = theme === "system" ? systemTheme : theme;
+  
+  const changeTheme=() =>{    
+    if(currentTheme==="light")
+    {
+      setTheme("dark");      
+    }
+    else
+    {
+      setTheme("light");
+    }
+  }
   return (
     <div>
       <div
@@ -47,7 +59,7 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
         onClick={handleHide}
       ></div>
       <div
-        className={` w-[240px] bg-white fixed transition-transform left-0 translate-x-[0] top-0 bottom-0 z-[200] ${
+        className={`w-[240px] bg-white fixed transition-transform left-0 translate-x-[0] top-0 bottom-0 z-[200] ${
           open ? "translate-x-0" : " translate-x-[-100%]"
         }`}
       >
@@ -62,7 +74,7 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
             return (
               <div key={index} className="flex items-center py-3">
                 <Icon fontSize={24} className='text-primary'/>
-                <span className="ml-2">{item.title}</span>
+                <span className="ml-2 dark:text-black">{item.title}</span>
               </div>
             );
           })}
@@ -72,7 +84,8 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
           <div>
             <Switch
               checked={isDark}
-              onChange={() => setIsDark(!isDark)}
+              onChange={() => {changeTheme();setIsDark(!isDark)}}
+              
               onColor="#EA8143"
               uncheckedIcon={
                 <div className="flex items-center justify-center h-full">

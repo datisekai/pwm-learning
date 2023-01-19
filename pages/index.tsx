@@ -46,6 +46,7 @@ const Home: NextPage<HomeProps> = ({ populars, species }) => {
           <Section6 data={species.species}/>
         </div>
       </MainLayout>
+     
     </>
   );
 };

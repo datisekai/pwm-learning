@@ -62,12 +62,12 @@ const InfoAdmin: NextPage<InfoAdminProps> = ({ infos }) => {
             Giới thiệu
           </h1>
           {/* {user?.detailActions.includes("infos:add") && ( */}
-            <button
-              onClick={() => setOpenModalAdd(true)}
-              className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700"
-            >
-              Thêm giới thiệu
-            </button>
+          <button
+            onClick={() => setOpenModalAdd(true)}
+            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700"
+          >
+            Thêm giới thiệu
+          </button>
           {/* )} */}
         </div>
         <div
@@ -77,7 +77,7 @@ const InfoAdmin: NextPage<InfoAdminProps> = ({ infos }) => {
           className="mt-10 bg-white rounded-3xl p-4"
         >
           <div className="overflow-x-auto relative">
-            <table className="w-full text-sm text-left text-gray-500 dark:text-gray-400">
+            <table className="table-fixed w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="py-3 px-6">
@@ -96,40 +96,44 @@ const InfoAdmin: NextPage<InfoAdminProps> = ({ infos }) => {
                     Ngày cập nhật
                   </th>
                   {/* {(user?.detailActions.includes("infos:update") || */}
-                    {/* user?.detailActions.includes("infos:delete")) && ( */}
-                    <th scope="col" className="py-3 px-6">
-                      Hành động
-                    </th>
+                  {/* user?.detailActions.includes("infos:delete")) && ( */}
+                  <th scope="col" className="py-3 px-6">
+                    Hành động
+                  </th>
                   {/* )} */}
                 </tr>
               </thead>
               <tbody>
                 {infos?.map((item) => {
-                  return(
-                  <tr
-                    key={item.id}
-                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                  >
-                    <th
-                      scope="row"
-                      className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                  return (
+                    <tr
+                      key={item.id}
+                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                     >
-                      {item.title}
-                    </th>
-                    <td className="py-4 px-6">{item.content}</td>
-                    <td className="py-4 px-6">
-                      <LazyLoadImage
-                        src={getImageServer(item.image)}
-                        alt="123"
-                        width={50}
-                        height={50}
-                      />
-                    </td>
-                    <td> {dayjs(item.createAt).format("DD/MM/YYYY")}</td>
-                    <td> {dayjs(item.updateAt).format("DD/MM/YYYY")}</td>
-                    <td className="py-4 px-6">
-                      <div className="flex">
-                        {/* {user?.detailActions.includes("infos:update") && ( */}
+                      <th
+                        scope="row"
+                        className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        {item.title}
+                      </th>
+                      <td className="py-4 px-6">
+                      {item.content.length < 20
+                      ? item.content
+                      : item.content.slice(0, 20) + "..."}
+                      </td>
+                      <td className="py-4 px-6">
+                        <LazyLoadImage
+                          src={getImageServer(item.image)}
+                          alt="123"
+                          width={50}
+                          height={50}
+                        />
+                      </td>
+                      <td> {dayjs(item.createAt).format("DD/MM/YYYY")}</td>
+                      <td> {dayjs(item.updateAt).format("DD/MM/YYYY")}</td>
+                      <td className="py-4 px-6">
+                        <div className="flex">
+                          {/* {user?.detailActions.includes("infos:update") && ( */}
                           <div
                             onClick={() => {
                               setCurrent(item);
@@ -139,18 +143,18 @@ const InfoAdmin: NextPage<InfoAdminProps> = ({ infos }) => {
                           >
                             <CiEdit fontSize={24} />
                           </div>
-                        {/* )} */}
-                        {/* {user?.detailActions.includes("infos:delete") && ( */}
+                          {/* )} */}
+                          {/* {user?.detailActions.includes("infos:delete") && ( */}
                           <div
                             onClick={() => handleDelete(item.id)}
                             className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
                           >
                             <RiDeleteBin6Line fontSize={24} />
                           </div>
-                       {/* )} */}
-                      </div>
-                    </td>
-                  </tr>
+                          {/* )} */}
+                        </div>
+                      </td>
+                    </tr>
                   );
                 })}
               </tbody>
