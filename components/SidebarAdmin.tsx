@@ -9,6 +9,7 @@ import { MdOutlineFaceRetouchingNatural } from "react-icons/md";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AuthContext } from "./context";
+import {TfiLayoutSlider} from 'react-icons/tfi'
 
 
 
@@ -48,6 +49,12 @@ const SidebarAdmin: FC<SidebarAdminProps> = ({ handleClose, show }) => {
       title: "Bài đăng",
       icon: BiNews,
       isHide: !user?.detailActions.includes('blog:view')
+    },
+    {
+      url: "/admin/slider",
+      title: "Slider",
+      icon: TfiLayoutSlider,
+      isHide: !(user?.detailActions.includes('slider:add') || user?.detailActions.includes('slider:update') || user?.detailActions.includes('slider:delete') )
     },
     {
       url: "/admin/info",

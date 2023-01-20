@@ -1,29 +1,27 @@
-import React, { FC, useContext, useState } from "react";
-import AdminLayout from "../../components/layouts/AdminLayout";
+import { useMutation } from "@tanstack/react-query";
+import dayjs from "dayjs";
+import { GetServerSideProps, NextPage } from "next";
+import { useRouter } from "next/router";
+import React, { useContext, useState } from "react";
+import { toast } from "react-hot-toast";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { AiOutlineUserAdd } from "react-icons/ai";
-import { GetServerSideProps, NextPage } from "next";
-import UserAction from "../../actions/User.action";
-import { UserModel } from "../../models/User.model";
-import dayjs from "dayjs";
-import ModalAddUser from "../../components/admin/users/ModalAddUser";
-import PermissionAction from "../../actions/Permission.action";
-import { PermissionModel } from "../../models/Permission.model";
-import ModalUpdateUser from "../../components/admin/users/ModalUpdateUser";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { toast } from "react-hot-toast";
-import { useRouter } from "next/router";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import swal from "sweetalert";
+import SliderAction from "../../actions/Slider.action";
+import ModalAddSlider from "../../components/admin/sliders/ModalAddSlider";
+import ModalUpdateSlider from "../../components/admin/sliders/ModalUpdateSlider";
 import { AuthContext } from "../../components/context";
+import AdminLayout from "../../components/layouts/AdminLayout";
 import Meta from "../../components/Meta";
+import { SliderModel } from "../../models/Slider.model";
+import { getImageServer } from "../../utils";
 
-interface UserAdminProps {
-  users: UserModel[];
-  permissions: PermissionModel[];
+interface SliderProps {
+  sliders: SliderModel[];
 }
 
-const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
+const Slider: NextPage<SliderProps> = ({ sliders }) => {
   const [openModalAdd, setOpenModalAdd] = useState(false);
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [current, setCurrent] = useState<any>();
@@ -32,9 +30,9 @@ const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
 
   const router = useRouter();
 
-  const { mutate, isLoading } = useMutation(UserAction.delete, {
+  const { mutate, isLoading } = useMutation(SliderAction.delete, {
     onSuccess: () => {
-      toast.success("Đã chuyển vào thùng rác");
+      toast.success("Đã xóa thành công");
       router.replace(router.asPath);
     },
     onError: (err) => {
@@ -61,7 +59,7 @@ const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
     <>
       <Meta
         image="/images/logo.png"
-        title="Người dùng | Admin"
+        title="Slider | Admin"
         description=""
       />
       <AdminLayout>
@@ -69,27 +67,27 @@ const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
           <div className="mt-5 grid">
             <div className="flex items-center justify-between">
               <h1 className="text-white bg-primary px-4 py-2 inline rounded-lg">
-                Quản lý người dùng
+                Quản lý slider
               </h1>
               {user?.detailActions.includes("user:add") && (
                 <button
                   onClick={() => setOpenModalAdd(true)}
                   className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700"
                 >
-                  Thêm người dùng
+                  Thêm slider
                 </button>
               )}
             </div>
             <div className="mt-4 bg-white rounded-3xl p-4 max-h-[450px] overflow-scroll shadow-master">
-          <div className="relative">
-            <table className="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <div className="relative">
+                <table className="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                       <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                        Email
+                        Hình ảnh
                       </th>
                       <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                        Loại quyền
+                        URL
                       </th>
                       <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
                         Ngày tạo
@@ -106,8 +104,7 @@ const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
                     </tr>
                   </thead>
                   <tbody>
-                  
-                    {users?.map((item: any) => (
+                    {sliders?.map((item) => (
                       <tr
                         key={item.id}
                         className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
@@ -116,10 +113,13 @@ const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
                           scope="row"
                           className="break-words max-w-[200px] px-2 py-3 md:py-4 md:px-6 font-medium text-gray-900 line-clamp-1 dark:text-white"
                         >
-                          {item.email}
+                          <LazyLoadImage
+                            src={getImageServer(item.image)}
+                            className="w-[80px] aspect-[16/9] rounded-sm"
+                          />
                         </th>
                         <td className="px-2 py-3 md:py-4 md:px-6 break-words max-w-[200px]">
-                          {item.permission.name}
+                          {item.url || "Không có"}
                         </td>
                         <td className="px-2 py-3 md:py-4 md:px-6">
                           {dayjs(item.createdAt).format("DD/MM/YYYY")}
@@ -160,14 +160,12 @@ const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
               </div>
             </div>
           </div>
-          <ModalAddUser
-            data={permissions}
+          <ModalAddSlider
             handleClose={() => setOpenModalAdd(false)}
             open={openModalAdd}
           />
-          <ModalUpdateUser
+          <ModalUpdateSlider
             current={current}
-            data={permissions}
             handleClose={() => setOpenModalUpdate(false)}
             open={openModalUpdate}
           />
@@ -177,30 +175,13 @@ const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
   );
 };
 
-export default UserAdmin;
+export default Slider;
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const token = req.cookies["token"];
-  const detailActions = JSON.parse(req.cookies["detailActions"] || "[]");
-
-  const data = await Promise.all([
-    UserAction.getAll(token || ""),
-    PermissionAction.getAll(),
-  ]);
-
-  if (!detailActions.includes("user:view")) {
-    return {
-      props: {},
-      redirect: {
-        destination: "/admin",
-      },
-    };
-  }
-
+export const getServerSideProps: GetServerSideProps = async () => {
+  const data = await SliderAction.getAll();
   return {
     props: {
-      users: data[0] || [],
-      permissions: data[1] || [],
+      sliders: data,
     },
   };
 };
