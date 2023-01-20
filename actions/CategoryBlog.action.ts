@@ -22,9 +22,9 @@ const CategoryBlogAction = {
     const result = await axiosClient.delete(`/category-blog/${id}`);
     return result.data;
   },
-  getBySlug:async(slug:string) => {
+  getBySlug:async(data:any) => {
     try {
-        const result = await axiosClient.get(`/category-blog/search?slug=${slug}`)
+        const result = await axiosClient.get(`/category-blog/search?slug=${data.slug}&page=${data.page || 1}&limit=${data.limit}`)
         return result.data      
     } catch (error) {
       console.log(error)
