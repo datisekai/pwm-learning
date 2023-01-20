@@ -73,7 +73,7 @@ const AddBlog: NextPage<AddBlogProps> = ({ categoriesBlog }) => {
       return;
     }
 
-    if(content.length < 200){
+    if(content.length < 50){
       toast.error("Nội dung quá ngắn, không được dưới 200 kí tự");
       return;
     }
