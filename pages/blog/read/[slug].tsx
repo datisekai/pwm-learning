@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { GetStaticPaths, GetStaticProps, NextPage } from "next";
+import { GetServerSideProps, GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import React from "react";
 import BlogAction from "../../../actions/Blog.action";
@@ -77,15 +77,15 @@ const DetailBlog: NextPage<DetailBlogProps> = ({ data }) => {
 
 export default DetailBlog;
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const blogs = (await BlogAction.getAll()) || [];
-  return {
-    paths: blogs.map((item: any) => ({ params: { slug: item.slug } })),
-    fallback: false,
-  };
-};
+// export const getStaticPaths: GetStaticPaths = async () => {
+//   const blogs = (await BlogAction.getAll()) || [];
+//   return {
+//     paths: blogs.map((item: any) => ({ params: { slug: item.slug } })),
+//     fallback: false,
+//   };
+// };
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   const slug = params?.slug as string;
 
   const data = await BlogAction.getBySlug(slug);
@@ -94,6 +94,5 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     props: {
       data: data,
     },
-    revalidate: 60,
   };
 };
