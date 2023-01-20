@@ -92,8 +92,8 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ data }) => {
         value={search}
         placeholder="Tìm kiếm với slug, tên, danh mục, người đăng..."
       />
-    <div className="mt-4 bg-white rounded-3xl p-4 max-h-[450px] overflow-y-scroll shadow-master">
-          <div className="overflow-x-scroll relative">
+      <div className="mt-4 bg-white rounded-3xl p-4 max-h-[450px] overflow-scroll shadow-master">
+          <div className="relative">
             <table className="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
