@@ -66,7 +66,7 @@ const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
       />
       <AdminLayout>
         <>
-          <div className="mt-5 w-full">
+          <div className="mt-5 grid">
             <div className="flex items-center justify-between">
               <h1 className="text-white bg-primary px-4 py-2 inline rounded-lg">
                 Quản lý người dùng
@@ -80,14 +80,9 @@ const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
                 </button>
               )}
             </div>
-            <div
-              style={{
-                boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-              }}
-              className="mt-10 bg-white rounded-3xl p-4 max-h-[450px] overflow-y-scroll"
-            >
-              <div className=" relative">
-                <table className="w-full table-fixed text-sm text-left text-gray-500 dark:text-gray-400">
+            <div className="mt-4 bg-white rounded-3xl p-4 max-h-[450px] overflow-scroll shadow-master">
+          <div className="relative">
+            <table className="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                       <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
@@ -139,11 +134,11 @@ const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
                       >
                         <th
                           scope="row"
-                          className="px-2 py-3 md:py-4 md:px-6 font-medium text-gray-900 line-clamp-1 dark:text-white"
+                          className="break-words max-w-[200px] px-2 py-3 md:py-4 md:px-6 font-medium text-gray-900 line-clamp-1 dark:text-white"
                         >
                           {item.email}
                         </th>
-                        <td className="px-2 py-3 md:py-4 md:px-6">
+                        <td className="px-2 py-3 md:py-4 md:px-6 break-words max-w-[200px]">
                           {item.permission.name}
                         </td>
                         <td className="px-2 py-3 md:py-4 md:px-6">

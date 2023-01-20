@@ -71,7 +71,7 @@ const SkuAdmin: FC<SkuAdminProps> = ({ data }) => {
 
   return (
     <>
-      <div className="mt-5">
+      <div className="mt-5 grid">
         <div className="flex items-center justify-between">
           <h1 className="text-white bg-primary px-4 py-2 inline rounded-lg">
             Quản lý hàng hóa
@@ -83,9 +83,9 @@ const SkuAdmin: FC<SkuAdminProps> = ({ data }) => {
           value={search}
           placeholder={"Tìm kiếm theo tên, mã sku..."}
         />
-        <div className="mt-4 bg-white rounded-3xl p-4 max-h-[450px] overflow-y-scroll shadow-master">
-          <div className="overflow-x-auto relative">
-            <table className="table-fixed w-full text-sm text-left  text-gray-500 dark:text-gray-400">
+          <div className="mt-4 bg-white rounded-3xl p-4 max-h-[450px] overflow-scroll shadow-master">
+          <div className="relative">
+            <table className="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 sticky uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="py-2 md:py-3 px-3 md:px-6">
@@ -151,10 +151,10 @@ const SkuAdmin: FC<SkuAdminProps> = ({ data }) => {
                           height={50}
                         />
                       </th>
-                      <td className="py-2 md:py-4 px-3 md:px-6">
+                      <td className="py-2 md:py-4 px-3 md:px-6 break-words max-w-[300px]">
                         {item.product.name}
                       </td>
-                      <td className="py-2 md:py-4 px-3 md:px-6">
+                      <td className="py-2 md:py-4 px-3 md:px-6 break-words max-w-[300px]">
                         {types.trim().replace("  ", " , ")}
                       </td>
                       <td className="py-2 md:py-4 px-3 md:px-6">

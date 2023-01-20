@@ -90,7 +90,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
   };
 };
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetServerSideProps = async ({ params }) => {
   const slug = params?.slug as string;
 
   const data = await BlogAction.getBySlug(slug);

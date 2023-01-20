@@ -44,8 +44,8 @@ const Search: NextPage<SearchProps> = ({ query }) => {
 
   const handleClick = () => {
     setShowOptions(!showOptions);
-  };
-
+  }
+  
   return (
     <>
       <Meta

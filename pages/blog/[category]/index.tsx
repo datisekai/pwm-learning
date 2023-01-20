@@ -1,5 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { GetServerSideProps, NextPage } from "next";
+import CategoryAction from "../../../actions/Category.action";
 import CategoryBlogAction from "../../../actions/CategoryBlog.action";
 import MainLayout from "../../../components/layouts/MainLayout";
 import Meta from "../../../components/Meta";

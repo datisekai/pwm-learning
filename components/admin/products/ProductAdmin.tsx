@@ -93,7 +93,7 @@ const ProductAdmin: React.FC<ProductAdminProps> = ({ data, categories }) => {
 
   return (
     <>
-      <div className="mt-5">
+      <div className="mt-5 grid">
         <div className="flex items-center justify-between">
           <h1 className="text-white bg-primary px-4 py-2 inline rounded-lg">
             Quản lý sản phẩm
@@ -112,9 +112,9 @@ const ProductAdmin: React.FC<ProductAdminProps> = ({ data, categories }) => {
           onChange={(e) => setSearch(e.target.value)}
           value={search}
         />
-        <div className="mt-4 bg-white rounded-3xl p-4 max-h-[450px] overflow-y-scroll shadow-master">
-          <div className="overflow-x-auto relative">
-            <table className="table-fixed w-full text-sm text-left text-gray-500 dark:text-gray-400">
+    <div className="mt-4 bg-white rounded-3xl p-4 max-h-[450px] overflow-scroll shadow-master">
+          <div className="relative">
+            <table className="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="py-3 px-6">
@@ -163,13 +163,13 @@ const ProductAdmin: React.FC<ProductAdminProps> = ({ data, categories }) => {
                         height={50}
                       />
                     </th>
-                    <td className="py-4 px-6">{item.name}</td>
-                    <td className="py-4 px-6">{item.category.name}</td>
+                    <td className="py-4 px-6 break-words max-w-[200px]">{item.name}</td>
+                    <td className="py-4 px-6 break-words max-w-[200px]">{item.category.name}</td>
                     <td className="py-4 px-6">{item.skus.length}</td>
                     <td className="py-4 px-6">
                       {dayjs(item.createdAt).format("DD/MM/YYYY")}
                     </td>
-                    <td className="py-4 px-6">{item.user.email}</td>
+                    <td className="py-4 px-6 break-words max-w-[300px]">{item.user.email}</td>
                     <td className="py-4 px-4">
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input

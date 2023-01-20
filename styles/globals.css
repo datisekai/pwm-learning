@@ -116,13 +116,14 @@ body {
     height: 700px;
 }
 
-.table-home::-webkit-scrollbar{
+.table-home::-webkit-scrollbar {
     display: none;
 }
 
-.css-field{
+.css-field {
     @apply outline-none bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500;
 }
+
 .table-home::-webkit-scrollbar {
     display: none;
 }
@@ -216,63 +217,65 @@ input:checked+.slider:before {
     border-radius: 50%;
 }
 
-.tool-user::after{
+.tool-user::after {
     content: "";
     width: 70px;
     height: 10px;
     background-color: transparent;
     position: absolute;
     display: block;
-    right:0;
+    right: 0;
     margin-top: 44px;
 }
 
-.tool-user:hover .child-tool-user{
+.tool-user:hover .child-tool-user {
     display: block;
 }
 
-.emoji-404{
-
+.emoji-404 {
     position: relative;
     animation: mymove 2.5s infinite;
-  }
-  
-  @keyframes mymove {
-    33%   {top: 0px;}
-    66%  {top: 20px;}
-    100%  {top: 0px}
-  
-  
-  
-  }
+}
 
-.animationHeight{
+@keyframes mymove {
+    33% {
+        top: 0px;
+    }
+    66% {
+        top: 20px;
+    }
+    100% {
+        top: 0px
+    }
+}
+
+.animationHeight {
     transition: max-height .25s;
 }
 
-ul[role=navigation]{
+ul[role=navigation] {
     display: flex;
 }
 
-li a[role=button]{
+li a[role=button] {
     border: 1px solid #ccc;
     margin: 0px 1px;
     padding: 6px 12px;
 }
 
-li.selected a[role=button]{
+li.selected a[role=button] {
     background-color: #EA8143;
     color: white;
 }
 
-.swiper-pagination-vertical{
+.swiper-pagination-vertical {
     right: 0 !important;
 }
 
-span.lazy-load-image-background{
+span.lazy-load-image-background {
     width: 100%;
 }
 
-.shadow-master{
+.shadow-master {
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
