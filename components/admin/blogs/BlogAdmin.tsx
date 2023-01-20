@@ -147,20 +147,20 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ data }) => {
                       height={50}
                     />
                   </th>                  
-                   <td className="py-4 px-6">
+                   <td className="py-4 px-6 break-words max-w-[200px]">
                     {item.slug}
                   </td>
-                  <td className="py-4 px-6">
+                  <td className="py-4 px-6 break-words max-w-[200px]">
                     {item.name}
                   </td>
                   <td className="py-4 px-6">{item?.categories_blog?.name}</td>
-                  <td className="py-4 px-6">
-                    {item.description.length < 40
+                  <td className="py-4 px-6 break-words max-w-[200px]">
+                    {item.description.length < 60
                       ? item.description
-                      : item.description.slice(0, 40) + "..."}
+                      : item.description.slice(0, 60) + "..."}
                   </td>
                   <td className="py-4 px-6">{item.view.count}</td>
-                  <td className="py-4 px-6">{item?.user?.email}</td>
+                  <td className="py-4 px-6 break-words max-w-[200px]">{item?.user?.email}</td>
                   <td className="py-4 px-6">
                     {" "}
                     {dayjs(item.updatedAt).format("DD/MM/YYYY")}

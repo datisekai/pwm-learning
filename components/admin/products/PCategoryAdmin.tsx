@@ -105,8 +105,8 @@ const PCategoryAdmin: FC<PCategoryAdminProps> = ({ data, species }) => {
                     >
                       {item.id}
                     </th>
-                    <td className="py-4 px-6">{item.name}</td>
-                    <td className="py-4 px-6">{item.species.name}</td>
+                    <td className="py-4 px-6 break-words max-w-[300px]">{item.name}</td>
+                    <td className="py-4 px-6 break-words max-w-[300px]">{item.species.name}</td>
                     <td className="py-4 px-6">
                       {dayjs(item.createdAt).format("DD/MM/YYYY")}
                     </td>

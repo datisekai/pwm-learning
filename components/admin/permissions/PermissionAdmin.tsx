@@ -105,8 +105,8 @@ const PermissionAdmin: React.FC<PermissionAdminProps> = ({ data }) => {
                     >
                       {item.id}
                     </th>
-                    <td className="py-4 px-6">{item.name}</td>
-                    <td className="py-4 px-6">{item.note || "Không có"}</td>
+                    <td className="py-4 px-6 break-words max-w-[300px]">{item.name}</td>
+                    <td className="py-4 px-6 break-words max-w-[300px]">{item.note || "Không có"}</td>
                     <td className="py-4 px-6">
                       {dayjs(item.updatedAt).format("DD/MM/YYYY")}
                     </td>

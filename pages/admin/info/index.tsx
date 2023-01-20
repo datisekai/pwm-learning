@@ -107,14 +107,12 @@ const InfoAdmin: NextPage<InfoAdminProps> = ({ infos }) => {
                     >
                       <th
                         scope="row"
-                        className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                        className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white break-words max-w-[300px]"
                       >
                         {item.title}
                       </th>
-                      <td className="py-4 px-6">
-                        {item.content.length < 20
-                          ? item.content
-                          : item.content.slice(0, 20) + "..."}
+                      <td className="py-4 px-6 break-words max-w-[300px]">
+                        {item.content}
                       </td>
                       <td className="py-4 px-6">
                         <LazyLoadImage

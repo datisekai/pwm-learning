@@ -151,10 +151,10 @@ const SkuAdmin: FC<SkuAdminProps> = ({ data }) => {
                           height={50}
                         />
                       </th>
-                      <td className="py-2 md:py-4 px-3 md:px-6">
+                      <td className="py-2 md:py-4 px-3 md:px-6 break-words max-w-[300px]">
                         {item.product.name}
                       </td>
-                      <td className="py-2 md:py-4 px-3 md:px-6">
+                      <td className="py-2 md:py-4 px-3 md:px-6 break-words max-w-[300px]">
                         {types.trim().replace("  ", " , ")}
                       </td>
                       <td className="py-2 md:py-4 px-3 md:px-6">

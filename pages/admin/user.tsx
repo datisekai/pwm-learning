@@ -113,11 +113,11 @@ const UserAdmin: NextPage<UserAdminProps> = ({ users, permissions }) => {
                       >
                         <th
                           scope="row"
-                          className="px-2 py-3 md:py-4 md:px-6 font-medium text-gray-900 line-clamp-1 dark:text-white"
+                          className="break-words max-w-[200px] px-2 py-3 md:py-4 md:px-6 font-medium text-gray-900 line-clamp-1 dark:text-white"
                         >
                           {item.email}
                         </th>
-                        <td className="px-2 py-3 md:py-4 md:px-6">
+                        <td className="px-2 py-3 md:py-4 md:px-6 break-words max-w-[200px]">
                           {item.permission.name}
                         </td>
                         <td className="px-2 py-3 md:py-4 md:px-6">

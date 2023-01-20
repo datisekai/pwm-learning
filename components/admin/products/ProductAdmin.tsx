@@ -163,13 +163,13 @@ const ProductAdmin: React.FC<ProductAdminProps> = ({ data, categories }) => {
                         height={50}
                       />
                     </th>
-                    <td className="py-4 px-6">{item.name}</td>
-                    <td className="py-4 px-6">{item.category.name}</td>
+                    <td className="py-4 px-6 break-words max-w-[200px]">{item.name}</td>
+                    <td className="py-4 px-6 break-words max-w-[200px]">{item.category.name}</td>
                     <td className="py-4 px-6">{item.skus.length}</td>
                     <td className="py-4 px-6">
                       {dayjs(item.createdAt).format("DD/MM/YYYY")}
                     </td>
-                    <td className="py-4 px-6">{item.user.email}</td>
+                    <td className="py-4 px-6 break-words max-w-[300px]">{item.user.email}</td>
                     <td className="py-4 px-4">
                       <label className="relative inline-flex items-center cursor-pointer">
                         <input
