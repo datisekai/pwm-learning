@@ -73,7 +73,7 @@ const AddBlog: NextPage<AddBlogProps> = ({ categoriesBlog }) => {
       return;
     }
 
-    if(content.length < 200){
+    if(content.length < 50){
       toast.error("Nội dung quá ngắn, không được dưới 200 kí tự");
       return;
     }
@@ -211,11 +211,6 @@ const AddBlog: NextPage<AddBlogProps> = ({ categoriesBlog }) => {
                         error={errors}
                         rules={{
                           required: "Không được để trống ô",
-                          minLength: {
-                            value: 100,
-                            message:
-                              "Mô tả của bạn quá ngắn. Vui lòng nhập ít nhất 100 kí tự",
-                          },
                           maxLength: {
                             value: 3000,
                             message:

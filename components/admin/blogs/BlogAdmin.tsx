@@ -73,7 +73,7 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ data }) => {
   };
 
   return (
-    <div className="mt-5">
+    <div className="mt-5 grid">
       <div className="flex items-center justify-between">
         <h1 className="text-white bg-primary px-4 py-2 inline rounded-lg">
           Quản lý blog
@@ -92,9 +92,9 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ data }) => {
         value={search}
         placeholder="Tìm kiếm với slug, tên, danh mục, người đăng..."
       />
-      <div className="mt-4 bg-white rounded-3xl p-4  max-h-[450px] overflow-y-scroll shadow-master">
-        <div className="overflow-x-auto relative">
-          <table className="table-fixed w-full text-sm text-left text-gray-500 dark:text-gray-400">
+    <div className="mt-4 bg-white rounded-3xl p-4 max-h-[450px] overflow-y-scroll shadow-master">
+          <div className="overflow-x-scroll relative">
+            <table className="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" className="py-3 px-6">
@@ -146,14 +146,18 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ data }) => {
                       width={50}
                       height={50}
                     />
-                  </th>
-                  <td className="py-4 px-6">{item.slug}</td>
-                  <td className="py-4 px-6">{item.name}</td>
+                  </th>                  
+                   <td className="py-4 px-6">
+                    {item.slug}
+                  </td>
+                  <td className="py-4 px-6">
+                    {item.name}
+                  </td>
                   <td className="py-4 px-6">{item?.categories_blog?.name}</td>
                   <td className="py-4 px-6">
-                    {item.description.length < 60
+                    {item.description.length < 40
                       ? item.description
-                      : item.description.slice(0, 60) + "..."}
+                      : item.description.slice(0, 40) + "..."}
                   </td>
                   <td className="py-4 px-6">{item.view.count}</td>
                   <td className="py-4 px-6">{item?.user?.email}</td>
@@ -165,9 +169,7 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ data }) => {
                     user?.detailActions.includes("blog:delete")) && (
                     <td className="py-4 px-6">
                       <div className="flex space-x-2">
-                        <Link
-                          href={`/blog/${item?.categories_blog?.slug}/${item.slug}`}
-                        >
+                        <Link href={`/blog/read/${item.slug}`}>
                           <div className="bg-slate-400 flex items-center justify-center text-white p-1 rounded-md hover:bg-slate-600 cursor-pointer">
                             <AiFillEye fontSize={24} />
                           </div>

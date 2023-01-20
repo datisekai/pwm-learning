@@ -56,7 +56,7 @@ const InfoAdmin: NextPage<InfoAdminProps> = ({ infos }) => {
   const { user } = useContext(AuthContext);
   return (
     <AdminLayout>
-      <div className="mt-5">
+      <div className="mt-5 grid">
         <div className="flex items-center justify-between">
           <h1 className="text-white bg-primary px-4 py-2 inline rounded-lg">
             Giới thiệu
@@ -70,9 +70,9 @@ const InfoAdmin: NextPage<InfoAdminProps> = ({ infos }) => {
           </button>
           {/* )} */}
         </div>
-        <div className="mt-10 bg-white rounded-3xl p-4 shadow-master  max-h-[450px] overflow-y-scroll">
-          <div className="overflow-x-auto relative">
-            <table className="table-fixed w-full text-sm text-left text-gray-500 dark:text-gray-400">
+        <div className="mt-4 bg-white rounded-3xl p-4 max-h-[450px] overflow-y-scroll shadow-master">
+          <div className="overflow-x-scroll relative">
+            <table className="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
               <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                 <tr>
                   <th scope="col" className="py-3 px-6">

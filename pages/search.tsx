@@ -15,7 +15,7 @@ import { SpeciesModel } from "../models/Species.model";
 import ReactPaginate from "react-paginate";
 import { useRouter } from "next/router";
 import { AiOutlineRight } from "react-icons/ai";
-import React from "react";
+import React from 'react'
 
 interface SearchProps {
   query: any;
@@ -30,10 +30,11 @@ const Search: NextPage<SearchProps> = ({ query, species, products }) => {
   const { name, speciesId, categoryId, min, max } = query;
   const router = useRouter();
   const [showOptions, setShowOptions] = React.useState(false);
-  const handleClick = () => {
+  const handleClick = () =>
+  {
     setShowOptions(!showOptions);
-  };
-
+  }
+  
   return (
     <>
       <Meta

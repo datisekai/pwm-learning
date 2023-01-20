@@ -12,5 +12,5 @@ export interface ActionModel {
   name: string;
   createdAt: Date;
   updatedAt: Date;
-  detailActions: DetailAction[];
+  detailactions: DetailAction[];
 }

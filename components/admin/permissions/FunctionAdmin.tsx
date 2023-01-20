@@ -16,11 +16,13 @@ const FunctionAdmin: React.FC<FunctionAdminProps> = ({ data, permissions }) => {
   const [detailActions, setDetailActions] = useState<number[]>([]);
   const [permissionId, setPermissionId] = useState(permissions[0].id);
 
+  console.log(data)
+
   useEffect(() => {
     const currentPermission = permissions.find(
       (item) => item.id === permissionId
     );
-    const checkeds = currentPermission?.perDetailActions?.map(
+    const checkeds = currentPermission?.perdetailactions?.map(
       (item) => item.detailActionId
     );
     setDetailActions(checkeds || []);
@@ -48,14 +50,14 @@ const FunctionAdmin: React.FC<FunctionAdminProps> = ({ data, permissions }) => {
       setDetailActions([]);
     } else {
       const checks = data.reduce((pre: number[], cur) => {
-        const currentDetail = cur.detailActions.map((item) => item.id);
+        const currentDetail = cur.detailactions.map((item) => item.id);
         return [...pre, ...currentDetail];
       }, []);
       setDetailActions(checks);
     }
   };
   const handleIsCheckOneBox = (actions: ActionModel) => {
-    const currentActions = actions.detailActions.map((item) => item.id);
+    const currentActions = actions.detailactions.map((item) => item.id);
     let flag = true;
 
     currentActions.forEach((item) => {
@@ -89,7 +91,7 @@ const FunctionAdmin: React.FC<FunctionAdminProps> = ({ data, permissions }) => {
               checked={
                 detailActions.length ===
                 data.reduce((pre: number[], cur) => {
-                  const currentDetail = cur.detailActions.map(
+                  const currentDetail = cur.detailactions.map(
                     (item) => item.id
                   );
                   return [...pre, ...currentDetail];
@@ -137,7 +139,7 @@ const FunctionAdmin: React.FC<FunctionAdminProps> = ({ data, permissions }) => {
                   checked={handleIsCheckOneBox(item)}
                   onChange={(e) => {
                     if (e.target.checked) {
-                      const currentDetailActions = item.detailActions.map(
+                      const currentDetailActions = item.detailactions.map(
                         (element) => element.id
                       );
                       const current = [...detailActions];
@@ -148,7 +150,7 @@ const FunctionAdmin: React.FC<FunctionAdminProps> = ({ data, permissions }) => {
                       });
                       setDetailActions(current);
                     } else {
-                      const currentDetailActions = item.detailActions.map(
+                      const currentDetailActions = item.detailactions.map(
                         (element) => element.id
                       );
                       let current = [...detailActions];
@@ -169,7 +171,7 @@ const FunctionAdmin: React.FC<FunctionAdminProps> = ({ data, permissions }) => {
               </div>
             </div>
             <div className="mt-2 grid grid-cols-1 gap-y-2">
-              {item.detailActions.map((element) => (
+              {item.detailactions.map((element) => (
                 <label
                   key={element.id}
                   className="relative inline-flex items-center cursor-pointer"

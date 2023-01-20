@@ -78,7 +78,7 @@ const SidebarAdmin: FC<SidebarAdminProps> = ({ handleClose, show }) => {
         }`}
       >
         <div className="bg-white rounded-sm px-2 flex items-center mx-4">
-          <LazyLoadImage effect="blur" src="/images/logo.png" />
+          <Link href={'/'}> <LazyLoadImage effect="blur" src="/images/logo.png" /></Link>
         </div>
         <div className="mt-10 px-2">
           {data.map((item, index) => {
