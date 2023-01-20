@@ -39,7 +39,7 @@ const Slider: React.FC<SliderProps> = ({ data }) => {
             <LazyLoadImage
               effect="blur"
               src={getImageServer(item.image)}
-              className="w-full "
+              className="w-full aspect-[553/215] "
             />
           </SwiperSlide>
         ))}
