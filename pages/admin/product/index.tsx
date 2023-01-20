@@ -19,10 +19,10 @@ import SkuAction from "../../../actions/Sku.action";
 import { SkuModel } from "../../../models/Sku.model";
 import { AuthContext } from "../../../components/context";
 import Meta from "../../../components/Meta";
+import { useQuery } from "@tanstack/react-query";
 
 
 interface ProductAdminMnProps {
-  products: ProductModel[];
   categories: CategoryModel[];
   species: SpeciesModel[];
   tab: string;
@@ -30,13 +30,13 @@ interface ProductAdminMnProps {
 }
 
 const ProductAdminManager: NextPage<ProductAdminMnProps> = ({
-  products,
   categories,
   species,
   tab,
   skus
 }) => {
 
+  const {data:products, isLoading:isProductsLoading} = useQuery(['product-admin'],ProductAction.getAll)
   
 const dataTab = [
   {

@@ -1,4 +1,5 @@
 import { Inter } from "@next/font/google";
+import { useQuery } from "@tanstack/react-query";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import PopularAction from "../actions/Popular.action";
@@ -16,11 +17,14 @@ import { PopularModel } from "../models/Popular.model";
 const inter = Inter({ subsets: ["latin"] });
 
 interface HomeProps {
-  populars: PopularModel[];
-  species: HomeModel;
+ 
 }
 
-const Home: NextPage<HomeProps> = ({ populars, species }) => {
+const Home: NextPage<HomeProps> = () => {
+
+  const {data:populars, isLoading:isPopularsLoading} = useQuery(['popular'],PopularAction.getAll)
+  const {data:species, isLoading:isSpeciesLoading} = useQuery(['species-home'],SpeciesAction.home)
+
   return (
     <>
       <Head>
@@ -32,9 +36,9 @@ const Home: NextPage<HomeProps> = ({ populars, species }) => {
       <MainLayout>
         <div className="pb-10">
           <Slider />
-          <Section1 data={populars} />
+          <Section1 data={populars} isLoading={isPopularsLoading}/>
           <Section2 />
-          {species?.species.map((item, index) => species?.products[index].length > 0 && (
+          {species?.species.map((item:any, index:number) => species?.products[index].length > 0 && (
             <Section3
               key={index}
               title={item.name}
@@ -43,7 +47,7 @@ const Home: NextPage<HomeProps> = ({ populars, species }) => {
             />
           ))}
           {/* <Section5 /> */}
-          <Section6 data={species.species}/>
+          <Section6 data={species?.species}/>
         </div>
       </MainLayout>
      
@@ -52,20 +56,3 @@ const Home: NextPage<HomeProps> = ({ populars, species }) => {
 };
 
 export default Home;
-
-export const getServerSideProps: GetServerSideProps = async ({
-  req,
-  query,
-}) => {
-  const data = await Promise.all([
-    PopularAction.getAll(),
-    SpeciesAction.home(),
-  ]);
-
-  return {
-    props: {
-      populars: data[0],
-      species: data[1],
-    },
-  };
-};

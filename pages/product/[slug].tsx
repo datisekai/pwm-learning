@@ -254,10 +254,9 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
 export default ProductDetail;
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const products = (await ProductAction.getAll()) || [];
   return {
-    paths: products.map((item: any) => ({ params: { slug: item.slug } })),
-    fallback: false,
+    paths: [],
+    fallback: 'blocking',
   };
 };
 

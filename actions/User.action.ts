@@ -23,13 +23,9 @@ const UserAction = {
     const result = await axiosClient.post('/user/register',data);
     return result.data;
   },
-  getAll:async(token:string) => {
+  getAll:async() => {
     try {
-      const result = await axiosClient.get('/user',{
-        headers:{
-          Authorization:`Bearer ${token || ""}`
-        }
-      });
+      const result = await axiosClient.get('/user');
       return result.data
     } catch (error) {
       console.log(error)

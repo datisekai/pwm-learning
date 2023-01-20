@@ -11,19 +11,16 @@ import ModalAddUser from "../../components/admin/users/ModalAddUser";
 import PermissionAction from "../../actions/Permission.action";
 import { PermissionModel } from "../../models/Permission.model";
 import ModalUpdateUser from "../../components/admin/users/ModalUpdateUser";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/router";
 import swal from "sweetalert";
 import { AuthContext } from "../../components/context";
 import Meta from "../../components/Meta";
 
-interface UserAdminProps {
-  users: UserModel[];
-  permissions: PermissionModel[];
-}
+interface UserAdminProps {}
 
-const UserAdmin: NextPage<UserAdminProps> = ({ users, permissions }) => {
+const UserAdmin: NextPage<UserAdminProps> = () => {
   const [openModalAdd, setOpenModalAdd] = useState(false);
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [current, setCurrent] = useState<any>();
@@ -31,6 +28,16 @@ const UserAdmin: NextPage<UserAdminProps> = ({ users, permissions }) => {
   const { user } = useContext(AuthContext);
 
   const router = useRouter();
+
+  const { data: users, isLoading: isUserLoading, refetch } = useQuery(
+    ["users"],
+    UserAction.getAll
+  );
+
+  const { data: permissions, isLoading: isPermissionLoading } = useQuery(
+    ["permisison"],
+    PermissionAction.getAll
+  );
 
   const { mutate, isLoading } = useMutation(UserAction.delete, {
     onSuccess: () => {
@@ -111,54 +118,78 @@ const UserAdmin: NextPage<UserAdminProps> = ({ users, permissions }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {users?.map((item) => (
-                      <tr
-                        key={item.id}
-                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                      >
-                        <th
-                          scope="row"
-                          className="px-2 py-3 md:py-4 md:px-6 font-medium text-gray-900 line-clamp-1 dark:text-white"
-                        >
-                          {item.email}
-                        </th>
-                        <td className="px-2 py-3 md:py-4 md:px-6">
-                          {item.permission.name}
-                        </td>
-                        <td className="px-2 py-3 md:py-4 md:px-6">
-                          {dayjs(item.createdAt).format("DD/MM/YYYY")}
-                        </td>
-                        <td className="px-2 py-3 md:py-4 md:px-6">
-                          {dayjs(item.updatedAt).format("DD/MM/YYYY")}
-                        </td>
-                        {(user?.detailActions.includes("user:update") ||
-                          user?.detailActions.includes("user:delete")) && (
-                          <td className="px-2 py-3 md:py-4 md:px-6">
-                            <div className="flex">
-                              {user?.detailActions.includes("user:update") && (
-                                <div
-                                  onClick={() => {
-                                    setCurrent(item);
-                                    setOpenModalUpdate(true);
-                                  }}
-                                  className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
-                                >
-                                  <CiEdit fontSize={24} />
+                    {isUserLoading
+                      ? [1, 2, 3, 4].map((item) => (
+                          <tr key={item} className="animate-pulse">
+                            <td>
+                              <div className="h-4 bg-gray-200 mt-3 mb-6 rounded"></div>{" "}
+                            </td>
+                            <td>
+                              <div className="h-4 bg-gray-200 mt-3 mb-6 rounded"></div>{" "}
+                            </td>
+                            <td>
+                              <div className="h-4 bg-gray-200 mt-3 mb-6 rounded"></div>{" "}
+                            </td>
+                            <td>
+                              <div className="h-4 bg-gray-200 mt-3 mb-6 rounded"></div>{" "}
+                            </td>
+                            <td>
+                              <div className="h-4 bg-gray-200 mt-3 mb-6 rounded"></div>{" "}
+                            </td>
+                          </tr>
+                        ))
+                      : users?.map((item: any) => (
+                          <tr
+                            key={item.id}
+                            className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                          >
+                            <th
+                              scope="row"
+                              className="px-2 py-3 md:py-4 md:px-6 font-medium text-gray-900 line-clamp-1 dark:text-white"
+                            >
+                              {item.email}
+                            </th>
+                            <td className="px-2 py-3 md:py-4 md:px-6">
+                              {item.permission.name}
+                            </td>
+                            <td className="px-2 py-3 md:py-4 md:px-6">
+                              {dayjs(item.createdAt).format("DD/MM/YYYY")}
+                            </td>
+                            <td className="px-2 py-3 md:py-4 md:px-6">
+                              {dayjs(item.updatedAt).format("DD/MM/YYYY")}
+                            </td>
+                            {(user?.detailActions.includes("user:update") ||
+                              user?.detailActions.includes("user:delete")) && (
+                              <td className="px-2 py-3 md:py-4 md:px-6">
+                                <div className="flex">
+                                  {user?.detailActions.includes(
+                                    "user:update"
+                                  ) && (
+                                    <div
+                                      onClick={() => {
+                                        setCurrent(item);
+                                        setOpenModalUpdate(true);
+                                      }}
+                                      className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
+                                    >
+                                      <CiEdit fontSize={24} />
+                                    </div>
+                                  )}
+                                  {user?.detailActions.includes(
+                                    "user:delete"
+                                  ) && (
+                                    <div
+                                      onClick={() => handleDelete(item.id)}
+                                      className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
+                                    >
+                                      <RiDeleteBin6Line fontSize={24} />
+                                    </div>
+                                  )}
                                 </div>
-                              )}
-                              {user?.detailActions.includes("user:delete") && (
-                                <div
-                                  onClick={() => handleDelete(item.id)}
-                                  className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
-                                >
-                                  <RiDeleteBin6Line fontSize={24} />
-                                </div>
-                              )}
-                            </div>
-                          </td>
-                        )}
-                      </tr>
-                    ))}
+                              </td>
+                            )}
+                          </tr>
+                        ))}
                   </tbody>
                 </table>
               </div>
@@ -184,13 +215,7 @@ const UserAdmin: NextPage<UserAdminProps> = ({ users, permissions }) => {
 export default UserAdmin;
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const token = req.cookies["token"];
   const detailActions = JSON.parse(req.cookies["detailActions"] || "[]");
-
-  const data = await Promise.all([
-    UserAction.getAll(token || ""),
-    PermissionAction.getAll(),
-  ]);
 
   if (!detailActions.includes("user:view")) {
     return {
@@ -202,9 +227,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   }
 
   return {
-    props: {
-      users: data[0] || [],
-      permissions: data[1] || [],
-    },
+    props: {},
   };
 };

@@ -22,7 +22,7 @@ const ModalUpdateUser: React.FC<ModalUpdateUserProps> = ({
   handleClose,
   open,
   data,
-  current
+  current,
 }) => {
   const {
     control,
@@ -40,7 +40,6 @@ const ModalUpdateUser: React.FC<ModalUpdateUserProps> = ({
   });
 
 
-  console.log()
 
   useEffect(() => {
     setValue('email',current?.email)

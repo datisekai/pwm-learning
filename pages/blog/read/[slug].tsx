@@ -83,7 +83,14 @@ export default DetailBlog;
 //   };
 // };
 
-export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+export const getStaticPaths: GetStaticPaths = async () => {
+  return {
+    paths: [],
+    fallback: 'blocking',
+  };
+};
+
+export const getStaticProps: GetStaticProps = async ({ params }) => {
   const slug = params?.slug as string;
 
   const data = await BlogAction.getBySlug(slug);
@@ -92,5 +99,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
     props: {
       data: data,
     },
+    revalidate:60
   };
 };
+
