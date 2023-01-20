@@ -14,7 +14,6 @@ interface DetailBlogProps {
 }
 
 const DetailBlog: NextPage<DetailBlogProps> = ({ data }) => {
-  console.log(data)
   const router = useRouter();
   const { isLoading } = useQuery(
     ["increase-view", router?.query?.slug || 1],
@@ -23,7 +22,6 @@ const DetailBlog: NextPage<DetailBlogProps> = ({ data }) => {
     }
   );
 
-  console.log(router.query);
 
   const { data: dataRecommend } = useQuery(
     ["recommend-blog", data.categoriesBlogId],
