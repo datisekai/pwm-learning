@@ -29,6 +29,14 @@ const SpeciesAction = {
     } catch (error) {
       return []
     }
+  },
+  setMenu:async(id:number | string) => {
+    try {
+      const result = await axiosClient.put(`/species/menu/${id}`);
+      return result.data;      
+    } catch (error) {
+      return null
+    }
   }
 };
 

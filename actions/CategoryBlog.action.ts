@@ -34,6 +34,14 @@ const CategoryBlogAction = {
   getByUser:async() => {
       const result = await axiosClient.get("/category-blog/user");
       return result.data;
+  },
+  setMenu:async(id:number | string) => {
+    try {
+      const result = await axiosClient.put(`/category-blog/menu/${id}`);
+      return result.data;      
+    } catch (error) {
+      return null
+    }
   }
 };
 
