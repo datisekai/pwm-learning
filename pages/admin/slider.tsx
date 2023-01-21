@@ -69,7 +69,7 @@ const Slider: NextPage<SliderProps> = ({ sliders }) => {
               <h1 className="text-white bg-primary px-4 py-2 inline rounded-lg">
                 Quản lý slider
               </h1>
-              {user?.detailActions.includes("user:add") && (
+              {user?.detailActions.includes("slider:add") && (
                 <button
                   onClick={() => setOpenModalAdd(true)}
                   className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700"
@@ -95,8 +95,8 @@ const Slider: NextPage<SliderProps> = ({ sliders }) => {
                       <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
                         Ngày cập nhật
                       </th>
-                      {(user?.detailActions.includes("user:update") ||
-                        user?.detailActions.includes("user:delete")) && (
+                      {(user?.detailActions.includes("slider:update") ||
+                        user?.detailActions.includes("slider:delete")) && (
                         <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
                           Hành động
                         </th>
@@ -127,11 +127,11 @@ const Slider: NextPage<SliderProps> = ({ sliders }) => {
                         <td className="px-2 py-3 md:py-4 md:px-6">
                           {dayjs(item.updatedAt).format("DD/MM/YYYY")}
                         </td>
-                        {(user?.detailActions.includes("user:update") ||
-                          user?.detailActions.includes("user:delete")) && (
+                        {(user?.detailActions.includes("slider:update") ||
+                          user?.detailActions.includes("slider:delete")) && (
                           <td className="px-2 py-3 md:py-4 md:px-6">
                             <div className="flex">
-                              {user?.detailActions.includes("user:update") && (
+                              {user?.detailActions.includes("slider:update") && (
                                 <div
                                   onClick={() => {
                                     setCurrent(item);
@@ -142,7 +142,7 @@ const Slider: NextPage<SliderProps> = ({ sliders }) => {
                                   <CiEdit fontSize={24} />
                                 </div>
                               )}
-                              {user?.detailActions.includes("user:delete") && (
+                              {user?.detailActions.includes("slider:delete") && (
                                 <div
                                   onClick={() => handleDelete(item.id)}
                                   className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"

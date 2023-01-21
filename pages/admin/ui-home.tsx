@@ -1,27 +1,26 @@
 import { useMutation } from "@tanstack/react-query";
-import dayjs from "dayjs";
 import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
-import React, { useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { toast } from "react-hot-toast";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import swal from "sweetalert";
-import SliderAction from "../../actions/Slider.action";
-import ModalAddSlider from "../../components/admin/sliders/ModalAddSlider";
-import ModalUpdateSlider from "../../components/admin/sliders/ModalUpdateSlider";
+import UIAction from "../../actions/UiHome.action";
+import ModalAddUiHome from "../../components/admin/ui-home/ModalAddUiHome";
+import ModalUpdateUiHome from "../../components/admin/ui-home/ModalUpdateUiHome";
 import { AuthContext } from "../../components/context";
 import AdminLayout from "../../components/layouts/AdminLayout";
 import Meta from "../../components/Meta";
-import { SliderModel } from "../../models/Slider.model";
+import { UIModel } from "../../models/Ui.model";
 import { getImageServer } from "../../utils";
 
-interface SliderProps {
-  sliders: SliderModel[];
+interface UIHomeProps {
+  data: UIModel[];
 }
 
-const Slider: NextPage<SliderProps> = ({ sliders }) => {
+const UIHome: NextPage<UIHomeProps> = ({ data }) => {
   const [openModalAdd, setOpenModalAdd] = useState(false);
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [current, setCurrent] = useState<any>();
@@ -30,7 +29,7 @@ const Slider: NextPage<SliderProps> = ({ sliders }) => {
 
   const router = useRouter();
 
-  const { mutate, isLoading } = useMutation(SliderAction.delete, {
+  const { mutate, isLoading } = useMutation(UIAction.delete, {
     onSuccess: () => {
       toast.success("Đã xóa thành công");
       router.replace(router.asPath);
@@ -55,26 +54,38 @@ const Slider: NextPage<SliderProps> = ({ sliders }) => {
     });
   };
 
+  const {mutate:updateStatus, isLoading:loadingUI} = useMutation(UIAction.update,{
+    onSuccess:() => {
+      router.replace(router.asPath);
+    },
+    onError: (err) => {
+      console.log(err);
+      toast.error("Có lỗi xảy ra, vui lòng thử lại");
+    },
+  })
+
+  const handleUI = (data:{id:number, checked:boolean}) => {
+      updateStatus({id:data.id, status:data.checked})
+  }
+
+
+
   return (
     <>
-      <Meta
-        image="/images/logo.png"
-        title="Slider | Admin"
-        description=""
-      />
+      <Meta image="/images/logo.png" title="UI Home | Admin" description="" />
       <AdminLayout>
         <>
           <div className="mt-5 grid">
             <div className="flex items-center justify-between">
               <h1 className="text-white bg-primary px-4 py-2 inline rounded-lg">
-                Quản lý slider
+                Quản lý UI Home
               </h1>
-              {user?.detailActions.includes("user:add") && (
+              {user?.detailActions.includes("ui:add") && (
                 <button
                   onClick={() => setOpenModalAdd(true)}
                   className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700"
                 >
-                  Thêm slider
+                  Thêm UI
                 </button>
               )}
             </div>
@@ -87,16 +98,16 @@ const Slider: NextPage<SliderProps> = ({ sliders }) => {
                         Hình ảnh
                       </th>
                       <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                        URL
+                        Code
                       </th>
                       <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                        Ngày tạo
+                        Ghi chú
                       </th>
                       <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                        Ngày cập nhật
+                        Hiển thị
                       </th>
-                      {(user?.detailActions.includes("user:update") ||
-                        user?.detailActions.includes("user:delete")) && (
+                      {(user?.detailActions.includes("ui:update") ||
+                        user?.detailActions.includes("ui:delete")) && (
                         <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
                           Hành động
                         </th>
@@ -104,7 +115,7 @@ const Slider: NextPage<SliderProps> = ({ sliders }) => {
                     </tr>
                   </thead>
                   <tbody>
-                    {sliders?.map((item) => (
+                    {data?.map((item) => (
                       <tr
                         key={item.id}
                         className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
@@ -119,19 +130,30 @@ const Slider: NextPage<SliderProps> = ({ sliders }) => {
                           />
                         </th>
                         <td className="px-2 py-3 md:py-4 md:px-6 break-words max-w-[200px]">
-                          {item.url || "Không có"}
+                          {item.code || "Không có"}
                         </td>
                         <td className="px-2 py-3 md:py-4 md:px-6">
-                          {dayjs(item.createdAt).format("DD/MM/YYYY")}
+                          {item.note || "Không có"}
                         </td>
                         <td className="px-2 py-3 md:py-4 md:px-6">
-                          {dayjs(item.updatedAt).format("DD/MM/YYYY")}
+                          <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={item.status}
+                              onChange={(e) => handleUI({id:item.id, checked:e.target.checked})}
+                              className="sr-only peer"
+                              disabled={user?.detailActions.includes("ui:update") ? loadingUI : true}
+                            />
+                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
+                          </label>
                         </td>
-                        {(user?.detailActions.includes("user:update") ||
-                          user?.detailActions.includes("user:delete")) && (
+                        {(user?.detailActions.includes("ui:update") ||
+                          user?.detailActions.includes("ui:delete")) && (
                           <td className="px-2 py-3 md:py-4 md:px-6">
                             <div className="flex">
-                              {user?.detailActions.includes("user:update") && (
+                              {user?.detailActions.includes(
+                                "ui:update"
+                              ) && (
                                 <div
                                   onClick={() => {
                                     setCurrent(item);
@@ -142,7 +164,9 @@ const Slider: NextPage<SliderProps> = ({ sliders }) => {
                                   <CiEdit fontSize={24} />
                                 </div>
                               )}
-                              {user?.detailActions.includes("user:delete") && (
+                              {user?.detailActions.includes(
+                                "ui:delete"
+                              ) && (
                                 <div
                                   onClick={() => handleDelete(item.id)}
                                   className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
@@ -160,11 +184,11 @@ const Slider: NextPage<SliderProps> = ({ sliders }) => {
               </div>
             </div>
           </div>
-          <ModalAddSlider
+          <ModalAddUiHome
             handleClose={() => setOpenModalAdd(false)}
             open={openModalAdd}
           />
-          <ModalUpdateSlider
+          <ModalUpdateUiHome
             current={current}
             handleClose={() => setOpenModalUpdate(false)}
             open={openModalUpdate}
@@ -175,13 +199,13 @@ const Slider: NextPage<SliderProps> = ({ sliders }) => {
   );
 };
 
-export default Slider;
+export default UIHome;
 
 export const getServerSideProps: GetServerSideProps = async () => {
-  const data = await SliderAction.getAll();
+  const data = await UIAction.getAll();
   return {
     props: {
-      sliders: data,
+      data: data,
     },
   };
 };

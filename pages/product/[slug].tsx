@@ -85,11 +85,12 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
           <Breadcumb current={detail.name} />
           <div className="flex items-center mt-4 flex-col md:flex-row">
             <div className="flex w-full md:w-[60%]  flex-col-reverse md:flex-row items-center">
-              <div className="relative w-full max-h-[500px] md:w-[110px] flex flex-row md:flex-col overflow-x-scroll list-image">
+              <div className="relative mt-2 md:mt-0 w-full max-h-[500px] md:w-[110px] flex flex-row md:flex-col overflow-x-scroll list-image">
                 <Swiper
                   direction={"horizontal"}
                   className="mySwiper"
                   slidesPerView={3}
+                  spaceBetween={0}
                   breakpoints={{
                     768: {
                       direction: "vertical",
