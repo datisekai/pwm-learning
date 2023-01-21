@@ -37,7 +37,7 @@ const Home: NextPage<HomeProps> = () => {
           <Slider data={sliders}/>
           <Section1 data={populars} isLoading={isPopularsLoading}/>
           <Section2 />
-          {species?.species.map((item:any, index:number) => species?.products[index].length > 0 && (
+          {species?.species?.map((item:any, index:number) => species?.products[index].length > 0 && (
             <Section3
               key={index}
               title={item.name}
