@@ -24,16 +24,16 @@ const BoxSearch: React.FC<BoxSearchProps> = ({ data, title, name }) => {
                 if(e.target.checked){
                   switch(e.target.value){
                     case "510":
-                      router.push({query:{...router.query, min:5000000, max:10000000}})
+                      router.push({query:{...router.query, page:1,min:5000000, max:10000000}})
                       break;
                     case "1050":
-                      router.push({query:{...router.query, min:10000000, max:50000000}})
+                      router.push({query:{...router.query, page:1,min:10000000, max:50000000}})
                       break;
                     case "50100":
-                      router.push({query:{...router.query, min:50000000, max:100000000}})
+                      router.push({query:{...router.query, page:1,min:50000000, max:100000000}})
                       break;
                     case "100":
-                      router.push({query:{...router.query, min:100000000}})
+                      router.push({query:{...router.query, page:1,min:100000000}})
                       break;
                     default:
                       break;

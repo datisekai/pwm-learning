@@ -27,7 +27,7 @@ const ItemSearch: FC<ItemSearchProps> = ({ data }) => {
       <div className="py-1 flex cursor-pointer items-center space-x-2">
         <span
           onClick={() => {
-            const query: any = { ...router.query, speciesId: data.id };
+            const query: any = { ...router.query, speciesId: data.id,page:1 };
             if (query?.speciesId) {
               delete query["categoryId"];
             }
@@ -52,7 +52,7 @@ const ItemSearch: FC<ItemSearchProps> = ({ data }) => {
         {data?.categories?.map((item) => (
           <div
             onClick={() => {
-              const query: any = { ...router.query, categoryId: item.id };
+              const query: any = { ...router.query, categoryId: item.id,page:1 };
               if (query?.speciesId) {
                 delete query["speciesId"];
               }
