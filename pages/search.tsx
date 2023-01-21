@@ -119,7 +119,7 @@ const Search: NextPage<SearchProps> = ({ query }) => {
                         query: { ...router.query, page: +e.selected + 1 },
                       });
                     }}
-                    forcePage={+products.page - 1}
+                    forcePage={(+query.page || 1) - 1}
                     pageRangeDisplayed={5}
                     pageCount={products.totalPage}
                     previousLabel={<span>{`<`}</span>}
@@ -141,6 +141,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   //   SpeciesAction.getAll(1),
   //   ProductAction.search(query),
   // ]);
+
 
   return {
     props: { query },
