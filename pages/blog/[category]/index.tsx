@@ -56,7 +56,7 @@ const Blog: NextPage<BlogProps> = ({ category,page }) => {
       CategoryBlogAction.getBySlug({
         slug: category,
         page,
-        limit: 1,
+        limit: 8,
       })
   );
 
