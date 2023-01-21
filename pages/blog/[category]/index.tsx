@@ -10,6 +10,8 @@ import BlogCard from "../../../components/cards/BlogCard";
 import Breadcumb from "../../../components/Breadcumb";
 import BlogSkeletonCard from "../../../components/skeletons/BlogSkeletonCard";
 import InfiniteScroll from "react-infinite-scroll-component";
+import ReactPaginate from "react-paginate";
+import { useRouter } from "next/router";
 
 interface BlogProps {
   category: string;
@@ -19,34 +21,40 @@ const Blog: NextPage<BlogProps> = ({ category }) => {
   //   CategoryBlogAction.getBySlug(category)
   // );
 
-  const { data, fetchNextPage, isLoading } = useInfiniteQuery(
-    ["category-blog", category],
-    ({ pageParam }) => {
-      return CategoryBlogAction.getBySlug({
-        slug: category,
-        page: pageParam,
-        limit: 8,
-      });
-    },
-    {
-      getNextPageParam: (lastPage: any, allPages: any) => {
-        if (+lastPage.page < +lastPage.totalPage) {
-          return +lastPage.page + 1;
-        }
+  const router = useRouter();
+
+  const { page = 1 } = router.query;
+
+  const { data, fetchNextPage, isLoading, isFetching, isFetchingNextPage } =
+    useInfiniteQuery(
+      ["category-blog", { category, page }],
+      ({ pageParam }) => {
+        return CategoryBlogAction.getBySlug({
+          slug: category,
+          page: pageParam,
+          limit: 9,
+        });
       },
-    }
-  );
+      {
+        getNextPageParam: (lastPage: any, allPages: any) => {
+          if (+page < +lastPage.totalPage) {
+            return +page + 1;
+          }
+        },
+      }
+    );
 
   const blogs = React.useMemo(() => {
     if (data) {
-      return data.pages.reduce(
-        (pre, cur) => {
-          return { ...cur, blogs: [...pre.blogs, ...cur.blogs] };
-        },
-        {
-          blogs: [],
-        }
-      );
+      // return data.pages.reduce(
+      //   (pre, cur) => {
+      //     return { ...cur, blogs: [...pre.blogs, ...cur.blogs] };
+      //   },
+      //   {
+      //     blogs: [],
+      //   }
+      // );
+      return data.pages[data.pages.length - 1];
     }
 
     return {
@@ -64,7 +72,7 @@ const Blog: NextPage<BlogProps> = ({ category }) => {
       <MainLayout>
         <div className="max-w-[1200px] py-4 mx-auto px-2">
           <Breadcumb current="Tin tức" />
-          {isLoading ? (
+          {isFetching && !isFetchingNextPage ? (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4">
               <BlogSkeletonCard />
               <BlogSkeletonCard />
@@ -115,6 +123,24 @@ const Blog: NextPage<BlogProps> = ({ category }) => {
                 )}
               </>
             </InfiniteScroll>
+          )}
+
+          {blogs?.totalPage > 1 && (
+            <div className="mt-4">
+              <ReactPaginate
+              breakLabel="..."
+              nextLabel=">"
+              onPageChange={(e) => {
+                router.push({
+                  query: { ...router.query, page: +e.selected + 1 },
+                });
+              }}
+              forcePage={+page - 1}
+              pageRangeDisplayed={5}
+              pageCount={blogs.totalPage}
+              previousLabel={<span>{`<`}</span>}
+            />
+            </div>
           )}
         </div>
       </MainLayout>

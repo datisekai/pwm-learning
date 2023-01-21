@@ -115,11 +115,11 @@ const Search: NextPage<SearchProps> = ({ query }) => {
                     breakLabel="..."
                     nextLabel=">"
                     onPageChange={(e) => {
-                      console.log(e.selected);
                       router.push({
                         query: { ...router.query, page: +e.selected + 1 },
                       });
                     }}
+                    forcePage={+products.page - 1}
                     pageRangeDisplayed={5}
                     pageCount={products.totalPage}
                     previousLabel={<span>{`<`}</span>}
