@@ -12,11 +12,11 @@ import SpeciesAction from "../../actions/Species.action";
 const BottomHeader = () => {
   const router = useRouter();
 
-  const { data: dataSpecies } = useQuery(["species"], SpeciesAction.home);
-  const { data: dataCategoryBlog } = useQuery(
-    ["category-blog"],
-    CategoryBlogAction.getByUser
-  );
+  // const { data: dataSpecies } = useQuery(["species"], SpeciesAction.home);
+  // const { data: dataCategoryBlog } = useQuery(
+  //   ["category-blog"],
+  //   CategoryBlogAction.getByUser
+  // );
   const { data: dataHeader } = useQuery(["header"], HeaderAction.getHeader);
 
   const [data, setData] = React.useState([{ url: "/", title: "Trang chủ" }]);
