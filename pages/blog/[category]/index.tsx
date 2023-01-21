@@ -15,15 +15,15 @@ import { useRouter } from "next/router";
 
 interface BlogProps {
   category: string;
-  page:string | number
+  page: string | number;
+  limit: string | number;
 }
-const Blog: NextPage<BlogProps> = ({ category,page }) => {
+const Blog: NextPage<BlogProps> = ({ category, page, limit }) => {
   // const { data: blogs, isLoading } = useQuery(["category-blog", category], () =>
   //   CategoryBlogAction.getBySlug(category)
   // );
 
   const router = useRouter();
-
 
   // const { data, fetchNextPage, isLoading, isFetching, isFetchingNextPage } =
   //   useInfiniteQuery(
@@ -44,19 +44,20 @@ const Blog: NextPage<BlogProps> = ({ category,page }) => {
   //     }
   //   );
 
-  const { data:blogs, isLoading } = useQuery(
+  const { data: blogs, isLoading } = useQuery(
     [
       "category-blog",
       {
         category,
         page,
+        limit
       },
     ],
     () =>
       CategoryBlogAction.getBySlug({
         slug: category,
         page,
-        limit: 8,
+        limit,
       })
   );
 
@@ -78,7 +79,6 @@ const Blog: NextPage<BlogProps> = ({ category,page }) => {
   //   };
   // }, [data]);
 
-
   return (
     <>
       <Meta
@@ -88,7 +88,27 @@ const Blog: NextPage<BlogProps> = ({ category,page }) => {
       />
       <MainLayout>
         <div className="max-w-[1200px] py-4 mx-auto px-2">
-          <Breadcumb current="Tin tức" />
+          <div className="flex items-center justify-between">
+            <Breadcumb current="Tin tức" />
+            <>
+              <select
+                id="displays"
+                defaultValue={9}
+                onChange={(e) =>
+                  router.push({
+                    query: { ...router.query, page: 1, limit: e.target.value },
+                  })
+                }
+                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-[70px] p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              >
+                <option value="5">5</option>
+                <option value="9">9</option>
+                <option value="13">13</option>
+                <option value="17">17</option>
+                <option value="21">21</option>
+              </select>
+            </>
+          </div>
           {isLoading ? (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4">
               <BlogSkeletonCard />
@@ -149,7 +169,7 @@ const Blog: NextPage<BlogProps> = ({ category,page }) => {
                 nextLabel=">"
                 forcePage={+page - 1}
                 onPageChange={(e) => {
-                  if(+e.selected < +blogs?.totalPage){
+                  if (+e.selected < +blogs?.totalPage) {
                     router.push({
                       query: { ...router.query, page: +e.selected + 1 },
                     });
@@ -171,6 +191,7 @@ export default Blog;
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const category = query.category;
   const page = query.page || 1;
+  const limit = query.limit || 9;
   if (!category) {
     return {
       notFound: true,
@@ -181,7 +202,8 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     props: {
       // blogs: data,
       category,
-      page
+      page,
+      limit,
     },
   };
 };
