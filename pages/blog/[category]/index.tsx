@@ -1,4 +1,4 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { GetServerSideProps, NextPage } from "next";
 import CategoryAction from "../../../actions/Category.action";
 import CategoryBlogAction from "../../../actions/CategoryBlog.action";
@@ -15,52 +15,69 @@ import { useRouter } from "next/router";
 
 interface BlogProps {
   category: string;
+  page:string | number
 }
-const Blog: NextPage<BlogProps> = ({ category }) => {
+const Blog: NextPage<BlogProps> = ({ category,page }) => {
   // const { data: blogs, isLoading } = useQuery(["category-blog", category], () =>
   //   CategoryBlogAction.getBySlug(category)
   // );
 
   const router = useRouter();
 
-  const { page = 1 } = router.query;
 
-  const { data, fetchNextPage, isLoading, isFetching, isFetchingNextPage } =
-    useInfiniteQuery(
-      ["category-blog", { category, page }],
-      ({ pageParam }) => {
-        return CategoryBlogAction.getBySlug({
-          slug: category,
-          page: pageParam,
-          limit: 9,
-        });
-      },
+  // const { data, fetchNextPage, isLoading, isFetching, isFetchingNextPage } =
+  //   useInfiniteQuery(
+  //     ["category-blog", { category, page }],
+  //     ({ pageParam }) => {
+  //       return CategoryBlogAction.getBySlug({
+  //         slug: category,
+  //         page: pageParam,
+  //         limit: 2,
+  //       });
+  //     },
+  //     {
+  //       getNextPageParam: (lastPage: any, allPages: any) => {
+  //         if (+page < +lastPage.totalPage) {
+  //           return +page + 1;
+  //         }
+  //       },
+  //     }
+  //   );
+
+  const { data:blogs, isLoading } = useQuery(
+    [
+      "category-blog",
       {
-        getNextPageParam: (lastPage: any, allPages: any) => {
-          if (+page < +lastPage.totalPage) {
-            return +page + 1;
-          }
-        },
-      }
-    );
+        category,
+        page,
+      },
+    ],
+    () =>
+      CategoryBlogAction.getBySlug({
+        slug: category,
+        page,
+        limit: 1,
+      })
+  );
 
-  const blogs = React.useMemo(() => {
-    if (data) {
-      // return data.pages.reduce(
-      //   (pre, cur) => {
-      //     return { ...cur, blogs: [...pre.blogs, ...cur.blogs] };
-      //   },
-      //   {
-      //     blogs: [],
-      //   }
-      // );
-      return data.pages[data.pages.length - 1];
-    }
+  // const blogs = React.useMemo(() => {
+  //   if (data) {
+  //     // return data.pages.reduce(
+  //     //   (pre, cur) => {
+  //     //     return { ...cur, blogs: [...pre.blogs, ...cur.blogs] };
+  //     //   },
+  //     //   {
+  //     //     blogs: [],
+  //     //   }
+  //     // );
+  //     return data.pages[data.pages.length - 1];
+  //   }
 
-    return {
-      blogs: [],
-    };
-  }, [data]);
+  //   return {
+  //     blogs: [],
+  //   };
+  // }, [data]);
+
 
   return (
     <>
@@ -72,7 +89,7 @@ const Blog: NextPage<BlogProps> = ({ category }) => {
       <MainLayout>
         <div className="max-w-[1200px] py-4 mx-auto px-2">
           <Breadcumb current="Tin tức" />
-          {isFetching && !isFetchingNextPage ? (
+          {isLoading ? (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-4">
               <BlogSkeletonCard />
               <BlogSkeletonCard />
@@ -84,62 +101,64 @@ const Blog: NextPage<BlogProps> = ({ category }) => {
               <BlogSkeletonCard />
             </div>
           ) : (
-            <InfiniteScroll
-              dataLength={blogs?.blogs}
-              next={() => fetchNextPage()}
-              hasMore={true}
-              loader={<p></p>}
-              endMessage={<p>Hết</p>}
-            >
-              <>
-                <div className="flex items-center flex-col md:flex-row mt-4">
-                  <div className="flex-1">
-                    {blogs && blogs.blogs && blogs?.blogs?.length > 0 && (
-                      <BlogCard data={blogs.blogs[0]} />
-                    )}
-                  </div>
-                  <div className="flex-1 mt-2 md:mt-0 grid grid-cols-2 gap-2 md:ml-2">
-                    {blogs &&
-                      blogs.blogs &&
-                      blogs.blogs.length > 1 &&
-                      blogs.blogs.map((item: any, index: number) => {
-                        if (index > 0 && index < 5) {
-                          return <BlogCard key={item.id} data={item} />;
-                        }
-                      })}
-                  </div>
+            // <InfiniteScroll
+            //   dataLength={blogs?.blogs}
+            //   next={() => fetchNextPage()}
+            //   hasMore={true}
+            //   loader={<p></p>}
+            //   endMessage={<p>Hết</p>}
+            // >
+            <>
+              <div className="flex items-center flex-col md:flex-row mt-4">
+                <div className="flex-1">
+                  {blogs && blogs.blogs && blogs?.blogs?.length > 0 && (
+                    <BlogCard data={blogs.blogs[0]} />
+                  )}
                 </div>
+                <div className="flex-1 mt-2 md:mt-0 grid grid-cols-2 gap-2 md:ml-2">
+                  {blogs &&
+                    blogs.blogs &&
+                    blogs.blogs.length > 1 &&
+                    blogs.blogs.map((item: any, index: number) => {
+                      if (index > 0 && index < 5) {
+                        return <BlogCard key={item.id} data={item} />;
+                      }
+                    })}
+                </div>
+              </div>
 
-                {blogs && blogs.blogs && (
-                  <div className="mt-2 grid grid-cols-2  md:grid-cols-4 gap-x-2 gap-y-4">
-                    {blogs &&
-                      blogs.blogs &&
-                      blogs.blogs.map((item: any, index: number) => {
-                        if (index >= 5) {
-                          return <BlogCard key={item.id} data={item} />;
-                        }
-                      })}
-                  </div>
-                )}
-              </>
-            </InfiniteScroll>
+              {blogs && blogs.blogs && (
+                <div className="mt-2 grid grid-cols-2  md:grid-cols-4 gap-x-2 gap-y-4">
+                  {blogs &&
+                    blogs.blogs &&
+                    blogs.blogs.map((item: any, index: number) => {
+                      if (index >= 5) {
+                        return <BlogCard key={item.id} data={item} />;
+                      }
+                    })}
+                </div>
+              )}
+            </>
+            // </InfiniteScroll>
           )}
 
           {blogs?.totalPage > 1 && (
             <div className="mt-4">
               <ReactPaginate
-              breakLabel="..."
-              nextLabel=">"
-              onPageChange={(e) => {
-                router.push({
-                  query: { ...router.query, page: +e.selected + 1 },
-                });
-              }}
-              forcePage={+page - 1}
-              pageRangeDisplayed={5}
-              pageCount={blogs.totalPage}
-              previousLabel={<span>{`<`}</span>}
-            />
+                breakLabel="..."
+                nextLabel=">"
+                forcePage={+page - 1}
+                onPageChange={(e) => {
+                  if(+e.selected < +blogs?.totalPage){
+                    router.push({
+                      query: { ...router.query, page: +e.selected + 1 },
+                    });
+                  }
+                }}
+                pageRangeDisplayed={5}
+                pageCount={blogs.totalPage}
+                previousLabel={<span>{`<`}</span>}
+              />
             </div>
           )}
         </div>
@@ -151,6 +170,7 @@ const Blog: NextPage<BlogProps> = ({ category }) => {
 export default Blog;
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const category = query.category;
+  const page = query.page || 1;
   if (!category) {
     return {
       notFound: true,
@@ -161,6 +181,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     props: {
       // blogs: data,
       category,
+      page
     },
   };
 };
