@@ -50,7 +50,7 @@ const Blog: NextPage<BlogProps> = ({ category, page, limit }) => {
       {
         category,
         page,
-        limit
+        limit,
       },
     ],
     () =>
@@ -135,7 +135,8 @@ const Blog: NextPage<BlogProps> = ({ category, page, limit }) => {
                     <BlogCard data={blogs.blogs[0]} />
                   )}
                 </div>
-                <div className="flex-1 mt-2 md:mt-0 grid grid-cols-2 gap-2 md:ml-2">
+                {/* Ẩn trên mobile do iphone bị lỗi, đã có fix bên dưới... */}
+                <div className="hidden md:grid flex-1 mt-2 md:mt-0 grid-cols-2 gap-2 md:ml-2">
                   {blogs &&
                     blogs.blogs &&
                     blogs.blogs.length > 1 &&
@@ -145,6 +146,18 @@ const Blog: NextPage<BlogProps> = ({ category, page, limit }) => {
                       }
                     })}
                 </div>
+              </div>
+
+              {/* Thêm để fix lỗi responsive trên iphone... */}
+              <div className="grid grid-cols-2 gap-2 md:hidden mt-2">
+                {blogs &&
+                  blogs.blogs &&
+                  blogs.blogs.length > 1 &&
+                  blogs.blogs.map((item: any, index: number) => {
+                    if (index > 0 && index < 5) {
+                      return <BlogCard key={item.id} data={item} />;
+                    }
+                  })}
               </div>
 
               {blogs && blogs.blogs && (
