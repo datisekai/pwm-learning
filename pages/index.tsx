@@ -7,6 +7,7 @@ import SliderAction from "../actions/Slider.action";
 import SpeciesAction from "../actions/Species.action";
 import UIAction from "../actions/UiHome.action";
 import MainLayout from "../components/layouts/MainLayout";
+import LoadingSpinner from "../components/LoadingSpinner";
 import Section1 from "../components/sections/Section1";
 import Section2 from "../components/sections/Section2";
 import Section3 from "../components/sections/Section3";
@@ -16,11 +17,13 @@ import { UIModel } from "../models/Ui.model";
 
 const inter = Inter({ subsets: ["latin"] });
 
-interface HomeProps {
-  data: UIModel[];
-}
+// interface HomeProps {
+//   data: UIModel[];
+// }
 
-const Home: NextPage<HomeProps> = ({ data }) => {
+const Home = () => {
+  const { data, isLoading } = useQuery(["ui-home"], UIAction.getAll);
+
   const { data: populars, isLoading: isPopularsLoading } = useQuery(
     ["popular"],
     PopularAction.getAll
@@ -43,35 +46,41 @@ const Home: NextPage<HomeProps> = ({ data }) => {
         <link rel="icon" href="/fav.png" />
       </Head>
       <MainLayout>
-        <div className="pb-10">
-          {data?.some((item) => item.code === "home;slider" && item.status) && (
-            <Slider data={sliders} />
-          )}
-          {data?.some(
-            (item) => item.code === "home;popular" && item.status
-          ) && <Section1 data={populars} isLoading={isPopularsLoading} />}
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <div className="pb-10">
+            {data?.some(
+              (item: any) => item.code === "home;slider" && item.status
+            ) && <Slider data={sliders} />}
+            {data?.some(
+              (item: any) => item.code === "home;popular" && item.status
+            ) && <Section1 data={populars} isLoading={isPopularsLoading} />}
 
-          {data?.some(
-            (item) => item.code === "home;introduce" && item.status
-          ) && <Section2 />}
-          {data?.some((item) => item.code === "home;species" && item.status) &&
-            species?.species?.map(
-              (item: any, index: number) =>
-                species?.products[index].length > 0 && (
-                  <Section3
-                    key={index}
-                    title={item.name}
-                    dataCategory={item}
-                    dataProduct={species.products[index]}
-                  />
-                )
-            )}
+            {data?.some(
+              (item: any) => item.code === "home;introduce" && item.status
+            ) && <Section2 />}
+            {data?.some(
+              (item: any) => item.code === "home;species" && item.status
+            ) &&
+              species?.species?.map(
+                (item: any, index: number) =>
+                  species?.products[index].length > 0 && (
+                    <Section3
+                      key={index}
+                      title={item.name}
+                      dataCategory={item}
+                      dataProduct={species.products[index]}
+                    />
+                  )
+              )}
 
-          {/* <Section5 /> */}
-          {data?.some((item) => item.code === "home;bst" && item.status) && (
-            <Section6 data={species?.species} />
-          )}
-        </div>
+            {/* <Section5 /> */}
+            {data?.some(
+              (item: any) => item.code === "home;bst" && item.status
+            ) && <Section6 data={species?.species} />}
+          </div>
+        )}
       </MainLayout>
     </>
   );
@@ -79,11 +88,11 @@ const Home: NextPage<HomeProps> = ({ data }) => {
 
 export default Home;
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const data = await UIAction.getAll();
-  return {
-    props: {
-      data,
-    },
-  };
-};
+// export const getServerSideProps: GetServerSideProps = async () => {
+//   const data = await UIAction.getAll();
+//   return {
+//     props: {
+//       data,
+//     },
+//   };
+// };
