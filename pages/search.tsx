@@ -15,23 +15,34 @@ import { SpeciesModel } from "../models/Species.model";
 import ReactPaginate from "react-paginate";
 import { useRouter } from "next/router";
 import { AiOutlineRight } from "react-icons/ai";
-import React from 'react'
+import React from "react";
+import { useQuery } from "@tanstack/react-query";
+import ProductSkeletonCard from "../components/skeletons/ProductSkeletonCard";
 
 interface SearchProps {
   query: any;
-  species: SpeciesModel[];
-  products: {
-    products: ProductModel[];
-    totalPage: number;
-  };
+  // species: SpeciesModel[];
+  // products: {
+  //   products: ProductModel[];
+  //   totalPage: number;
+  // };
 }
 
-const Search: NextPage<SearchProps> = ({ query, species, products }) => {
+const Search: NextPage<SearchProps> = ({ query }) => {
   const { name, speciesId, categoryId, min, max } = query;
   const router = useRouter();
   const [showOptions, setShowOptions] = React.useState(false);
-  const handleClick = () =>
-  {
+
+  const { data: species, isLoading: isSpeciesLoading } = useQuery(
+    ["species-search"],
+    () => SpeciesAction.getAll(1)
+  );
+  const { data: products, isLoading: isProductsLoading } = useQuery(
+    ["result-search", query],
+    () => ProductAction.search(query)
+  );
+
+  const handleClick = () => {
     setShowOptions(!showOptions);
   }
   
@@ -58,7 +69,7 @@ const Search: NextPage<SearchProps> = ({ query, species, products }) => {
               {showOptions && <ToolSearch species={species} />}
             </div>
             <div className="md:block hidden">
-             <ToolSearch species={species} />
+              <ToolSearch species={species} />
             </div>
             <div className="flex-1 md:ml-5">
               <div
@@ -90,12 +101,13 @@ const Search: NextPage<SearchProps> = ({ query, species, products }) => {
                 </div>
               </div>
               <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-2 gap-y-4">
-                {/* {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
-                  <HomeCard key={item} data="/images/test.jpg" />
-                ))} */}
-                {products?.products.map((item) => (
-                  <HomeCard key={item.id} data={item} />
-                ))}
+                {isProductsLoading
+                  ? [1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+                      <ProductSkeletonCard key={item} />
+                    ))
+                  : products?.products.map((item: any) => (
+                      <HomeCard key={item.id} data={item} />
+                    ))}
               </div>
               <div className="flex w-full justify-end mt-5">
                 {products?.totalPage > 1 && (
@@ -103,11 +115,11 @@ const Search: NextPage<SearchProps> = ({ query, species, products }) => {
                     breakLabel="..."
                     nextLabel=">"
                     onPageChange={(e) => {
-                      console.log(e.selected);
                       router.push({
                         query: { ...router.query, page: +e.selected + 1 },
                       });
                     }}
+                    forcePage={(+query.page || 1) - 1}
                     pageRangeDisplayed={5}
                     pageCount={products.totalPage}
                     previousLabel={<span>{`<`}</span>}
@@ -125,12 +137,13 @@ const Search: NextPage<SearchProps> = ({ query, species, products }) => {
 export default Search;
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const data = await Promise.all([
-    SpeciesAction.getAll(1),
-    ProductAction.search(query),
-  ]);
+  // const data = await Promise.all([
+  //   SpeciesAction.getAll(1),
+  //   ProductAction.search(query),
+  // ]);
+
 
   return {
-    props: { query, species: data[0], products: data[1] },
+    props: { query },
   };
 };

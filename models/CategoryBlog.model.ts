@@ -6,6 +6,7 @@ export interface CategoryBlogModel {
   status: boolean;
   slug: string;
   blogs?: BlogModelCb[];
+  isMenu:boolean
 }
 
 export interface BlogModelCb {

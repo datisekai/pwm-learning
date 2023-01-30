@@ -1,29 +1,26 @@
-import React, { FC, useContext, useState } from "react";
-import AdminLayout from "../../components/layouts/AdminLayout";
+import { useMutation } from "@tanstack/react-query";
+import { GetServerSideProps, NextPage } from "next";
+import { useRouter } from "next/router";
+import { useContext, useState } from "react";
+import { toast } from "react-hot-toast";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { AiOutlineUserAdd } from "react-icons/ai";
-import { GetServerSideProps, NextPage } from "next";
-import UserAction from "../../actions/User.action";
-import { UserModel } from "../../models/User.model";
-import dayjs from "dayjs";
-import ModalAddUser from "../../components/admin/users/ModalAddUser";
-import PermissionAction from "../../actions/Permission.action";
-import { PermissionModel } from "../../models/Permission.model";
-import ModalUpdateUser from "../../components/admin/users/ModalUpdateUser";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { toast } from "react-hot-toast";
-import { useRouter } from "next/router";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import swal from "sweetalert";
+import UIAction from "../../actions/UiHome.action";
+import ModalAddUiHome from "../../components/admin/ui-home/ModalAddUiHome";
+import ModalUpdateUiHome from "../../components/admin/ui-home/ModalUpdateUiHome";
 import { AuthContext } from "../../components/context";
+import AdminLayout from "../../components/layouts/AdminLayout";
 import Meta from "../../components/Meta";
+import { UIModel } from "../../models/Ui.model";
+import { getImageServer } from "../../utils";
 
-interface UserAdminProps {
-  users: UserModel[];
-  permissions: PermissionModel[];
+interface UIHomeProps {
+  data: UIModel[];
 }
 
-const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
+const UIHome: NextPage<UIHomeProps> = ({ data }) => {
   const [openModalAdd, setOpenModalAdd] = useState(false);
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [current, setCurrent] = useState<any>();
@@ -32,9 +29,9 @@ const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
 
   const router = useRouter();
 
-  const { mutate, isLoading } = useMutation(UserAction.delete, {
+  const { mutate, isLoading } = useMutation(UIAction.delete, {
     onSuccess: () => {
-      toast.success("Đã chuyển vào thùng rác");
+      toast.success("Đã xóa thành công");
       router.replace(router.asPath);
     },
     onError: (err) => {
@@ -57,48 +54,60 @@ const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
     });
   };
 
+  const {mutate:updateStatus, isLoading:loadingUI} = useMutation(UIAction.update,{
+    onSuccess:() => {
+      router.replace(router.asPath);
+    },
+    onError: (err) => {
+      console.log(err);
+      toast.error("Có lỗi xảy ra, vui lòng thử lại");
+    },
+  })
+
+  const handleUI = (data:{id:number, checked:boolean}) => {
+      updateStatus({id:data.id, status:data.checked})
+  }
+
+
+
   return (
     <>
-      <Meta
-        image="/images/logo.png"
-        title="Người dùng | Admin"
-        description=""
-      />
+      <Meta image="/images/logo.png" title="UI Home | Admin" description="" />
       <AdminLayout>
         <>
           <div className="mt-5 grid">
             <div className="flex items-center justify-between">
               <h1 className="text-white bg-primary px-4 py-2 inline rounded-lg">
-                Quản lý người dùng
+                Quản lý UI Home
               </h1>
-              {user?.detailActions.includes("user:add") && (
+              {user?.detailActions.includes("ui:add") && (
                 <button
                   onClick={() => setOpenModalAdd(true)}
                   className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700"
                 >
-                  Thêm người dùng
+                  Thêm UI
                 </button>
               )}
             </div>
             <div className="mt-4 bg-white rounded-3xl p-4 max-h-[450px] overflow-scroll shadow-master">
-          <div className="relative">
-            <table className="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
+              <div className="relative">
+                <table className="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
                   <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
                       <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                        Email
+                        Hình ảnh
                       </th>
                       <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                        Loại quyền
+                        Code
                       </th>
                       <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                        Ngày tạo
+                        Ghi chú
                       </th>
                       <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                        Ngày cập nhật
+                        Hiển thị
                       </th>
-                      {(user?.detailActions.includes("user:update") ||
-                        user?.detailActions.includes("user:delete")) && (
+                      {(user?.detailActions.includes("ui:update") ||
+                        user?.detailActions.includes("ui:delete")) && (
                         <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
                           Hành động
                         </th>
@@ -106,8 +115,7 @@ const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
                     </tr>
                   </thead>
                   <tbody>
-                  
-                    {users?.map((item: any) => (
+                    {data?.map((item) => (
                       <tr
                         key={item.id}
                         className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
@@ -116,22 +124,36 @@ const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
                           scope="row"
                           className="break-words max-w-[200px] px-2 py-3 md:py-4 md:px-6 font-medium text-gray-900 line-clamp-1 dark:text-white"
                         >
-                          {item.email}
+                          <LazyLoadImage
+                            src={getImageServer(item.image)}
+                            className="w-[80px] aspect-[16/9] rounded-sm"
+                          />
                         </th>
                         <td className="px-2 py-3 md:py-4 md:px-6 break-words max-w-[200px]">
-                          {item.permission.name}
+                          {item.code || "Không có"}
                         </td>
                         <td className="px-2 py-3 md:py-4 md:px-6">
-                          {dayjs(item.createdAt).format("DD/MM/YYYY")}
+                          {item.note || "Không có"}
                         </td>
                         <td className="px-2 py-3 md:py-4 md:px-6">
-                          {dayjs(item.updatedAt).format("DD/MM/YYYY")}
+                          <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={item.status}
+                              onChange={(e) => handleUI({id:item.id, checked:e.target.checked})}
+                              className="sr-only peer"
+                              disabled={user?.detailActions.includes("ui:update") ? loadingUI : true}
+                            />
+                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
+                          </label>
                         </td>
-                        {(user?.detailActions.includes("user:update") ||
-                          user?.detailActions.includes("user:delete")) && (
+                        {(user?.detailActions.includes("ui:update") ||
+                          user?.detailActions.includes("ui:delete")) && (
                           <td className="px-2 py-3 md:py-4 md:px-6">
                             <div className="flex">
-                              {user?.detailActions.includes("user:update") && (
+                              {user?.detailActions.includes(
+                                "ui:update"
+                              ) && (
                                 <div
                                   onClick={() => {
                                     setCurrent(item);
@@ -142,7 +164,9 @@ const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
                                   <CiEdit fontSize={24} />
                                 </div>
                               )}
-                              {user?.detailActions.includes("user:delete") && (
+                              {user?.detailActions.includes(
+                                "ui:delete"
+                              ) && (
                                 <div
                                   onClick={() => handleDelete(item.id)}
                                   className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
@@ -160,14 +184,12 @@ const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
               </div>
             </div>
           </div>
-          <ModalAddUser
-            data={permissions}
+          <ModalAddUiHome
             handleClose={() => setOpenModalAdd(false)}
             open={openModalAdd}
           />
-          <ModalUpdateUser
+          <ModalUpdateUiHome
             current={current}
-            data={permissions}
             handleClose={() => setOpenModalUpdate(false)}
             open={openModalUpdate}
           />
@@ -177,30 +199,13 @@ const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
   );
 };
 
-export default UserAdmin;
+export default UIHome;
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const token = req.cookies["token"];
-  const detailActions = JSON.parse(req.cookies["detailActions"] || "[]");
-
-  const data = await Promise.all([
-    UserAction.getAll(token || ""),
-    PermissionAction.getAll(),
-  ]);
-
-  if (!detailActions.includes("user:view")) {
-    return {
-      props: {},
-      redirect: {
-        destination: "/admin",
-      },
-    };
-  }
-
+export const getServerSideProps: GetServerSideProps = async () => {
+  const data = await UIAction.getAll();
   return {
     props: {
-      users: data[0] || [],
-      permissions: data[1] || [],
+      data: data,
     },
   };
 };

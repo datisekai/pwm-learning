@@ -116,14 +116,14 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
       return;
     }
 
-    if (classify1.length === 0) {
-      toast.error("Vui lòng nhập chi tiết phân loại");
+    if (classify1.filter(item => item.text != "").length === 0) {
+      toast.error("Vui lòng nhập chi tiết phân loại 1");
       return;
     }
 
     if (newProduct.attributes.length === 2) {
-      if (classify2.length === 0) {
-        toast.error("Vui lòng nhập chi tiết phân loại");
+      if (classify2.filter(item => item.text != "").length === 0) {
+        toast.error("Vui lòng nhập chi tiết phân loại 2");
         return;
       }
     }
@@ -316,7 +316,7 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
                         rules={{
                           required: "Không được để trống ô",
                           minLength: {
-                            value: 100,
+                            value: 10,
                             message:
                               "Mô tả sản phẩm của bạn quá ngắn. Vui lòng nhập ít nhất 100 kí tự",
                           },

@@ -27,7 +27,7 @@ const BlogCard: React.FC<BlogProps> = ({ data }) => {
       />
 
       <div className="absolute bottom-0  py-2 left-0 right-0 bg-[rgba(0,0,0,0.6)] px-2">
-        <h2 className=" line-clamp-2 md:line-clamp-3 text-md md:text-lg hover:text-primary cursor-pointer hover:underline transition-all text-white ">
+        <h2 className="line-clamp-1 text-md md:text-lg hover:text-primary cursor-pointer hover:underline transition-all text-white ">
           {data.name}
         </h2>
         <p className="text-white text-sm md:text-md mt-1">

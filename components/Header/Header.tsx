@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useTheme } from "next-themes";
 import { HiOutlineSun, HiOutlineMoon } from "react-icons/hi";
+import { getImageServer, uploadImg } from "../../utils";
 interface HeaderProps {
   handleOpen: () => void;
   handleOpenSearch: () => void;
@@ -40,11 +41,16 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
   const [keyword, setKeyword] = useState("");
 
   const router = useRouter();
-
+  const [logo, setLogo] = React.useState<string>("");
   useEffect(() => {
     if (router && router.query && router.query.name) {
       setKeyword(router.query.name.toString());
     }
+    if (router.asPath === "/") setLogo("images/PWM-Trangchu.jpg");
+    else if (router.asPath.includes("/search"))
+      setLogo("images/PWM-Jewelry.png");
+    else if (router.asPath.includes("blog"))
+      setLogo("../images/PWM-Learning.png");
   }, [router]);
 
   const handleSearch = () => {
@@ -52,6 +58,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
       router.push(`/search?name=${encodeURI(keyword)}`);
     }
   };
+  
 
   return (
     <>
@@ -71,11 +78,11 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
               className="block md:hidden dark:text-black"
             />
 
-            <Link href={"/"}>
+            <Link href={"/"} >
               <img
                 alt="PWM Logo"
-                src="/images/logo.png"
-                className="w-[150px] md:w-auto"
+                src={logo}
+                className="w-[150px] rounded-md"
               />
             </Link>
             <div className="md:flex items-center hidden">

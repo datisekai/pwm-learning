@@ -13,4 +13,5 @@ export interface SpeciesModel {
     updatedAt: Date;
     categories: Category[];
     thumbnail:string;
+    isMenu:boolean
 }

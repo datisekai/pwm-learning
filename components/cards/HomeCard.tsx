@@ -33,7 +33,7 @@ const HomeCard: React.FC<HomeCardProps> = ({ data }) => {
   }, [data]);
   return (
     <Link href={`/product/${data.slug}`}>
-      <div className="w-full">
+      <div className="w-full h-full pb-2 border shadow-custom-100">
         <div className="flex items-center justify-center w-full  relative">
           <LazyLoadImage
             effect="blur"
@@ -45,7 +45,7 @@ const HomeCard: React.FC<HomeCardProps> = ({ data }) => {
           </button>
         </div>
         <div className="mt-2 text-center">
-          <h3 className="font-bold text-sm md:text-md">{data.name}</h3>
+          <h3 className="font-bold text-sm px-2 line-clamp-2 md:text-md">{data.name}</h3>
           <p className="font-bold text-sm md:text-md text-primary">
             {minPrice === maxPrice
               ? formatPrices(minPrice)

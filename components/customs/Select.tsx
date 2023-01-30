@@ -29,7 +29,7 @@ const Select: FC<SelectProps> = ({
         render={({ field }) => (
           <select {...field} className={className}>
               <option  value={""}>Vui lòng chọn</option>  
-            {data.map((item) => (
+            {data?.map((item) => (
               <option key={item.value} value={item.value}>{item.text}</option>
             ))}
           </select>

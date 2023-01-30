@@ -3,14 +3,21 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper";
 
 import { Swiper, SwiperSlide } from "swiper/react";
+import { SliderModel } from "../models/Slider.model";
+import { getImageServer } from "../utils";
+import SliderSkeletonCard from "./skeletons/SliderSkeletonCard";
 
-const data = [
-  "/images/banner1.png",
-  "/images/banner2.png",
-  "/images/banner3.png",
-];
+// const data = [
+//   "/images/banner1.png",
+//   "/images/banner2.png",
+//   "/images/banner3.png",
+// ];
 
-const Slider = () => {
+interface SliderProps {
+  data: SliderModel[];
+}
+
+const Slider: React.FC<SliderProps> = ({ data }) => {
   return (
     <div className="max-w-[1200px] mx-auto mt-2">
       <Swiper
@@ -21,9 +28,21 @@ const Slider = () => {
         color="#EA8143"
         pagination={{ clickable: true }}
       >
-        {data.map(item => <SwiperSlide key={item}>
-            <LazyLoadImage effect="blur" src={item} className='w-full '/>
-        </SwiperSlide>)}
+        {!data &&
+          [1, 2, 3].map((item) => (
+            <SwiperSlide key={item}>
+              <SliderSkeletonCard />
+            </SwiperSlide>
+          ))}
+        {data?.map((item) => (
+          <SwiperSlide key={item.id}>
+            <LazyLoadImage
+              effect="blur"
+              src={getImageServer(item.image)}
+              className="w-full aspect-[553/215] "
+            />
+          </SwiperSlide>
+        ))}
       </Swiper>
     </div>
   );

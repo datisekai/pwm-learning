@@ -1,36 +1,29 @@
 import { useMutation } from "@tanstack/react-query";
-import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { FcAddImage } from "react-icons/fc";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import ProductAction from "../../../actions/Product.action";
-import { CategoryModel } from "../../../models/Category.model";
-import { ProductModel } from "../../../models/Product.model";
+import SliderAction from "../../../actions/Slider.action";
+import SpeciesAction from "../../../actions/Species.action";
+import UIAction from "../../../actions/UiHome.action";
+import { SliderModel } from "../../../models/Slider.model";
+import { UIModel } from "../../../models/Ui.model";
 import { getImageServer, uploadImg } from "../../../utils";
-import Select from "../../customs/Select";
-import TextArea from "../../customs/TextArea";
 import TextField from "../../customs/TextField";
 
-interface ModalUpdateProductProps {
+interface ModalUpdateUiHomeProps {
   open: boolean;
   handleClose: () => void;
-  current: ProductModel;
-  categories: CategoryModel[];
+  current: UIModel;
 }
 
-const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
+const ModalUpdateUiHome: React.FC<ModalUpdateUiHomeProps> = ({
   handleClose,
   open,
   current,
-  categories,
 }) => {
-  const [file, setFile] = React.useState<any>();
-
-  const [preview, setPreview] = React.useState("");
-
   const {
     control,
     formState: { errors },
@@ -40,24 +33,25 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
     setValue,
   } = useForm({
     defaultValues: {
-      name: "",
-      categoryId: 0,
-      description: "",
+      code: "",
+      note: "",
     },
   });
 
+  const [thumbnail, setThumbnail] = React.useState<File>();
+  const [preview, setPreview] = React.useState<string>("");
+
   useEffect(() => {
-    if (current) {
-      setValue("name", current.name);
-      setValue("categoryId", current.categoryId);
-      setValue("description", current.description);
-      setPreview(getImageServer(current.thumbnail));
+    setValue("code", current?.code);
+    current?.note && setValue("note", current?.note);
+    if (current?.image) {
+      setPreview(getImageServer(current.image));
     }
   }, [current]);
 
   const router = useRouter();
 
-  const { mutate, isLoading } = useMutation(ProductAction.update, {
+  const { mutate, isLoading } = useMutation(UIAction.update, {
     onSuccess: () => {
       toast.success("Cập nhật thành công");
       handleClose();
@@ -71,15 +65,13 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
 
   const handleUpdate = async (data: any) => {
     let image = "";
-    if (file) {
-      image = await uploadImg(file);
-    }else{
-      image = preview.split('images/')[1]
+    if (thumbnail) {
+      image = await uploadImg(thumbnail);
+    } else {
+      image = preview.split("images/")[1];
     }
 
-
-    mutate({ ...data, id: current.id, thumbnail: image
-  });
+    mutate({ ...data, id: current?.id, image: image });
   };
 
   return (
@@ -89,7 +81,7 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
         onClick={handleClose}
       ></div>
       <div className="w-[90%] md:w-[500px] p-4 rounded-lg bg-white fixed z-[70] top-[50%] translate-y-[-50%] translate-x-[-50%] left-[50%] ">
-        <h2 className="font-bold">Cập nhật sản phẩm</h2>
+        <h2 className="font-bold">Cập nhật UI</h2>
         <div className="mt-4 space-y-2">
           <div className="flex items-center space-x-2 mb-2">
             <span>Hình ảnh</span>
@@ -98,7 +90,7 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
                 type="file"
                 onChange={(e) => {
                   const files = e.target && e.target.files && e.target.files[0];
-                  setFile(files);
+                  setThumbnail(files || undefined);
                   files && setPreview(URL.createObjectURL(files));
                 }}
                 className="hidden"
@@ -115,68 +107,33 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
             </div>
           </div>
           <div className="space-y-2">
-            <label>Tên sản phẩm</label>
+            <label>Code</label>
             <TextField
               control={control}
               error={errors}
-              name="name"
+              name="code"
               className={"css-field"}
               placeholder="Nhập vào"
               rules={{
-                required: "Không được để trống ô",
-                minLength: {
-                  value: 10,
-                  message:
-                    "Tên sản phẩm của bạn quá ngắn. Vui lòng nhập ít nhất 10 kí tự",
-                },
-                maxLength: {
-                  value: 120,
-                  message:
-                    "Tên sản phẩm của bạn quá dài. Vui lòng nhập tối đa 120 kí tự",
-                },
+                required: "Không được bỏ trống",
               }}
             />
           </div>
           <div className="space-y-2">
-            <label>Thể loại</label>
-            <Select
-              control={control}
-              data={categories?.map((item) => ({
-                text: item.name,
-                value: item.id,
-              }))}
-              error={errors}
-              name="categoryId"
-              className={"css-field"}
-            />
-          </div>
-          <div className="space-y-2">
-            <label>Mô tả sản phẩm</label>
-            <TextArea
+            <label>Ghi chú</label>
+            <TextField
               control={control}
               error={errors}
-              name="description"
+              name="note"
               className={"css-field"}
-              placeholder="Nhập vào"
-              rules={{
-                required: "Không được để trống ô",
-                minLength: {
-                  value: 10,
-                  message:
-                    "Tên sản phẩm của bạn quá ngắn. Vui lòng nhập ít nhất 100 kí tự",
-                },
-                maxLength: {
-                  value: 3000,
-                  message:
-                    "Tên sản phẩm của bạn quá dài. Vui lòng nhập tối đa 3000 kí tự",
-                },
-              }}
+              placeholder="VD: slider đầu trang home"
             />
           </div>
         </div>
 
         <div className="mt-4 flex items-center justify-between">
           <button
+            disabled={isLoading}
             onClick={handleClose}
             type="button"
             className="text-gray-500 bg-gray-100 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
@@ -184,10 +141,11 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
             Đóng
           </button>
           <button
+            disabled={isLoading}
             onClick={handleSubmit(handleUpdate)}
             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
-            Cập nhật
+            Lưu
           </button>
         </div>
       </div>
@@ -195,4 +153,4 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
   );
 };
 
-export default ModalUpdateProduct;
+export default ModalUpdateUiHome;
