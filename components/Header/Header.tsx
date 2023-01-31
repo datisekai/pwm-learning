@@ -77,7 +77,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
               className="block md:hidden dark:text-black"
             />
 
-            <div className="flex-1 flex justify-center">
+            <div className="flex-1 md:flex-none flex justify-center">
               <Link href={"/"}>
                 {" "}
                 <img
@@ -107,10 +107,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
                 <BsSearch fontSize={20} className="text-white" />
               </div>
             </div>
-            <div className="hidden hover:bg-primaryHover transition-all hover:cursor-pointer bg-primary h-[40px] w-[40px] md:flex items-center justify-center rounded-full">
-              {/* UI */}
-              {renderThemeChanger()}
-            </div>
+
             <div className="flex items-center">
               <div className="hidden lg:flex items-center">
                 <Image
@@ -134,7 +131,12 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
                   Hệ thống cửa hàng
                 </span>
               </div>
+             
             </div>
+           <div className="hidden hover:bg-primaryHover transition-all hover:cursor-pointer bg-primary h-[40px] w-[40px] md:flex items-center justify-center rounded-full">
+                {/* UI */}
+                {renderThemeChanger()}
+              </div>
             {/* <div className=" items-center hidden md:flex">
               <button>Đăng nhập</button>
               <button className="px-4 ml-2 py-2 rounded-tl-lg rounded-br-lg hover:bg-primaryHover transition-all bg-primary text-white">
@@ -155,12 +157,12 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
               </Link>
             </div> */}
 
-            <div className="w-[30px] h-[30px] flex items-center justify-center">
-            <BsSearch
-              onClick={handleOpenSearch}
-              fontSize={20}
-              className="block md:hidden dark:text-black"
-            />
+            <div className="flex md:hidden w-[30px] h-[30px]  items-center justify-center">
+              <BsSearch
+                onClick={handleOpenSearch}
+                fontSize={20}
+                className=" dark:text-black"
+              />
             </div>
           </div>
         </div>
