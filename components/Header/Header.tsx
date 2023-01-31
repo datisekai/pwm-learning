@@ -47,12 +47,11 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
   const [keyword, setKeyword] = useState("");
 
   const router = useRouter();
-  
+
   useEffect(() => {
     if (router && router.query && router.query.name) {
       setKeyword(router.query.name.toString());
     }
-  
   }, [router]);
 
   const handleSearch = () => {
@@ -84,7 +83,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
       >
         {/* <TopHeader /> */}
         <div className="bg-grey">
-          <div className="max-w-[1200px] mx-auto py-4 w-[calc(100%-16px)] flex items-center justify-between">
+          <div className="max-w-[1200px] mx-auto py-2 md:py-4 w-[calc(100%-16px)] flex items-center justify-between">
             <BiMenuAltLeft
               onClick={handleOpen}
               fontSize={30}
@@ -94,12 +93,14 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
             <div className="flex-1 md:flex-none flex justify-center">
               <Link href={"/"}>
                 {" "}
-                <LazyLoadImage
-                  effect="blur"
-                  alt="PWM Logo"
-                  src={logoRender}
-                  className="w-[150px] rounded-tl-md rounded-br-md h-[50px]"
-                />
+                <div className="w-[150px] h-[50px]">
+                  <LazyLoadImage
+                    effect="blur"
+                    alt="PWM Logo"
+                    src={logoRender}
+                    className=" rounded-tl-md rounded-br-md "
+                  />
+                </div>
               </Link>
             </div>
             <div className="md:flex items-center hidden">
