@@ -15,6 +15,12 @@ interface HeaderProps {
   handleOpenSearch: () => void;
 }
 
+const logoUrl = {
+  "/": "/images/PWM-Trangchu.jpg",
+  "/search": "/images/PWM-Jewelry.png",
+  "/blog": "/images/PWM-Learning.png",
+};
+
 const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
   const { systemTheme, theme, setTheme } = useTheme();
 
@@ -41,16 +47,12 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
   const [keyword, setKeyword] = useState("");
 
   const router = useRouter();
-  const [logo, setLogo] = React.useState<string>("");
+  
   useEffect(() => {
     if (router && router.query && router.query.name) {
       setKeyword(router.query.name.toString());
     }
-    if (router.asPath === "/") setLogo("images/PWM-Trangchu.jpg");
-    else if (router.asPath.includes("/search"))
-      setLogo("images/PWM-Jewelry.png");
-    else if (router.asPath.includes("blog"))
-      setLogo("../images/PWM-Learning.png");
+  
   }, [router]);
 
   const handleSearch = () => {
@@ -58,6 +60,18 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
       router.push(`/search?name=${encodeURI(keyword)}`);
     }
   };
+
+  const logoRender = React.useMemo(() => {
+    let logo = logoUrl["/"];
+    if (router.asPath) {
+      if (router.asPath.includes("/blog")) {
+        logo = logoUrl["/blog"];
+      } else if (router.asPath.includes("/search")) {
+        logo = logoUrl["/search"];
+      }
+    }
+    return logo;
+  }, [router.asPath]);
 
   return (
     <>
@@ -80,10 +94,11 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
             <div className="flex-1 md:flex-none flex justify-center">
               <Link href={"/"}>
                 {" "}
-                <img
+                <LazyLoadImage
+                  effect="blur"
                   alt="PWM Logo"
-                  src={logo}
-                  className="w-[150px] rounded-md"
+                  src={logoRender}
+                  className="w-[150px] rounded-tl-md rounded-br-md h-[50px]"
                 />
               </Link>
             </div>
@@ -131,12 +146,11 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
                   Hệ thống cửa hàng
                 </span>
               </div>
-             
             </div>
-           <div className="hidden hover:bg-primaryHover transition-all hover:cursor-pointer bg-primary h-[40px] w-[40px] md:flex items-center justify-center rounded-full">
-                {/* UI */}
-                {renderThemeChanger()}
-              </div>
+            <div className="hidden hover:bg-primaryHover transition-all hover:cursor-pointer bg-primary h-[40px] w-[40px] md:flex items-center justify-center rounded-full">
+              {/* UI */}
+              {renderThemeChanger()}
+            </div>
             {/* <div className=" items-center hidden md:flex">
               <button>Đăng nhập</button>
               <button className="px-4 ml-2 py-2 rounded-tl-lg rounded-br-lg hover:bg-primaryHover transition-all bg-primary text-white">
