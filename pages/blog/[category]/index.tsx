@@ -14,35 +14,20 @@ import ReactPaginate from "react-paginate";
 import { useRouter } from "next/router";
 
 interface BlogProps {
-  category: string;
-  page: string | number;
-  limit: string | number;
+  // category: string;
+  // page: string | number;
+  // limit: string | number;
 }
-const Blog: NextPage<BlogProps> = ({ category, page, limit }) => {
+const Blog: NextPage<BlogProps> = () => {
   // const { data: blogs, isLoading } = useQuery(["category-blog", category], () =>
   //   CategoryBlogAction.getBySlug(category)
   // );
 
   const router = useRouter();
 
-  // const { data, fetchNextPage, isLoading, isFetching, isFetchingNextPage } =
-  //   useInfiniteQuery(
-  //     ["category-blog", { category, page }],
-  //     ({ pageParam }) => {
-  //       return CategoryBlogAction.getBySlug({
-  //         slug: category,
-  //         page: pageParam,
-  //         limit: 2,
-  //       });
-  //     },
-  //     {
-  //       getNextPageParam: (lastPage: any, allPages: any) => {
-  //         if (+page < +lastPage.totalPage) {
-  //           return +page + 1;
-  //         }
-  //       },
-  //     }
-  //   );
+  const {category, page, limit} = router.query;
+
+
 
   const { data: blogs, isLoading } = useQuery(
     [
@@ -61,23 +46,6 @@ const Blog: NextPage<BlogProps> = ({ category, page, limit }) => {
       })
   );
 
-  // const blogs = React.useMemo(() => {
-  //   if (data) {
-  //     // return data.pages.reduce(
-  //     //   (pre, cur) => {
-  //     //     return { ...cur, blogs: [...pre.blogs, ...cur.blogs] };
-  //     //   },
-  //     //   {
-  //     //     blogs: [],
-  //     //   }
-  //     // );
-  //     return data.pages[data.pages.length - 1];
-  //   }
-
-  //   return {
-  //     blogs: [],
-  //   };
-  // }, [data]);
 
   return (
     <>
@@ -180,7 +148,7 @@ const Blog: NextPage<BlogProps> = ({ category, page, limit }) => {
               <ReactPaginate
                 breakLabel="..."
                 nextLabel=">"
-                forcePage={+page - 1}
+                forcePage={+(page || 1) - 1}
                 onPageChange={(e) => {
                   if (+e.selected < +blogs?.totalPage) {
                     router.push({
@@ -201,22 +169,23 @@ const Blog: NextPage<BlogProps> = ({ category, page, limit }) => {
 };
 
 export default Blog;
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const category = query.category;
-  const page = query.page || 1;
-  const limit = query.limit || 9;
-  if (!category) {
-    return {
-      notFound: true,
-    };
-  }
-  // const data = await CategoryBlogAction.getBySlug(category.toString());
-  return {
-    props: {
-      // blogs: data,
-      category,
-      page,
-      limit,
-    },
-  };
-};
+
+// export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+//   const category = query.category;
+//   const page = query.page || 1;
+//   const limit = query.limit || 9;
+//   if (!category) {
+//     return {
+//       notFound: true,
+//     };
+//   }
+//   // const data = await CategoryBlogAction.getBySlug(category.toString());
+//   return {
+//     props: {
+//       // blogs: data,
+//       category,
+//       page,
+//       limit,
+//     },
+//   };
+// };
