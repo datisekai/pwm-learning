@@ -9,6 +9,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useTheme } from "next-themes";
 import { HiOutlineSun, HiOutlineMoon } from "react-icons/hi";
+import { getImageServer, uploadImg } from "../../utils";
 interface HeaderProps {
   handleOpen: () => void;
   handleOpenSearch: () => void;
@@ -40,11 +41,16 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
   const [keyword, setKeyword] = useState("");
 
   const router = useRouter();
-
+  const [logo, setLogo] = React.useState<string>("");
   useEffect(() => {
     if (router && router.query && router.query.name) {
       setKeyword(router.query.name.toString());
     }
+    if (router.asPath === "/") setLogo("images/PWM-Trangchu.jpg");
+    else if (router.asPath.includes("/search"))
+      setLogo("images/PWM-Jewelry.png");
+    else if (router.asPath.includes("blog"))
+      setLogo("../images/PWM-Learning.png");
   }, [router]);
 
   const handleSearch = () => {
@@ -71,13 +77,16 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
               className="block md:hidden dark:text-black"
             />
 
-            <Link href={"/"}>
-              <img
-                alt="PWM Logo"
-                src="/images/logo.png"
-                className="w-[150px] md:w-auto"
-              />
-            </Link>
+            <div className="flex-1 flex justify-center">
+              <Link href={"/"}>
+                {" "}
+                <img
+                  alt="PWM Logo"
+                  src={logo}
+                  className="w-[150px] rounded-md"
+                />
+              </Link>
+            </div>
             <div className="md:flex items-center hidden">
               <input
                 type="text"
@@ -98,7 +107,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
                 <BsSearch fontSize={20} className="text-white" />
               </div>
             </div>
-            <div className="block hover:bg-primaryHover transition-all hover:cursor-pointer bg-primary h-[40px] w-[40px] flex items-center justify-center rounded-full">
+            <div className="hidden hover:bg-primaryHover transition-all hover:cursor-pointer bg-primary h-[40px] w-[40px] md:flex items-center justify-center rounded-full">
               {/* UI */}
               {renderThemeChanger()}
             </div>
@@ -145,11 +154,14 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
                 </div>
               </Link>
             </div> */}
+
+            <div className="w-[30px] h-[30px] flex items-center justify-center">
             <BsSearch
               onClick={handleOpenSearch}
               fontSize={20}
               className="block md:hidden dark:text-black"
             />
+            </div>
           </div>
         </div>
       </div>
