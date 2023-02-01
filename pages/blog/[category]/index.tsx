@@ -4,7 +4,7 @@ import CategoryAction from "../../../actions/Category.action";
 import CategoryBlogAction from "../../../actions/CategoryBlog.action";
 import MainLayout from "../../../components/layouts/MainLayout";
 import Meta from "../../../components/Meta";
-import React from "react";
+import React, { useEffect } from "react";
 import { CiAlignBottom } from "react-icons/ci";
 import BlogCard from "../../../components/cards/BlogCard";
 import Breadcumb from "../../../components/Breadcumb";
@@ -13,21 +13,10 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import ReactPaginate from "react-paginate";
 import { useRouter } from "next/router";
 
-interface BlogProps {
-  // category: string;
-  // page: string | number;
-  // limit: string | number;
-}
-const Blog: NextPage<BlogProps> = () => {
-  // const { data: blogs, isLoading } = useQuery(["category-blog", category], () =>
-  //   CategoryBlogAction.getBySlug(category)
-  // );
-
+const Blog = () => {
   const router = useRouter();
 
-  const {category, page, limit} = router.query;
-
-
+  const { category, page, limit } = router.query;
 
   const { data: blogs, isLoading } = useQuery(
     [
@@ -47,6 +36,13 @@ const Blog: NextPage<BlogProps> = () => {
   );
 
 
+  useEffect(() => {
+    window?.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, []);
+
   return (
     <>
       <Meta
@@ -57,7 +53,7 @@ const Blog: NextPage<BlogProps> = () => {
       <MainLayout>
         <div className="max-w-[1200px] py-4 mx-auto px-2">
           <div className="flex items-center justify-between">
-            <Breadcumb current="Tin tức" />
+            <Breadcumb current={blogs?.name || "PWM"} />
             <>
               <select
                 id="displays"

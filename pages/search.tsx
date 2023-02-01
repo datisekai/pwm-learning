@@ -15,7 +15,7 @@ import { SpeciesModel } from "../models/Species.model";
 import ReactPaginate from "react-paginate";
 import { useRouter } from "next/router";
 import { AiOutlineRight } from "react-icons/ai";
-import React from "react";
+import React, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import ProductSkeletonCard from "../components/skeletons/ProductSkeletonCard";
 
@@ -46,6 +46,13 @@ const Search: NextPage<SearchProps> = () => {
   const handleClick = () => {
     setShowOptions(!showOptions);
   };
+
+  useEffect(() => {
+    window?.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, []);
 
   return (
     <>

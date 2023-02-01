@@ -21,7 +21,6 @@ const SidebarAdmin: FC<SidebarAdminProps> = ({ handleClose, show }) => {
 
   const { user } = useContext(AuthContext);
 
-  console.log(user);
 
   const data = [
     {
@@ -97,7 +96,7 @@ const SidebarAdmin: FC<SidebarAdminProps> = ({ handleClose, show }) => {
         <div className="bg-white rounded-sm px-2 flex items-center mx-4">
           <Link href={"/"}>
             {" "}
-            <LazyLoadImage effect="blur" src="/images/PWM-Trangchu.jpg" />
+            <LazyLoadImage effect="blur" src="/images/PWM-Learning.png" />
           </Link>
         </div>
         <div className="mt-10 px-2">
