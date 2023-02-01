@@ -98,7 +98,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
                     effect="blur"
                     alt="PWM Logo"
                     src={logoRender}
-                    className=" rounded-tl-md rounded-br-md "
+                    className=" w-[150px] h-[50px] rounded-tl-md rounded-br-md "
                   />
                 </div>
               </Link>
