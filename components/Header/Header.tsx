@@ -15,6 +15,12 @@ interface HeaderProps {
   handleOpenSearch: () => void;
 }
 
+const logoUrl = {
+  "/": "/images/PWM-Trangchu.jpg",
+  "/search": "/images/PWM-Jewelry.png",
+  "/blog": "/images/PWM-Learning.png",
+};
+
 const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
   const { systemTheme, theme, setTheme } = useTheme();
 
@@ -41,16 +47,11 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
   const [keyword, setKeyword] = useState("");
 
   const router = useRouter();
-  const [logo, setLogo] = React.useState<string>("");
+
   useEffect(() => {
     if (router && router.query && router.query.name) {
       setKeyword(router.query.name.toString());
     }
-    if (router.asPath === "/") setLogo("images/PWM-Trangchu.jpg");
-    else if (router.asPath.includes("/search"))
-      setLogo("images/PWM-Jewelry.png");
-    else if (router.asPath.includes("blog"))
-      setLogo("../images/PWM-Learning.png");
   }, [router]);
 
   const handleSearch = () => {
@@ -58,7 +59,18 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
       router.push(`/search?name=${encodeURI(keyword)}`);
     }
   };
-  
+
+  const logoRender = React.useMemo(() => {
+    let logo = logoUrl["/"];
+    if (router.asPath) {
+      if (router.asPath.includes("/blog")) {
+        logo = logoUrl["/blog"];
+      } else if (router.asPath.includes("/search")) {
+        logo = logoUrl["/search"];
+      }
+    }
+    return logo;
+  }, [router.asPath]);
 
   return (
     <>
@@ -71,20 +83,26 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
       >
         {/* <TopHeader /> */}
         <div className="bg-grey">
-          <div className="max-w-[1200px] mx-auto py-4 w-[calc(100%-16px)] flex items-center justify-between">
+          <div className="max-w-[1200px] mx-auto py-2 md:py-4 w-[calc(100%-16px)] flex items-center justify-between">
             <BiMenuAltLeft
               onClick={handleOpen}
               fontSize={30}
               className="block md:hidden dark:text-black"
             />
 
-            <Link href={"/"} >
-              <img
-                alt="PWM Logo"
-                src={logo}
-                className="w-[150px] rounded-md"
-              />
-            </Link>
+            <div className="flex-1 md:flex-none flex justify-center">
+              <Link href={"/"}>
+                {" "}
+                <div className="w-[150px] h-[50px]">
+                  <LazyLoadImage
+                    effect="blur"
+                    alt="PWM Logo"
+                    src={logoRender}
+                    className=" w-[150px] h-[50px] rounded-tl-md rounded-br-md "
+                  />
+                </div>
+              </Link>
+            </div>
             <div className="md:flex items-center hidden">
               <input
                 type="text"
@@ -105,10 +123,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
                 <BsSearch fontSize={20} className="text-white" />
               </div>
             </div>
-            <div className="block hover:bg-primaryHover transition-all hover:cursor-pointer bg-primary h-[40px] w-[40px] flex items-center justify-center rounded-full">
-              {/* UI */}
-              {renderThemeChanger()}
-            </div>
+
             <div className="flex items-center">
               <div className="hidden lg:flex items-center">
                 <Image
@@ -133,6 +148,10 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
                 </span>
               </div>
             </div>
+            <div className="hidden hover:bg-primaryHover transition-all hover:cursor-pointer bg-primary h-[40px] w-[40px] md:flex items-center justify-center rounded-full">
+              {/* UI */}
+              {renderThemeChanger()}
+            </div>
             {/* <div className=" items-center hidden md:flex">
               <button>Đăng nhập</button>
               <button className="px-4 ml-2 py-2 rounded-tl-lg rounded-br-lg hover:bg-primaryHover transition-all bg-primary text-white">
@@ -152,11 +171,14 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
                 </div>
               </Link>
             </div> */}
-            <BsSearch
-              onClick={handleOpenSearch}
-              fontSize={20}
-              className="block md:hidden dark:text-black"
-            />
+
+            <div className="flex md:hidden w-[30px] h-[30px]  items-center justify-center">
+              <BsSearch
+                onClick={handleOpenSearch}
+                fontSize={20}
+                className=" dark:text-black"
+              />
+            </div>
           </div>
         </div>
       </div>

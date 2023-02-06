@@ -82,14 +82,14 @@ const ModalUpdateInfo: React.FC<ModalUpdateInfoProps> = ({
               rules={{
                 required: "Không được để trống ô",
                 minLength: {
-                  value: 20,
+                  value: 5,
                   message:
-                    "Tiêu đề của bạn quá ngắn. Vui lòng nhập ít nhất 20 kí tự",
+                    "Tiêu đề của bạn quá ngắn. Vui lòng nhập ít nhất 5 kí tự",
                 },
                 maxLength: {
-                  value: 120,
+                  value: 100,
                   message:
-                    "Tiêu đề của bạn quá dài. Vui lòng nhập tối đa 120 kí tự",
+                    "Tiêu đề của bạn quá dài. Vui lòng nhập tối đa 100 kí tự",
                 },
               }}
             />
@@ -105,9 +105,9 @@ const ModalUpdateInfo: React.FC<ModalUpdateInfoProps> = ({
               rules={{
                 required: "Không được để trống ô",
                 minLength: {
-                  value: 50,
+                  value: 20,
                   message:
-                    "Nội dung của bạn quá ngắn. Vui lòng nhập ít nhất 50 kí tự",
+                    "Nội dung của bạn quá ngắn. Vui lòng nhập ít nhất 20 kí tự",
                 },
                 maxLength: {
                   value: 3000,

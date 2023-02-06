@@ -13,7 +13,7 @@ const Search: FC<SearchProps> = ({ handleHide, open }) => {
 
   const handleSearch = () => {
     if (keyword.trim() !== "") {
-      router.push(`/search?keyword=${encodeURI(keyword)}`);
+      router.push(`/search?name=${encodeURI(keyword)}`);
     }
   };
   return (

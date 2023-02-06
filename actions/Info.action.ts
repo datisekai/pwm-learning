@@ -4,7 +4,10 @@ const InfoAction = {
   getAll: async () => {
     try {
       const result = await axiosClient.get("/info");
+      console.log(result.data);
       return result.data;
+   
+      
     } catch (error) {        
       console.log(error);
       return []

@@ -15,12 +15,12 @@ import { SpeciesModel } from "../models/Species.model";
 import ReactPaginate from "react-paginate";
 import { useRouter } from "next/router";
 import { AiOutlineRight } from "react-icons/ai";
-import React from "react";
+import React, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import ProductSkeletonCard from "../components/skeletons/ProductSkeletonCard";
 
 interface SearchProps {
-  query: any;
+  // query: any;
   // species: SpeciesModel[];
   // products: {
   //   products: ProductModel[];
@@ -28,9 +28,10 @@ interface SearchProps {
   // };
 }
 
-const Search: NextPage<SearchProps> = ({ query }) => {
-  const { name, speciesId, categoryId, min, max } = query;
+const Search: NextPage<SearchProps> = () => {
   const router = useRouter();
+  const { query } = router;
+  const { name, speciesId, categoryId, min, max } = query;
   const [showOptions, setShowOptions] = React.useState(false);
 
   const { data: species, isLoading: isSpeciesLoading } = useQuery(
@@ -44,8 +45,15 @@ const Search: NextPage<SearchProps> = ({ query }) => {
 
   const handleClick = () => {
     setShowOptions(!showOptions);
-  }
-  
+  };
+
+  useEffect(() => {
+    window?.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, []);
+
   return (
     <>
       <Meta
@@ -119,7 +127,7 @@ const Search: NextPage<SearchProps> = ({ query }) => {
                         query: { ...router.query, page: +e.selected + 1 },
                       });
                     }}
-                    forcePage={(+query.page || 1) - 1}
+                    forcePage={+(query.page || 1) - 1}
                     pageRangeDisplayed={5}
                     pageCount={products.totalPage}
                     previousLabel={<span>{`<`}</span>}
@@ -136,14 +144,13 @@ const Search: NextPage<SearchProps> = ({ query }) => {
 
 export default Search;
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  // const data = await Promise.all([
-  //   SpeciesAction.getAll(1),
-  //   ProductAction.search(query),
-  // ]);
+// export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+//   // const data = await Promise.all([
+//   //   SpeciesAction.getAll(1),
+//   //   ProductAction.search(query),
+//   // ]);
 
-
-  return {
-    props: { query },
-  };
-};
+//   return {
+//     props: { query },
+//   };
+// };

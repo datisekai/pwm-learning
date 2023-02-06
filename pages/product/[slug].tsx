@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
+import Lightbox from "lightbox-react";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import React, { useMemo, useState } from "react";
+import { toast } from "react-hot-toast";
 import { AiOutlineRight } from "react-icons/ai";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -34,6 +36,9 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
   }, [data2]);
 
   const [indexImage, setIndexImage] = useState(0);
+
+  const [isOpenLightBox, setIsOpenLightBox] = useState(false);
+
   const listImage = [
     detail.thumbnail,
     ...detail.skus.map((item) => item.image),
@@ -54,8 +59,8 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
     }
   }, [detail]);
 
-  const currentSku = React.useMemo(() => {
-    let sku = detail?.skus[0];
+  const currentSku: any = React.useMemo(() => {
+    let sku = detail.skus[0];
     const detailIds = detailAt.map((item) => item.detailId);
 
     detail?.skus?.forEach((item) => {
@@ -101,7 +106,10 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
                   {listImage.map((item, index) => (
                     <SwiperSlide key={index}>
                       <LazyLoadImage
-                        onClick={() => setIndexImage(index)}
+                        onClick={() => {
+                          setIndexImage(index);
+                          setIsOpenLightBox(true);
+                        }}
                         src={getImageServer(item)}
                         className={`w-[100px] cursor-pointer  aspect-[1/1] rounded-lg mt-2 first:mt-0 ${
                           indexImage === index && "border border-primary"
@@ -121,8 +129,9 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
                   />
                 ))} */}
               </div>
-              <div className="md:ml-2 flex-1 text-center mx-auto">
+              <div className="md:ml-2 md:p-2 flex-1 text-center mx-auto">
                 <LazyLoadImage
+                  onClick={() => setIsOpenLightBox(true)}
                   src={getImageServer(listImage[indexImage])}
                   className=" w-full rounded-lg text-center"
                 />
@@ -133,13 +142,13 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
               <div className="mt-2 flex items-center space-x-4">
                 <div className="text-2xl text-primary">
                   {formatPrices(
-                    currentSku.price -
-                      (currentSku.price * currentSku.discount) / 100
+                    currentSku?.price -
+                      (currentSku?.price * currentSku?.discount) / 100
                   )}
                 </div>
-                {currentSku.discount > 0 && (
+                {currentSku?.discount > 0 && (
                   <div className="text-xl text-[#999] line-through">
-                    {formatPrices(currentSku.price)}
+                    {formatPrices(currentSku?.price)}
                   </div>
                 )}
               </div>
@@ -151,7 +160,7 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
               </div>
               <div className="flex justify-between items-center mt-2">
                 <span>SKU</span>
-                <span>{currentSku.sku}</span>
+                <span>{currentSku?.sku}</span>
               </div>
 
               {detail?.attributes?.map((attribute) => (
@@ -247,6 +256,26 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
           )}
           {/* <Section4 title="Sự kết hợp hoàn hảo" /> */}
         </div>
+        {isOpenLightBox && (
+          <Lightbox
+            mainSrc={getImageServer(listImage[indexImage])}
+            nextSrc={getImageServer(
+              listImage[(indexImage + 1) % listImage.length]
+            )}
+            prevSrc={getImageServer(
+              listImage[(indexImage + listImage.length - 1) % listImage.length]
+            )}
+            onCloseRequest={() => setIsOpenLightBox(false)}
+            onMovePrevRequest={() => {
+              setIndexImage(
+                (indexImage + listImage.length - 1) % listImage.length
+              );
+            }}
+            onMoveNextRequest={() => {
+              setIndexImage((indexImage + 1) % listImage.length);
+            }}
+          />
+        )}
       </MainLayout>
     </>
   );
@@ -257,7 +286,7 @@ export default ProductDetail;
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: [],
-    fallback: 'blocking',
+    fallback: "blocking",
   };
 };
 

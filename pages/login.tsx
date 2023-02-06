@@ -52,7 +52,7 @@ const LoginAdmin = () => {
       >
         <div className="flex justify-center">
           <Link href={"/"}>
-            <LazyLoadImage src="/images/logo.png" />
+            <LazyLoadImage src="/images/PWM-Learning.png" />
           </Link>
         </div>
         <h1 className="font-bold uppercase text-center mt-2">Đăng nhập</h1>
@@ -63,7 +63,7 @@ const LoginAdmin = () => {
               error={errors}
               name="email"
               placeholder="Nhập email..."
-              className="px-4 py-2 bg-[#f5f5f5] outline-none w-full border rounded-sm"
+              className="px-4 py-2 bg-[#f5f5f5] outline-none w-full border rounded-sm dark:text-black"
               rules={{
                 required: "Vui lòng không bỏ trống",
                 pattern: {
@@ -81,7 +81,7 @@ const LoginAdmin = () => {
               rules={{
                 required: "Vui lòng không bỏ trống",
               }}
-              className="px-4 py-2 mt-1 bg-[#f5f5f5] outline-none w-full border rounded-sm"
+              className="px-4 py-2 mt-1 bg-[#f5f5f5] dark:text-black outline-none w-full border rounded-sm"
             />
             <button
               disabled={isLoading}

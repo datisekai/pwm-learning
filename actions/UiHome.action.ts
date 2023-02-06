@@ -1,7 +1,7 @@
 import axiosClient from "../config/axiosClient";
 
 const UIAction = {
-  getAll: async (status = 0) => {
+  getAll: async () => {
     try {
       const result = await axiosClient.get(`/ui`);
       return result.data;

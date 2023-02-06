@@ -37,8 +37,9 @@ const ItemSearch: FC<ItemSearchProps> = ({ data }) => {
             query &&
             query.speciesId &&
             +query.speciesId === data.id &&
-            "text-primary"
-          }`}
+            "text-primary item-search relative"
+          }  pb-2`}
+         
         >
           {data.name}
         </span>
@@ -59,7 +60,7 @@ const ItemSearch: FC<ItemSearchProps> = ({ data }) => {
               router.push({ query });
             }}
             key={item.id}
-            className={`hover:text-primary cursor-pointer ${
+            className={`border-b hover:text-primary cursor-pointer ${
               query &&
               query.categoryId &&
               +query.categoryId === item.id &&

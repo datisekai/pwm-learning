@@ -6,6 +6,13 @@ body {
     font-family: 'Noto Sans', sans-serif;
 }
 
+.flex{
+    display: -webkit-box;   /* OLD - iOS 6-, Safari 3.1-6, BB7 */
+    display: -ms-flexbox;  /* TWEENER - IE 10 */
+    display: -webkit-flex; /* NEW - Safari 6.1+. iOS 7.1+, BB10 */
+    display: flex;         /* NEW, Spec - Firefox, Chrome, Opera */
+}
+
 .swiper-button-next::after,
 .swiper-button-prev::after {
     font-size: 16px !important;
@@ -282,4 +289,13 @@ span.lazy-load-image-background {
 
 .shadow-custom-100{
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+
+.item-search::after{
+    content: "";
+    position: absolute;
+    display: block;
+    width: 100%;
+    background-color: #EA8143;
+    height: 3px;
 }
