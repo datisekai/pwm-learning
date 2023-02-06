@@ -1,6 +1,16 @@
 import axiosClient from "../config/axiosClient";
+import {SpeciesModel} from '../models/Species.model'
 
-const SpeciesAction = {
+interface ISpeciesAction{
+  getAll:(status?:number) => Promise<SpeciesModel[]>
+  add:(data:any) => Promise<SpeciesModel>
+  update:(data:any) => Promise<SpeciesModel>
+  delete:(id: number | string) => Promise<any>
+  home:() => Promise<any>
+  setMenu:(id:number | string) => Promise<SpeciesModel>
+}
+
+const SpeciesAction:ISpeciesAction = {
   getAll: async (status = 0) => {
     try {
       const result = await axiosClient.get(`/species?status=${status}`);

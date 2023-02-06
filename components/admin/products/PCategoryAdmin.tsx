@@ -1,34 +1,40 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import { useRouter } from "next/router";
-import { FC, useContext, useState } from "react";
+import { useContext, useState } from "react";
 import { toast } from "react-hot-toast";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import swal from "sweetalert";
 import CategoryAction from "../../../actions/Category.action";
-import { CategoryModel } from "../../../models/Category.model";
-import { SpeciesModel } from "../../../models/Species.model";
+import SpeciesAction from "../../../actions/Species.action";
 import { AuthContext } from "../../context";
+import LoadingSpinner from "../../LoadingSpinner";
 import ModalAddCategory from "./ModalAddCategory";
 import ModalUpdateCategory from "./ModalUpdateCategory";
 
-interface PCategoryAdminProps {
-  data: CategoryModel[];
-  species: SpeciesModel[];
-}
-
-const PCategoryAdmin: FC<PCategoryAdminProps> = ({ data, species }) => {
+const PCategoryAdmin = () => {
   const [openModalAdd, setOpenModalAdd] = useState(false);
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [current, setCurrent] = useState<any>();
 
   const router = useRouter();
+  const { data: species, isLoading: isLoadingSpecies } = useQuery(
+    ["species", router.asPath],
+    () => SpeciesAction.getAll(0)
+  );
+
+  const { data: categories, isLoading: isLoadingCategory } = useQuery(
+    ["categories", router.asPath],
+    CategoryAction.getAll
+  );
+
+  const queryClient = useQueryClient()
 
   const { mutate, isLoading } = useMutation(CategoryAction.delete, {
-    onSuccess: () => {
+    onSuccess: (data, variable) => {
       toast.success("Đã chuyển vào thùng rác");
-      router.replace(router.asPath);
+      queryClient.setQueryData(['categories',router.asPath],categories?.filter(item => item.id !== variable))
     },
     onError: (err) => {
       console.log(err);
@@ -70,88 +76,102 @@ const PCategoryAdmin: FC<PCategoryAdminProps> = ({ data, species }) => {
         </div>
         <div className="mt-4 bg-white rounded-3xl p-4 max-h-[450px] overflow-scroll shadow-master">
           <div className="relative">
-            <table className="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                <tr>
-                  <th scope="col" className="py-3 px-6">
-                    Mã thể loại
-                  </th>
-                  <th scope="col" className="py-3 px-6">
-                    Tên thể loại
-                  </th>
-                  <th scope="col" className="py-3 px-6">
-                    Chủng loại
-                  </th>
-                  <th scope="col" className="py-3 px-6">
-                    Ngày cập nhật
-                  </th>
-                  {(user?.detailActions.includes("category:update") ||
-                    user?.detailActions.includes("category:delete")) && (
+            {!isLoadingCategory ? (
+              <table className="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                  <tr>
                     <th scope="col" className="py-3 px-6">
-                      Hành động
+                      Mã thể loại
                     </th>
-                  )}
-                </tr>
-              </thead>
-              <tbody>
-                {data?.map((item) => (
-                  <tr
-                    key={item.id}
-                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                  >
-                    <th
-                      scope="row"
-                      className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                    >
-                      {item.id}
+                    <th scope="col" className="py-3 px-6">
+                      Tên thể loại
                     </th>
-                    <td className="py-4 px-6 break-words max-w-[300px]">{item.name}</td>
-                    <td className="py-4 px-6 break-words max-w-[300px]">{item.species.name}</td>
-                    <td className="py-4 px-6">
-                      {dayjs(item.createdAt).format("DD/MM/YYYY")}
-                    </td>
+                    <th scope="col" className="py-3 px-6">
+                      Chủng loại
+                    </th>
+                    <th scope="col" className="py-3 px-6">
+                      Ngày cập nhật
+                    </th>
                     {(user?.detailActions.includes("category:update") ||
                       user?.detailActions.includes("category:delete")) && (
-                      <td className="py-4 px-6">
-                        <div className="flex">
-                          {user?.detailActions.includes("category:update") && (
-                            <div
-                              onClick={() => {
-                                setCurrent(item);
-                                setOpenModalUpdate(true);
-                              }}
-                              className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
-                            >
-                              <CiEdit fontSize={24} />
-                            </div>
-                          )}
-                          {user?.detailActions.includes("category:delete") && (
-                            <div
-                              onClick={() => handleDelete(item.id)}
-                              className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
-                            >
-                              <RiDeleteBin6Line fontSize={24} />
-                            </div>
-                          )}
-                        </div>
-                      </td>
+                      <th scope="col" className="py-3 px-6">
+                        Hành động
+                      </th>
                     )}
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {categories?.map((item) => (
+                    <tr
+                      key={item.id}
+                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                    >
+                      <th
+                        scope="row"
+                        className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                      >
+                        {item.id}
+                      </th>
+                      <td className="py-4 px-6 break-words max-w-[300px]">
+                        {item.name}
+                      </td>
+                      <td className="py-4 px-6 break-words max-w-[300px]">
+                        {item?.species?.name}
+                      </td>
+                      <td className="py-4 px-6">
+                        {dayjs(item.createdAt).format("DD/MM/YYYY")}
+                      </td>
+                      {(user?.detailActions.includes("category:update") ||
+                        user?.detailActions.includes("category:delete")) && (
+                        <td className="py-4 px-6">
+                          <div className="flex">
+                            {user?.detailActions.includes(
+                              "category:update"
+                            ) && (
+                              <div
+                                onClick={() => {
+                                  setCurrent(item);
+                                  setOpenModalUpdate(true);
+                                }}
+                                className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
+                              >
+                                <CiEdit fontSize={24} />
+                              </div>
+                            )}
+                            {user?.detailActions.includes(
+                              "category:delete"
+                            ) && (
+                              <div
+                                onClick={() => handleDelete(item.id)}
+                                className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
+                              >
+                                <RiDeleteBin6Line fontSize={24} />
+                              </div>
+                            )}
+                          </div>
+                        </td>
+                      )}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <div className="flex items-center justify-center">
+                <LoadingSpinner isFullScreen={false} />
+              </div>
+            )}
           </div>
         </div>
       </div>
       <ModalAddCategory
         open={openModalAdd}
         handleClose={() => setOpenModalAdd(false)}
-        data={species}
+        data={species || []}
       />
       <ModalUpdateCategory
         open={openModalUpdate}
         handleClose={() => setOpenModalUpdate(false)}
-        data={species}
+        data={species || []}
         current={current}
       />
     </>

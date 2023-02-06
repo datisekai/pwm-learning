@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -28,6 +28,7 @@ const ModalUpdateSku: React.FC<ModalUpdateSkuProps> = ({
 }) => {
   const [file, setFile] = useState();
   const [preview, setPreview] = useState("");
+  const queryClient = useQueryClient();
 
   const {
     control,
@@ -54,10 +55,20 @@ const ModalUpdateSku: React.FC<ModalUpdateSkuProps> = ({
   const router = useRouter();
 
   const { mutate, isLoading } = useMutation(SkuAction.update, {
-    onSuccess: () => {
+    onSuccess: (data) => {
+      const dataSkuOld: SkuModel[] =
+        queryClient.getQueryData(["skus", router.asPath]) || [];
+      queryClient.setQueryData(
+        ["skus", router.asPath],
+        dataSkuOld.map((item) => {
+          if (item.id === data.id) {
+            return data;
+          }
+          return item;
+        })
+      );
       toast.success("Cập nhật thành công");
       handleClose();
-      router.replace(router.asPath);
     },
     onError: (err) => {
       console.log(err);
@@ -65,12 +76,12 @@ const ModalUpdateSku: React.FC<ModalUpdateSkuProps> = ({
     },
   });
 
-  const handleUpdate = async(data: any) => {
+  const handleUpdate = async (data: any) => {
     let image = preview;
-    if(file){
+    if (file) {
       image = await uploadImg(file);
     }
-    mutate({ ...data, id: current?.id, image: image.split('images/')[1] });
+    mutate({ ...data, id: current?.id, image: image.split("images/")[1] });
   };
 
   return (
@@ -94,7 +105,7 @@ const ModalUpdateSku: React.FC<ModalUpdateSkuProps> = ({
                     setFile(file);
                   }
                 }}
-                accept='image/*'
+                accept="image/*"
                 className="hidden"
                 name=""
                 id="mainImage"

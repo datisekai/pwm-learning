@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -7,6 +7,7 @@ import CategoryAction from "../../../actions/Category.action";
 import UserAction from "../../../actions/User.action";
 import { PermissionModel } from "../../../models/Permission.model";
 import { SpeciesModel } from "../../../models/Species.model";
+import { UserModel } from "../../../models/User.model";
 import Select from "../../customs/Select";
 import TextField from "../../customs/TextField";
 
@@ -32,17 +33,22 @@ const ModalAddUser: React.FC<ModalAddUserProps> = ({
     defaultValues: {
       email: "",
       password: "",
-      permissionId:""
+      permissionId: "",
     },
   });
 
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const { mutate, isLoading } = useMutation(UserAction.add, {
-    onSuccess: () => {
+    onSuccess: (data) => {
+      const dataUserOld: UserModel[] =
+        queryClient.getQueryData(["users"]) || [];
+      queryClient.setQueryData(["users"], [data, ...dataUserOld]);
+
       toast.success("Thêm thành công");
       handleClose();
-      router.replace(router.asPath);
+
       reset();
     },
     onError: (err) => {
@@ -99,7 +105,10 @@ const ModalAddUser: React.FC<ModalAddUserProps> = ({
             <label>Loại quyền</label>
             <Select
               control={control}
-              data={data?.map((item:any) => ({ text: item.name, value: item.id }))}
+              data={data?.map((item: any) => ({
+                text: item.name,
+                value: item.id,
+              }))}
               rules={{ required: "Không được để trống ô" }}
               error={errors}
               name="permissionId"

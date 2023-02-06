@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
@@ -56,12 +56,23 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
   }, [current]);
 
   const router = useRouter();
+  const queryClient = useQueryClient();
 
   const { mutate, isLoading } = useMutation(ProductAction.update, {
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
+      const dataProductOld: ProductModel[] =
+        queryClient.getQueryData(["products", router.asPath]) || [];
       toast.success("Cập nhật thành công");
       handleClose();
-      router.replace(router.asPath);
+      queryClient.setQueryData(
+        ["products", router.asPath],
+        dataProductOld.map((item) => {
+          if (item.id === variables.id) {
+            return data;
+          }
+          return item;
+        })
+      );
     },
     onError: (err) => {
       console.log(err);
@@ -73,13 +84,11 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
     let image = "";
     if (file) {
       image = await uploadImg(file);
-    }else{
-      image = preview.split('images/')[1]
+    } else {
+      image = preview.split("images/")[1];
     }
 
-
-    mutate({ ...data, id: current.id, thumbnail: image
-  });
+    mutate({ ...data, id: current.id, thumbnail: image });
   };
 
   return (

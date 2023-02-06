@@ -1,7 +1,17 @@
 import { toast } from "react-hot-toast";
 import axiosClient from "../config/axiosClient";
+import { ProductModel } from "../models/Product.model";
 
-const ProductAction = {
+interface IProductAction{
+  add:(data:any) => Promise<any>
+  getAll:() => Promise<ProductModel[]>
+  update:(data:any) => Promise<any>
+  delete:(id:number | string) => Promise<any>
+  search:(query:any) => Promise<{products:ProductModel[], totalPage:number}>,
+  detail:(slug:string) => Promise<ProductModel>
+}
+
+const ProductAction:IProductAction = {
   add: async (data: any) => {
     const result = await axiosClient.post("/product", data);
     return result.data;

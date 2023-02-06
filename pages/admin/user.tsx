@@ -1,29 +1,23 @@
-import React, { FC, useContext, useState } from "react";
-import AdminLayout from "../../components/layouts/AdminLayout";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import dayjs from "dayjs";
+import { GetServerSideProps } from "next";
+import { useRouter } from "next/router";
+import { useContext, useState } from "react";
+import { toast } from "react-hot-toast";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { AiOutlineUserAdd } from "react-icons/ai";
-import { GetServerSideProps, NextPage } from "next";
-import UserAction from "../../actions/User.action";
-import { UserModel } from "../../models/User.model";
-import dayjs from "dayjs";
-import ModalAddUser from "../../components/admin/users/ModalAddUser";
-import PermissionAction from "../../actions/Permission.action";
-import { PermissionModel } from "../../models/Permission.model";
-import ModalUpdateUser from "../../components/admin/users/ModalUpdateUser";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { toast } from "react-hot-toast";
-import { useRouter } from "next/router";
 import swal from "sweetalert";
+import PermissionAction from "../../actions/Permission.action";
+import UserAction from "../../actions/User.action";
+import ModalAddUser from "../../components/admin/users/ModalAddUser";
+import ModalUpdateUser from "../../components/admin/users/ModalUpdateUser";
 import { AuthContext } from "../../components/context";
+import AdminLayout from "../../components/layouts/AdminLayout";
+import LoadingSpinner from "../../components/LoadingSpinner";
 import Meta from "../../components/Meta";
+import { UserModel } from "../../models/User.model";
 
-interface UserAdminProps {
-  users: UserModel[];
-  permissions: PermissionModel[];
-}
-
-const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
+const UserAdmin = () => {
   const [openModalAdd, setOpenModalAdd] = useState(false);
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [current, setCurrent] = useState<any>();
@@ -31,17 +25,37 @@ const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
   const { user } = useContext(AuthContext);
 
   const router = useRouter();
+  const { page = 1 } = router.query;
 
-  const { mutate, isLoading } = useMutation(UserAction.delete, {
-    onSuccess: () => {
-      toast.success("Đã chuyển vào thùng rác");
-      router.replace(router.asPath);
-    },
-    onError: (err) => {
-      console.log(err);
-      toast.error("Có lỗi xảy ra, vui lòng thử lại");
-    },
-  });
+  const { data: permissions, isLoading: isLoadingPermission } = useQuery(
+    ["permissions"],
+    PermissionAction.getAll
+  );
+  const { data: users, isLoading: isLoadingUser } = useQuery(
+    ["users"],
+    UserAction.getAll
+  );
+
+  const queryClient = useQueryClient();
+
+  const { mutate, isLoading: isLoadingDelete } = useMutation(
+    UserAction.delete,
+    {
+      onSuccess: (data, variables) => {
+        console.log(variables)
+        queryClient.setQueryData(
+          ["users"],
+          users?.filter((item) => item.id != variables)
+        );
+        toast.success("Đã chuyển vào thùng rác");
+        router.replace(router.asPath);
+      },
+      onError: (err) => {
+        console.log(err);
+        toast.error("Có lỗi xảy ra, vui lòng thử lại");
+      },
+    }
+  );
 
   const handleDelete = (id: string | number) => {
     swal({
@@ -80,83 +94,92 @@ const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
                 </button>
               )}
             </div>
-            <div className="mt-4 bg-white rounded-3xl p-4 max-h-[450px] overflow-scroll shadow-master">
-          <div className="relative">
-            <table className="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                      <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                        Email
-                      </th>
-                      <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                        Loại quyền
-                      </th>
-                      <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                        Ngày tạo
-                      </th>
-                      <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                        Ngày cập nhật
-                      </th>
-                      {(user?.detailActions.includes("user:update") ||
-                        user?.detailActions.includes("user:delete")) && (
+            <div className="mt-4 bg-white rounded-3xl p-4 max-h-[450px]  overflow-x-auto shadow-master">
+              <div className="relative">
+                {!isLoadingUser || !isLoadingPermission ? (
+                  <table className="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                      <tr>
                         <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                          Hành động
+                          Email
                         </th>
-                      )}
-                    </tr>
-                  </thead>
-                  <tbody>
-                  
-                    {users?.map((item: any) => (
-                      <tr
-                        key={item.id}
-                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                      >
-                        <th
-                          scope="row"
-                          className="break-words max-w-[200px] px-2 py-3 md:py-4 md:px-6 font-medium text-gray-900 line-clamp-1 dark:text-white"
-                        >
-                          {item.email}
+                        <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
+                          Loại quyền
                         </th>
-                        <td className="px-2 py-3 md:py-4 md:px-6 break-words max-w-[200px]">
-                          {item.permission.name}
-                        </td>
-                        <td className="px-2 py-3 md:py-4 md:px-6">
-                          {dayjs(item.createdAt).format("DD/MM/YYYY")}
-                        </td>
-                        <td className="px-2 py-3 md:py-4 md:px-6">
-                          {dayjs(item.updatedAt).format("DD/MM/YYYY")}
-                        </td>
+                        <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
+                          Ngày tạo
+                        </th>
+                        <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
+                          Ngày cập nhật
+                        </th>
                         {(user?.detailActions.includes("user:update") ||
                           user?.detailActions.includes("user:delete")) && (
-                          <td className="px-2 py-3 md:py-4 md:px-6">
-                            <div className="flex">
-                              {user?.detailActions.includes("user:update") && (
-                                <div
-                                  onClick={() => {
-                                    setCurrent(item);
-                                    setOpenModalUpdate(true);
-                                  }}
-                                  className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
-                                >
-                                  <CiEdit fontSize={24} />
-                                </div>
-                              )}
-                              {user?.detailActions.includes("user:delete") && (
-                                <div
-                                  onClick={() => handleDelete(item.id)}
-                                  className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
-                                >
-                                  <RiDeleteBin6Line fontSize={24} />
-                                </div>
-                              )}
-                            </div>
-                          </td>
+                          <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
+                            Hành động
+                          </th>
                         )}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {users?.map((item: UserModel) => (
+                        <tr
+                          key={item.id}
+                          className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                        >
+                          <th
+                            scope="row"
+                            className="break-words max-w-[200px] px-2 py-3 md:py-4 md:px-6 font-medium text-gray-900 line-clamp-1 dark:text-white"
+                          >
+                            {item.email}
+                          </th>
+                          <td className="px-2 py-3 md:py-4 md:px-6 break-words max-w-[200px]">
+                            {item.permission.name}
+                          </td>
+                          <td className="px-2 py-3 md:py-4 md:px-6">
+                            {dayjs(item.createdAt).format("DD/MM/YYYY")}
+                          </td>
+                          <td className="px-2 py-3 md:py-4 md:px-6">
+                            {dayjs(item.updatedAt).format("DD/MM/YYYY")}
+                          </td>
+                          {(user?.detailActions.includes("user:update") ||
+                            user?.detailActions.includes("user:delete")) && (
+                            <td className="px-2 py-3 md:py-4 md:px-6">
+                              <div className="flex">
+                                {user?.detailActions.includes(
+                                  "user:update"
+                                ) && (
+                                  <div
+                                    onClick={() => {
+                                      setCurrent(item);
+                                      setOpenModalUpdate(true);
+                                    }}
+                                    className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
+                                  >
+                                    <CiEdit fontSize={24} />
+                                  </div>
+                                )}
+                                {user?.detailActions.includes(
+                                  "user:delete"
+                                ) && (
+                                  <div
+                                    onClick={() => handleDelete(item.id)}
+                                    className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
+                                  >
+                                    <RiDeleteBin6Line fontSize={24} />
+                                  </div>
+                                )}
+                              </div>
+                            </td>
+                          )}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="flex items-center justify-center">
+                    <LoadingSpinner isFullScreen={false} />
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -180,13 +203,7 @@ const UserAdmin: NextPage<UserAdminProps> = ({ permissions, users }) => {
 export default UserAdmin;
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const token = req.cookies["token"];
   const detailActions = JSON.parse(req.cookies["detailActions"] || "[]");
-
-  const data = await Promise.all([
-    UserAction.getAll(token || ""),
-    PermissionAction.getAll(),
-  ]);
 
   if (!detailActions.includes("user:view")) {
     return {
@@ -198,9 +215,6 @@ export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   }
 
   return {
-    props: {
-      users: data[0] || [],
-      permissions: data[1] || [],
-    },
+    props: {},
   };
 };

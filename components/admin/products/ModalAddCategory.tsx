@@ -1,9 +1,10 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import CategoryAction from "../../../actions/Category.action";
+import { CategoryModel } from "../../../models/Category.model";
 import { SpeciesModel } from "../../../models/Species.model";
 import Select from "../../customs/Select";
 import TextField from "../../customs/TextField";
@@ -33,13 +34,16 @@ const ModalAddCategory: React.FC<ModalAddCategoryProps> = ({
     },
   });
 
+  const queryClient = useQueryClient()
   const router = useRouter();
 
   const { mutate, isLoading } = useMutation(CategoryAction.add, {
-    onSuccess: () => {
+    onSuccess: (data) => {
+      const dataCategoriesOld:CategoryModel[] = queryClient.getQueryData(['categories',router.asPath]) || [];
+      queryClient.setQueryData(['categories',router.asPath],[data, ...dataCategoriesOld])
+
       toast.success("Thêm thành công");
       handleClose();
-      router.replace(router.asPath);
       reset()
     },
     onError: (err) => {
