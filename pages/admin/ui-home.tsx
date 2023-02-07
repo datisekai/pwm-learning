@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { GetServerSideProps, NextPage } from "next";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
@@ -12,27 +12,34 @@ import ModalAddUiHome from "../../components/admin/ui-home/ModalAddUiHome";
 import ModalUpdateUiHome from "../../components/admin/ui-home/ModalUpdateUiHome";
 import { AuthContext } from "../../components/context";
 import AdminLayout from "../../components/layouts/AdminLayout";
+import LoadingSpinner from "../../components/LoadingSpinner";
 import Meta from "../../components/Meta";
 import { UIModel } from "../../models/Ui.model";
 import { getImageServer } from "../../utils";
 
-interface UIHomeProps {
-  data: UIModel[];
-}
-
-const UIHome: NextPage<UIHomeProps> = ({ data }) => {
+const UIHome = () => {
   const [openModalAdd, setOpenModalAdd] = useState(false);
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [current, setCurrent] = useState<any>();
+
+  const { data, isLoading: isLoadingUiHome } = useQuery(
+    ["ui-home"],
+    UIAction.getAll
+  );
 
   const { user } = useContext(AuthContext);
 
   const router = useRouter();
 
+  const queryClient = useQueryClient();
+
   const { mutate, isLoading } = useMutation(UIAction.delete, {
-    onSuccess: () => {
+    onSuccess: (response, variable) => {
       toast.success("Đã xóa thành công");
-      router.replace(router.asPath);
+      queryClient.setQueryData(
+        ["ui-home"],
+        data?.filter((item) => item.id !== variable)
+      );
     },
     onError: (err) => {
       console.log(err);
@@ -54,21 +61,39 @@ const UIHome: NextPage<UIHomeProps> = ({ data }) => {
     });
   };
 
-  const {mutate:updateStatus, isLoading:loadingUI} = useMutation(UIAction.update,{
-    onSuccess:() => {
-      router.replace(router.asPath);
-    },
-    onError: (err) => {
-      console.log(err);
-      toast.error("Có lỗi xảy ra, vui lòng thử lại");
-    },
-  })
+  const { mutate: updateStatus, isLoading: loadingUI } = useMutation(
+    UIAction.update,
+    {
+      onSuccess: (response, variable) => {
+        const currentUpdate = data?.find((item) => item.id === variable.id);
+        if (currentUpdate) {
+          if (currentUpdate.status) {
+            toast.success("Đã ẩn thành công");
+          } else {
+            toast.success("Đã hiển thị thành công");
+          }
 
-  const handleUI = (data:{id:number, checked:boolean}) => {
-      updateStatus({id:data.id, status:data.checked})
-  }
+          queryClient.setQueryData(
+            ["ui-home"],
+            data?.map((item) => {
+              if (item.id === variable.id) {
+                return { ...item, status: !currentUpdate.status };
+              }
+              return item;
+            })
+          );
+        }
+      },
+      onError: (err) => {
+        console.log(err);
+        toast.error("Có lỗi xảy ra, vui lòng thử lại");
+      },
+    }
+  );
 
-
+  const handleUI = (data: { id: number; checked: boolean }) => {
+    updateStatus({ id: data.id, status: data.checked });
+  };
 
   return (
     <>
@@ -91,96 +116,107 @@ const UIHome: NextPage<UIHomeProps> = ({ data }) => {
             </div>
             <div className="mt-4 bg-white rounded-3xl p-4 max-h-[450px] overflow-scroll shadow-master">
               <div className="relative">
-                <table className="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
-                  <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-                    <tr>
-                      <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                        Hình ảnh
-                      </th>
-                      <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                        Code
-                      </th>
-                      <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                        Ghi chú
-                      </th>
-                      <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                        Hiển thị
-                      </th>
-                      {(user?.detailActions.includes("ui:update") ||
-                        user?.detailActions.includes("ui:delete")) && (
+                {!isLoadingUiHome ? (
+                  <table className="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
+                    <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                      <tr>
                         <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                          Hành động
+                          Hình ảnh
                         </th>
-                      )}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {data?.map((item) => (
-                      <tr
-                        key={item.id}
-                        className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
-                      >
-                        <th
-                          scope="row"
-                          className="break-words max-w-[200px] px-2 py-3 md:py-4 md:px-6 font-medium text-gray-900 line-clamp-1 dark:text-white"
-                        >
-                          <LazyLoadImage
-                            src={getImageServer(item.image)}
-                            className="w-[80px] aspect-[16/9] rounded-sm"
-                          />
+                        <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
+                          Code
                         </th>
-                        <td className="px-2 py-3 md:py-4 md:px-6 break-words max-w-[200px]">
-                          {item.code || "Không có"}
-                        </td>
-                        <td className="px-2 py-3 md:py-4 md:px-6">
-                          {item.note || "Không có"}
-                        </td>
-                        <td className="px-2 py-3 md:py-4 md:px-6">
-                          <label className="relative inline-flex items-center cursor-pointer">
-                            <input
-                              type="checkbox"
-                              checked={item.status}
-                              onChange={(e) => handleUI({id:item.id, checked:e.target.checked})}
-                              className="sr-only peer"
-                              disabled={user?.detailActions.includes("ui:update") ? loadingUI : true}
-                            />
-                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
-                          </label>
-                        </td>
+                        <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
+                          Ghi chú
+                        </th>
+                        <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
+                          Hiển thị
+                        </th>
                         {(user?.detailActions.includes("ui:update") ||
                           user?.detailActions.includes("ui:delete")) && (
-                          <td className="px-2 py-3 md:py-4 md:px-6">
-                            <div className="flex">
-                              {user?.detailActions.includes(
-                                "ui:update"
-                              ) && (
-                                <div
-                                  onClick={() => {
-                                    setCurrent(item);
-                                    setOpenModalUpdate(true);
-                                  }}
-                                  className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
-                                >
-                                  <CiEdit fontSize={24} />
-                                </div>
-                              )}
-                              {user?.detailActions.includes(
-                                "ui:delete"
-                              ) && (
-                                <div
-                                  onClick={() => handleDelete(item.id)}
-                                  className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
-                                >
-                                  <RiDeleteBin6Line fontSize={24} />
-                                </div>
-                              )}
-                            </div>
-                          </td>
+                          <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
+                            Hành động
+                          </th>
                         )}
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
+                    </thead>
+                    <tbody>
+                      {data?.map((item) => (
+                        <tr
+                          key={item.id}
+                          className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
+                        >
+                          <th
+                            scope="row"
+                            className="break-words max-w-[200px] px-2 py-3 md:py-4 md:px-6 font-medium text-gray-900 line-clamp-1 dark:text-white"
+                          >
+                            <LazyLoadImage
+                              src={getImageServer(item.image)}
+                              className="w-[80px] aspect-[16/9] rounded-sm"
+                            />
+                          </th>
+                          <td className="px-2 py-3 md:py-4 md:px-6 break-words max-w-[200px]">
+                            {item.code || "Không có"}
+                          </td>
+                          <td className="px-2 py-3 md:py-4 md:px-6">
+                            {item.note || "Không có"}
+                          </td>
+                          <td className="px-2 py-3 md:py-4 md:px-6">
+                            <label className="relative inline-flex items-center cursor-pointer">
+                              <input
+                                type="checkbox"
+                                checked={item.status}
+                                onChange={(e) =>
+                                  handleUI({
+                                    id: item.id,
+                                    checked: e.target.checked,
+                                  })
+                                }
+                                className="sr-only peer"
+                                disabled={
+                                  user?.detailActions.includes("ui:update")
+                                    ? loadingUI
+                                    : true
+                                }
+                              />
+                              <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600" />
+                            </label>
+                          </td>
+                          {(user?.detailActions.includes("ui:update") ||
+                            user?.detailActions.includes("ui:delete")) && (
+                            <td className="px-2 py-3 md:py-4 md:px-6">
+                              <div className="flex">
+                                {user?.detailActions.includes("ui:update") && (
+                                  <div
+                                    onClick={() => {
+                                      setCurrent(item);
+                                      setOpenModalUpdate(true);
+                                    }}
+                                    className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
+                                  >
+                                    <CiEdit fontSize={24} />
+                                  </div>
+                                )}
+                                {user?.detailActions.includes("ui:delete") && (
+                                  <div
+                                    onClick={() => handleDelete(item.id)}
+                                    className="ml-2 bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
+                                  >
+                                    <RiDeleteBin6Line fontSize={24} />
+                                  </div>
+                                )}
+                              </div>
+                            </td>
+                          )}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="flex items-center justify-center">
+                    <LoadingSpinner isFullScreen={false} />
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -200,12 +236,3 @@ const UIHome: NextPage<UIHomeProps> = ({ data }) => {
 };
 
 export default UIHome;
-
-export const getServerSideProps: GetServerSideProps = async () => {
-  const data = await UIAction.getAll();
-  return {
-    props: {
-      data: data,
-    },
-  };
-};

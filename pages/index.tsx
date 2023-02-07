@@ -48,7 +48,7 @@ const Home = () => {
           <div className="pb-10">
             {data?.some(
               (item: any) => item.code === "home;slider" && item.status
-            ) && <Slider data={sliders} />}
+            ) && <Slider data={sliders || []} />}
             {data?.some(
               (item: any) => item.code === "home;popular" && item.status
             ) && <Section1 data={populars} isLoading={isPopularsLoading} />}

@@ -184,13 +184,13 @@ const UserAdmin = () => {
             </div>
           </div>
           <ModalAddUser
-            data={permissions}
+            data={permissions || []}
             handleClose={() => setOpenModalAdd(false)}
             open={openModalAdd}
           />
           <ModalUpdateUser
             current={current}
-            data={permissions}
+            data={permissions || []}
             handleClose={() => setOpenModalUpdate(false)}
             open={openModalUpdate}
           />

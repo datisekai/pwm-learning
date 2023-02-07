@@ -1,8 +1,9 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
+import { CiLight } from "react-icons/ci";
 import CategoryAction from "../../../actions/Category.action";
 import CategoryBlogAction from "../../../actions/CategoryBlog.action";
 import SpeciesAction from "../../../actions/Species.action";
@@ -36,6 +37,8 @@ const ModalUpdateCategoryBlog: React.FC<ModalUpdateCategoryBlogProps> = ({
     },
   });
 
+  const queryClient = useQueryClient();
+
   useEffect(() => {
     setValue("name", current?.name);
   }, [current]);
@@ -43,10 +46,21 @@ const ModalUpdateCategoryBlog: React.FC<ModalUpdateCategoryBlogProps> = ({
   const router = useRouter();
 
   const { mutate, isLoading } = useMutation(CategoryBlogAction.update, {
-    onSuccess: () => {
+    onSuccess: (data, variable) => {
       toast.success("Cập nhật thành công");
+      const dataCbOld: CategoryBlogModel[] =
+        queryClient.getQueryData(["category-blog"]) || [];
+      queryClient.setQueryData(
+        ["category-blog"],
+        dataCbOld.map((item) => {
+          if (item.id === variable.id) {
+            return { ...item, ...variable, updatedAt: Date.now() };
+          }
+          return item;
+        })
+      );
+
       handleClose();
-      router.replace(router.asPath);
     },
     onError: (err) => {
       console.log(err);

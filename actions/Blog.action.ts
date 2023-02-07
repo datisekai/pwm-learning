@@ -1,4 +1,16 @@
 import axiosClient from "../config/axiosClient";
+import { BlogModel } from "../models/Blog.model";
+
+interface IBlogAction{
+  getAll:() => Promise<BlogModel[]>
+  add:(data:any) => Promise<BlogModel>
+  update:(data:any) => Promise<BlogModel>
+  delete:(id: number | string) => Promise<any>
+  getById:(id: number | string) =>  Promise<BlogModel>
+  increaseView:(slug:string) => Promise<any>
+  getBySlug:(slug:string) => Promise<BlogModel>
+  search:(data:any) => Promise<BlogModel[]>
+}
 
 const BlogAction = {
   getAll: async () => {

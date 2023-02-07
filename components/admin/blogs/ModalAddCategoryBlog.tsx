@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -6,6 +6,7 @@ import { toast } from "react-hot-toast";
 import CategoryAction from "../../../actions/Category.action";
 import CategoryBlogAction from "../../../actions/CategoryBlog.action";
 import SpeciesAction from "../../../actions/Species.action";
+import { CategoryBlogModel } from "../../../models/CategoryBlog.model";
 import { SpeciesModel } from "../../../models/Species.model";
 import Select from "../../customs/Select";
 import TextField from "../../customs/TextField";
@@ -35,11 +36,16 @@ const ModalAddCategoryBlog: React.FC<ModalAddCategoryBlogProps> = ({
 
   const router = useRouter();
 
+  const queryClient = useQueryClient();
+
   const { mutate, isLoading } = useMutation(CategoryBlogAction.add, {
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Thêm thành công");
       handleClose();
-      router.replace(router.asPath);
+      const dataCbOld: CategoryBlogModel[] =
+        queryClient.getQueryData(["category-blog"]) || [];
+      queryClient.setQueryData(["category-blog"], [data, ...dataCbOld]);
+
       reset();
     },
     onError: (err) => {

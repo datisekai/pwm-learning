@@ -1,48 +1,54 @@
-import { GetServerSideProps, NextPage } from "next";
+import { useQuery } from "@tanstack/react-query";
+import dayjs from "dayjs";
+import { GetServerSideProps } from "next";
+import Link from "next/link";
 import React from "react";
 import { AiOutlineEye } from "react-icons/ai";
 import { BiNews } from "react-icons/bi";
-import { TbDiamond } from "react-icons/tb";
-import AdminLayout from "../../components/layouts/AdminLayout";
-import { GrUserManager } from "react-icons/gr";
-import { formatNumber, formatPrices, getImageServer } from "../../utils";
 import { BsPeople } from "react-icons/bs";
+import { TbDiamond } from "react-icons/tb";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import Link from "next/link";
-import { getCookie } from "cookies-next";
 import StatisticAction from "../../actions/Statistic.action";
-import { StatisticCount, StatisticLatest } from "../../models/Statistic.model";
-import dayjs from "dayjs";
+import AdminLayout from "../../components/layouts/AdminLayout";
 import Meta from "../../components/Meta";
+import { formatNumber, getImageServer } from "../../utils";
 
-interface HomeAdminProps {
-  count: StatisticCount;
-  latest: StatisticLatest;
-}
+const HomeAdmin = () => {
+  const { data: count, isLoading: isLoadingCount } = useQuery(
+    ["count"],
+    StatisticAction.count
+  );
+  const { data: latest, isLoading: isLoadingLatest } = useQuery(
+    ["latest"],
+    StatisticAction.latest
+  );
 
-const HomeAdmin: NextPage<HomeAdminProps> = ({ count, latest }) => {
-  const dataSection1 = [
-    {
-      value: count.views,
-      title: "Lượt xem",
-      icon: AiOutlineEye,
-    },
-    {
-      value: count.products,
-      title: "Sản phẩm",
-      icon: TbDiamond,
-    },
-    {
-      value: count.blogs,
-      title: "Bài đăng",
-      icon: BiNews,
-    },
-    {
-      value: count.users,
-      title: "Người dùng",
-      icon: BsPeople,
-    },
-  ];
+  const dataSection1 = React.useMemo(() => {
+    return count
+      ? [
+          {
+            value: count.views,
+            title: "Lượt xem",
+            icon: AiOutlineEye,
+          },
+          {
+            value: count.products,
+            title: "Sản phẩm",
+            icon: TbDiamond,
+          },
+          {
+            value: count.blogs,
+            title: "Bài đăng",
+            icon: BiNews,
+          },
+          {
+            value: count.users,
+            title: "Người dùng",
+            icon: BsPeople,
+          },
+        ]
+      : [];
+  }, [count]);
 
   return (
     <>
@@ -72,10 +78,7 @@ const HomeAdmin: NextPage<HomeAdminProps> = ({ count, latest }) => {
             })}
           </div>
           <div className="mt-10 flex flex-col md:flex-row">
-            <div
-              className="dark:bg-neutral-200 w-full md:w-[60%] p-4 rounded-3xl shadow-master"
-              
-            >
+            <div className="dark:bg-neutral-200 w-full md:w-[60%] p-4 rounded-3xl shadow-master">
               <div className="flex items-center justify-between">
                 <h1 className="font-bold text-primary text-lg">
                   Sản phẩm gần đây
@@ -94,7 +97,7 @@ const HomeAdmin: NextPage<HomeAdminProps> = ({ count, latest }) => {
                   <div className="w-[80px] dark:text-black">Trạng thái</div>
                 </div>
               </div>
-              {latest?.product?.map((item) => (
+              {latest?.product?.map((item:any) => (
                 <div key={item.id} className="mt-2">
                   <div className=" flex justify-between overflow-x-scroll table-home text-sm">
                     <div className="w-[150px] line-clamp-2 dark:text-black">
@@ -125,7 +128,7 @@ const HomeAdmin: NextPage<HomeAdminProps> = ({ count, latest }) => {
                 </Link>
               </div>
               <div className="mt-4 space-y-2">
-                {latest.blog.map((item, index) => (
+                {latest?.blog?.map((item: any, index: number) => (
                   <div
                     key={index}
                     className="flex items-center mt-2 first:mt-0"
@@ -155,17 +158,10 @@ export default HomeAdmin;
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const token = req.cookies["token"];
-  const data = await Promise.all([
-    StatisticAction.count(),
-    StatisticAction.latest(),
-  ]);
 
   if (token) {
     return {
-      props: {
-        count: data[0],
-        latest: data[1],
-      },
+      props: {},
     };
   }
 

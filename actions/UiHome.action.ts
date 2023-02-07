@@ -1,6 +1,14 @@
 import axiosClient from "../config/axiosClient";
+import { UIModel } from "../models/Ui.model";
 
-const UIAction = {
+interface IUIAction{
+  getAll:() => Promise<UIModel[]>
+  add:(data:any) => Promise<UIModel>
+  update:(data:any) => Promise<any>
+  delete:(id:number | string) => Promise<any>
+}
+
+const UIAction:IUIAction = {
   getAll: async () => {
     try {
       const result = await axiosClient.get(`/ui`);
