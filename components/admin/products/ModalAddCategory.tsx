@@ -26,7 +26,7 @@ const ModalAddCategory: React.FC<ModalAddCategoryProps> = ({
     handleSubmit,
     getValues,
     watch,
-    reset
+    reset,
   } = useForm({
     defaultValues: {
       name: "",
@@ -34,17 +34,21 @@ const ModalAddCategory: React.FC<ModalAddCategoryProps> = ({
     },
   });
 
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
   const router = useRouter();
 
   const { mutate, isLoading } = useMutation(CategoryAction.add, {
     onSuccess: (data) => {
-      const dataCategoriesOld:CategoryModel[] = queryClient.getQueryData(['categories',router.asPath]) || [];
-      queryClient.setQueryData(['categories',router.asPath],[data, ...dataCategoriesOld])
+      const dataCategoriesOld: CategoryModel[] =
+        queryClient.getQueryData(["categories", router.asPath]) || [];
+      queryClient.setQueryData(
+        ["categories", router.asPath],
+        [data, ...dataCategoriesOld]
+      );
 
       toast.success("Thêm thành công");
       handleClose();
-      reset()
+      reset();
     },
     onError: (err) => {
       console.log(err);
@@ -75,11 +79,7 @@ const ModalAddCategory: React.FC<ModalAddCategoryProps> = ({
               placeholder="Nhập vào"
               rules={{
                 required: "Không được để trống ô",
-                minLength: {
-                  value: 5,
-                  message:
-                    "Tên thể loại của bạn quá ngắn. Vui lòng nhập ít nhất 5 kí tự",
-                },
+
                 maxLength: {
                   value: 120,
                   message:
