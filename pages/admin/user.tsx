@@ -42,7 +42,6 @@ const UserAdmin = () => {
     UserAction.delete,
     {
       onSuccess: (data, variables) => {
-        console.log(variables)
         queryClient.setQueryData(
           ["users"],
           users?.filter((item) => item.id != variables)

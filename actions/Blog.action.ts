@@ -16,6 +16,8 @@ const BlogAction = {
   getAll: async () => {
     try {
       const result = await axiosClient.get("/blog");
+   
+      
       return result.data;
     } catch (error) {
       console.log(error);

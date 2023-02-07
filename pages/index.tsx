@@ -1,7 +1,5 @@
 import { Inter } from "@next/font/google";
 import { useQuery } from "@tanstack/react-query";
-import { GetServerSideProps, NextPage } from "next";
-import Head from "next/head";
 import PopularAction from "../actions/Popular.action";
 import SliderAction from "../actions/Slider.action";
 import SpeciesAction from "../actions/Species.action";
@@ -14,7 +12,6 @@ import Section2 from "../components/sections/Section2";
 import Section3 from "../components/sections/Section3";
 import Section6 from "../components/sections/Section6";
 import Slider from "../components/Slider";
-import { UIModel } from "../models/Ui.model";
 
 const inter = Inter({ subsets: ["latin"] });
 

@@ -5,9 +5,9 @@ const InfoAction = {
     try {
       const result = await axiosClient.get("/info");
       return result.data;
-    } catch (error) {        
+    } catch (error) {
       console.log(error);
-      return []
+      return [];
     }
   },
   add: async (data: any) => {
