@@ -52,7 +52,7 @@ const HomeAdmin = () => {
 
   return (
     <>
-      <Meta image="/images/logo.png" title="Trang chủ | Admin" description="" />
+      <Meta image="/images/logo.jpg" title="Trang chủ | Admin" description="" />
       <AdminLayout>
         <>
           <div className="grid mt-5 grid-cols-2 md:grid-cols-4 gap-4">

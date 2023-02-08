@@ -73,7 +73,7 @@ const UserAdmin = () => {
   return (
     <>
       <Meta
-        image="/images/logo.png"
+        image="/images/logo.jpg"
         title="Người dùng | Admin"
         description=""
       />

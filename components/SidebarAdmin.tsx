@@ -60,6 +60,11 @@ const SidebarAdmin: FC<SidebarAdminProps> = ({ handleClose, show }) => {
       url: "/admin/info",
       title: "Giới thiệu",
       icon: AiOutlineInfoCircle,
+      isHide: !(
+        user?.detailActions.includes("info:add") ||
+        user?.detailActions.includes("info:update") ||
+        user?.detailActions.includes("info:delete")
+      ),
     },
     {
       url: "/admin/ui-home",

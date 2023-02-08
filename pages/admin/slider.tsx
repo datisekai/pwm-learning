@@ -60,7 +60,7 @@ const Slider = () => {
 
   return (
     <>
-      <Meta image="/images/logo.png" title="Slider | Admin" description="" />
+      <Meta image="/images/logo.jpg" title="Slider | Admin" description="" />
       <AdminLayout>
         <>
           <div className="mt-5 grid">

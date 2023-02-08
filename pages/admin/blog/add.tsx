@@ -86,7 +86,7 @@ const AddBlog: NextPage<AddBlogProps> = ({ categoriesBlog }) => {
 
   return (
     <>
-    <Meta image="/images/logo.png" title="Thêm Blog | Admin" description="" />
+    <Meta image="/images/logo.jpg" title="Thêm Blog | Admin" description="" />
       <AdminLayout>
         <div className="mt-5">
           <div className="flex items-center justify-between">

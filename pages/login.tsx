@@ -42,7 +42,7 @@ const LoginAdmin = () => {
 
   return (
    <>
-   <Meta description="Đăng nhập" title="Đăng nhập | PWM" image="/images/logo.png" />
+   <Meta description="Đăng nhập" title="Đăng nhập | PWM" image="/images/logo.jpg" />
     <div className="min-h-screen flex items-center justify-center bg-[#f5f5f5]">
       <div
         className="w-[90%] md:w-[400px] rounded-lg px-6 py-4 bg-white"

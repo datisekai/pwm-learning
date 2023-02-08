@@ -37,7 +37,7 @@ const Home = () => {
 
   return (
     <>
-      <Meta description="PWM tự hào là công ty chế tác và bán lẻ trang sức hàng đầu tại châu Á ❤️Khách hàng là trọng tâm ✔️Mua Online nhanh chóng, đơn giản" title="PWM | Trang sức cao cấp" image="/images/logo.png"/>
+      <Meta description="PWM tự hào là công ty chế tác và bán lẻ trang sức hàng đầu tại châu Á ❤️Khách hàng là trọng tâm ✔️Mua Online nhanh chóng, đơn giản" title="PWM | Trang sức cao cấp" image="/images/logo.jpg"/>
       <MainLayout>
         {isLoading ? (
           <LoadingSpinner />
@@ -68,7 +68,6 @@ const Home = () => {
                   )
               )}
 
-            {/* <Section5 /> */}
             {data?.some(
               (item: any) => item.code === "home;bst" && item.status
             ) && <Section6 data={species?.species} />}
@@ -81,11 +80,3 @@ const Home = () => {
 
 export default Home;
 
-// export const getServerSideProps: GetServerSideProps = async () => {
-//   const data = await UIAction.getAll();
-//   return {
-//     props: {
-//       data,
-//     },
-//   };
-// };

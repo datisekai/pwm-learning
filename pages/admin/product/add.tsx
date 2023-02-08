@@ -205,7 +205,7 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
 
   return (
     <>
-     <Meta image="/images/logo.png" title="Thêm sản phẩm | Admin" description="" />
+     <Meta image="/images/logo.jpg" title="Thêm sản phẩm | Admin" description="" />
       <AdminLayout>
         <div className="mt-5">
           <div className="flex items-center justify-between">

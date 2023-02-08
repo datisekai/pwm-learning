@@ -99,7 +99,7 @@ const UpdateBlog: NextPage<UpdateBlogProps> = ({ categoriesBlog, data }) => {
   return (
     <>
       <Meta
-        image="/images/logo.png"
+        image="/images/logo.jpg"
         title="Cập nhật Blog | Admin"
         description=""
       />

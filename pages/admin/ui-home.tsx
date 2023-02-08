@@ -97,7 +97,7 @@ const UIHome = () => {
 
   return (
     <>
-      <Meta image="/images/logo.png" title="UI Home | Admin" description="" />
+      <Meta image="/images/logo.jpg" title="UI Home | Admin" description="" />
       <AdminLayout>
         <>
           <div className="mt-5 grid">

@@ -32,7 +32,7 @@ const PermissionManager = () => {
   return (
     <>
       <Meta
-        image="/images/logo.png"
+        image="/images/logo.jpg"
         title="Phân quyền | Admin"
         description=""
       />
