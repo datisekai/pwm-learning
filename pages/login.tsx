@@ -51,8 +51,8 @@ const LoginAdmin = () => {
         }}
       >
         <div className="flex justify-center">
-          <Link href={"/"}>
-            <LazyLoadImage src="/images/PWM-Learning.png" />
+          <Link  href={"/"}>
+            <LazyLoadImage src="/images/logo.jpg" className="w-[50%] rounded-tl-md rounded-br-md mx-auto" />
           </Link>
         </div>
         <h1 className="font-bold uppercase text-center mt-2">Đăng nhập</h1>

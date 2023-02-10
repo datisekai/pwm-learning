@@ -1,22 +1,18 @@
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
-import { GetServerSideProps, NextPage } from "next";
-import CategoryAction from "../../../actions/Category.action";
+import { useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
+import ReactPaginate from "react-paginate";
 import CategoryBlogAction from "../../../actions/CategoryBlog.action";
+import Breadcumb from "../../../components/Breadcumb";
+import BlogCard from "../../../components/cards/BlogCard";
 import MainLayout from "../../../components/layouts/MainLayout";
 import Meta from "../../../components/Meta";
-import React, { useEffect } from "react";
-import { CiAlignBottom } from "react-icons/ci";
-import BlogCard from "../../../components/cards/BlogCard";
-import Breadcumb from "../../../components/Breadcumb";
 import BlogSkeletonCard from "../../../components/skeletons/BlogSkeletonCard";
-import InfiniteScroll from "react-infinite-scroll-component";
-import ReactPaginate from "react-paginate";
-import { useRouter } from "next/router";
 
 const Blog = () => {
   const router = useRouter();
 
-  const { category, page, limit } = router.query;
+  const { category, page = 1, limit = 9 } = router.query;
 
   const { data: blogs, isLoading } = useQuery(
     [
@@ -34,6 +30,7 @@ const Blog = () => {
         limit,
       })
   );
+
 
 
   useEffect(() => {
