@@ -10,19 +10,15 @@ import { useRouter } from "next/router";
 import { useTheme } from "next-themes";
 import { HiOutlineSun, HiOutlineMoon } from "react-icons/hi";
 import { getImageServer, uploadImg } from "../../utils";
+import { AuthContext } from "../context";
 interface HeaderProps {
   handleOpen: () => void;
   handleOpenSearch: () => void;
 }
 
-const logoUrl = {
-  "/": "/images/PWM-Trangchu.jpg",
-  "/search": "/images/PWM-Jewelry.png",
-  "/blog": "/images/PWM-Learning.png",
-};
-
 const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
   const { systemTheme, theme, setTheme } = useTheme();
+  const { infos }: any = React.useContext(AuthContext);
 
   const renderThemeChanger = () => {
     const currentTheme = theme === "system" ? systemTheme : theme;
@@ -61,16 +57,19 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
   };
 
   const logoRender = React.useMemo(() => {
-    let logo = logoUrl["/"];
-    if (router.asPath) {
-      if (router.asPath.includes("/blog")) {
-        logo = logoUrl["/blog"];
-      } else if (router.asPath.includes("/search")) {
-        logo = logoUrl["/search"];
+    let logo = "/images/logo.jpg";
+    if (infos) {
+      const currentInfo = infos.find(
+        (item: any) =>
+          item.code.indexOf("logo") !== -1 && item.title === router.asPath
+      );
+      if (currentInfo) {
+        logo = getImageServer(currentInfo.image);
       }
     }
+
     return logo;
-  }, [router.asPath]);
+  }, [router.asPath, infos]);
 
   return (
     <>

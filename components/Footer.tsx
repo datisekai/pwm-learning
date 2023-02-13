@@ -8,16 +8,12 @@ import React from "react";
 import { FaRegAddressCard } from "react-icons/fa";
 import Link from "next/link";
 import { validURL } from "../utils";
+import { AuthContext } from "./context";
 
-interface FooterProps {
-  data: InfoModel[];
-}
+
 
 const Footer = () => {
-  const { data: infos, isLoading } = useQuery(
-    ["info-footer"],
-    InfoAction.getAll
-  );
+  const {infos}:any = React.useContext(AuthContext);
 
   const infoRenders = React.useMemo(() => {
     const info: {
@@ -35,14 +31,14 @@ const Footer = () => {
     };
 
     if (infos) {
-      info.address = infos.filter((item) => item.code === "address");
-      info.phone = infos.filter((item) => item.code === "phone");
-      info.email = infos.filter((item) => item.code === "email");
+      info.address = infos.filter((item:any) => item.code === "address");
+      info.phone = infos.filter((item:any) => item.code === "phone");
+      info.email = infos.filter((item:any) => item.code === "email");
       info.lienKetNgoai = infos.filter(
-        (item) => item.code === "lien-ket-ngoai"
+        (item:any) => item.code === "lien-ket-ngoai"
       );
       info.lienKetTrong = infos.filter(
-        (item) => item.code === "lien-ket-trong"
+        (item:any) => item.code === "lien-ket-trong"
       );
     }
 
