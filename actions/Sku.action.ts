@@ -1,6 +1,13 @@
 import axiosClient from "../config/axiosClient";
+import { SkuModel } from "../models/Sku.model";
 
-const SkuAction = {
+interface ISkuAction{
+  getAll:() => Promise<SkuModel[]>
+  delete:(id:number | string) => Promise<any>
+  update:(data:any) => Promise<SkuModel>
+}
+
+const SkuAction:ISkuAction = {
   getAll: async () => {
     try {
       const result = await axiosClient.get("/sku");

@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -13,14 +13,14 @@ interface ModalUpdateCategoryProps {
   open: boolean;
   handleClose: () => void;
   data: SpeciesModel[];
-  current:CategoryModel
+  current: CategoryModel;
 }
 
 const ModalUpdateCategory: React.FC<ModalUpdateCategoryProps> = ({
   handleClose,
   open,
   data,
-  current
+  current,
 }) => {
   const {
     control,
@@ -28,7 +28,7 @@ const ModalUpdateCategory: React.FC<ModalUpdateCategoryProps> = ({
     handleSubmit,
     getValues,
     watch,
-    setValue
+    setValue,
   } = useForm({
     defaultValues: {
       name: "",
@@ -36,18 +36,31 @@ const ModalUpdateCategory: React.FC<ModalUpdateCategoryProps> = ({
     },
   });
 
+  const queryClient = useQueryClient();
+
   useEffect(() => {
-    setValue('name',current?.name)
-    setValue('speciesId',current?.speciesId.toString());
-  },[current])
+    setValue("name", current?.name);
+    setValue("speciesId", current?.speciesId.toString());
+  }, [current]);
 
   const router = useRouter();
 
   const { mutate, isLoading } = useMutation(CategoryAction.update, {
-    onSuccess: () => {
+    onSuccess: (data) => {
+      const dataCategoriesOld: CategoryModel[] =
+        queryClient.getQueryData(["categories", router.asPath]) || [];
+      queryClient.setQueryData(
+        ["categories", router.asPath],
+        dataCategoriesOld.map((item) => {
+          if (item.id === data.id) {
+            return data;
+          }
+          return item;
+        })
+      );
       toast.success("Cập nhật thành công");
+
       handleClose();
-      router.replace(router.asPath);
     },
     onError: (err) => {
       console.log(err);
@@ -56,7 +69,7 @@ const ModalUpdateCategory: React.FC<ModalUpdateCategoryProps> = ({
   });
 
   const handleUpdate = (data: any) => {
-    mutate({...data, id:current?.id});
+    mutate({ ...data, id: current?.id });
   };
 
   return (

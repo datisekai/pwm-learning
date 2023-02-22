@@ -1,16 +1,21 @@
 import axiosClient from "../config/axiosClient";
+import { InfoModel } from "../models/Info.model";
 
-const InfoAction = {
+interface IInfoAction {
+  getAll: () => Promise<InfoModel[]>;
+  add: (data: any) => Promise<InfoModel>;
+  update: (data: any) => Promise<InfoModel>;
+  delete: (id: number | string) => Promise<any>;
+}
+
+const InfoAction:IInfoAction = {
   getAll: async () => {
     try {
       const result = await axiosClient.get("/info");
-      console.log(result.data);
       return result.data;
-   
-      
-    } catch (error) {        
+    } catch (error) {
       console.log(error);
-      return []
+      return [];
     }
   },
   add: async (data: any) => {

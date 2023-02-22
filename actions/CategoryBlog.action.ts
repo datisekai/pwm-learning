@@ -1,6 +1,17 @@
 import axiosClient from "../config/axiosClient";
+import { CategoryBlogModel } from "../models/CategoryBlog.model";
 
-const CategoryBlogAction = {
+interface ICategoryBlogAction{
+  getAll:() => Promise<CategoryBlogModel[]>
+  add:(name:string) => Promise<CategoryBlogModel>
+  update:(data:any) => Promise<any>
+  delete:(id:number | string) => Promise<any>
+  getBySlug:(data:any) => Promise<any>
+  getByUser:(data:any) => Promise<CategoryBlogModel[]>
+  setMenu:(id: number | string) => Promise<any>
+}
+
+const CategoryBlogAction:ICategoryBlogAction = {
   getAll: async () => {
     try {
       const result = await axiosClient.get("/category-blog");
@@ -15,7 +26,7 @@ const CategoryBlogAction = {
     return result.data;
   },
   update:async(data:any) => {
-    const result = await axiosClient.put(`/category-blog/${data.id}`,{...data, id:undefined});
+    const result = await axiosClient.put(`/category-blog/${data.id}`,{...data});
     return result.data
   },
   delete:async(id: number | string) => {

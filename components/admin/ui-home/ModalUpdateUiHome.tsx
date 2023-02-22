@@ -1,14 +1,11 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { FcAddImage } from "react-icons/fc";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import SliderAction from "../../../actions/Slider.action";
-import SpeciesAction from "../../../actions/Species.action";
 import UIAction from "../../../actions/UiHome.action";
-import { SliderModel } from "../../../models/Slider.model";
 import { UIModel } from "../../../models/Ui.model";
 import { getImageServer, uploadImg } from "../../../utils";
 import TextField from "../../customs/TextField";
@@ -49,13 +46,26 @@ const ModalUpdateUiHome: React.FC<ModalUpdateUiHomeProps> = ({
     }
   }, [current]);
 
+  const queryClient = useQueryClient();
+
   const router = useRouter();
 
   const { mutate, isLoading } = useMutation(UIAction.update, {
-    onSuccess: () => {
+    onSuccess: (data, variable) => {
+      const dataUiOld: UIModel[] = queryClient.getQueryData(["ui-home"]) || [];
+
+      queryClient.setQueryData(
+        ["ui-home"],
+        dataUiOld.map((item) => {
+          if (item.id === variable.id) {
+            return { ...item, ...variable };
+          }
+          return item;
+        })
+      );
+
       toast.success("Cập nhật thành công");
       handleClose();
-      router.replace(router.asPath);
     },
     onError: (err) => {
       console.log(err);

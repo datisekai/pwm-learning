@@ -1,13 +1,10 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import CategoryAction from "../../../actions/Category.action";
 import PermissionAction from "../../../actions/Permission.action";
-import SpeciesAction from "../../../actions/Species.action";
-import { SpeciesModel } from "../../../models/Species.model";
-import Select from "../../customs/Select";
+import { PermissionModel } from "../../../models/Permission.model";
 import TextField from "../../customs/TextField";
 
 interface ModalAddPermissionProps {
@@ -34,13 +31,16 @@ const ModalAddPermission: React.FC<ModalAddPermissionProps> = ({
     },
   });
 
+  const queryClient = useQueryClient();
   const router = useRouter();
 
   const { mutate, isLoading } = useMutation(PermissionAction.add, {
-    onSuccess: () => {
+    onSuccess: (data, variable) => {
       toast.success("Thêm thành công");
       handleClose();
-      router.replace(router.asPath);
+      const dataPermissionOld: PermissionModel[] =
+        queryClient.getQueryData(["permissions"]) || [];
+      queryClient.setQueryData(["permissions"], [data, ...dataPermissionOld]);
       reset();
     },
     onError: (err) => {

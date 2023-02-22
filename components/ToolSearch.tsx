@@ -8,6 +8,10 @@ import ItemSearch from "./boxs/ItemSearch";
 
 const dataPrice = [
   {
+    value: "05",
+    text: "Dưới 5 triệu",
+  },
+  {
     value: "510",
     text: "Từ 5 - 10 triệu",
   },

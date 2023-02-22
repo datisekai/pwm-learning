@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -7,6 +7,7 @@ import { FcAddImage } from "react-icons/fc";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import SliderAction from "../../../actions/Slider.action";
 import UIAction from "../../../actions/UiHome.action";
+import { UIModel } from "../../../models/Ui.model";
 import { uploadImg } from "../../../utils";
 import TextField from "../../customs/TextField";
 
@@ -30,9 +31,11 @@ const ModalAddUiHome: React.FC<ModalAddUiHomeProps> = ({
   } = useForm({
     defaultValues: {
       code: "",
-      note:""
+      note: "",
     },
   });
+
+  const queryClient = useQueryClient();
 
   const router = useRouter();
 
@@ -40,10 +43,13 @@ const ModalAddUiHome: React.FC<ModalAddUiHomeProps> = ({
   const [preview, setPreview] = useState<string>("");
 
   const { mutate, isLoading } = useMutation(UIAction.add, {
-    onSuccess: () => {
+    onSuccess: (data, variable) => {
+      const dataUiOld: UIModel[] = queryClient.getQueryData(["ui-home"]) || [];
+
+      queryClient.setQueryData(["ui-home"], [data, ...dataUiOld]);
+
       toast.success("Thêm thành công");
       handleClose();
-      router.replace(router.asPath);
       reset();
     },
     onError: (err) => {
@@ -53,8 +59,8 @@ const ModalAddUiHome: React.FC<ModalAddUiHomeProps> = ({
   });
 
   React.useEffect(() => {
-    reset()
-  },[])
+    reset();
+  }, []);
 
   const handleUpdate = async (data: any) => {
     if (!thumbnail) {
@@ -110,7 +116,7 @@ const ModalAddUiHome: React.FC<ModalAddUiHomeProps> = ({
               className={"css-field"}
               placeholder="VD: home;slider"
               rules={{
-                required:"Không được bỏ trống"
+                required: "Không được bỏ trống",
               }}
             />
           </div>

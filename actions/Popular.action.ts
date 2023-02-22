@@ -7,11 +7,11 @@ const PopularAction = {
       return result.data;
     } catch (error) {
       console.log(error);
-      return []
+      return [];
     }
   },
   popular: async (productId: number | string) => {
-    const result = await axiosClient.post(`/popular`,{productId});
+    const result = await axiosClient.post(`/popular`, { productId });
     return result.data;
   },
 };

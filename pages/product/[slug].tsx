@@ -70,6 +70,7 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
           check = true;
         }
       });
+
       if (!check) {
         sku = item;
       }

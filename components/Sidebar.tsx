@@ -24,7 +24,6 @@ const data = [
     title: "Hệ thống cửa hàng",
     icon: AiTwotoneShop,
   },
-  
 ];
 
 const tools = [
@@ -39,17 +38,21 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
   const [isDark, setIsDark] = React.useState(false);
   const { systemTheme, theme, setTheme } = useTheme();
   const currentTheme = theme === "system" ? systemTheme : theme;
-  
-  const changeTheme=() =>{    
-    if(currentTheme==="light")
-    {
-      setTheme("dark");      
-    }
-    else
-    {
+
+  const changeTheme = () => {
+    if (currentTheme === "light") {
+      setTheme("dark");
+    } else {
       setTheme("light");
     }
-  }
+  };
+
+  React.useEffect(() => {
+    if(theme){
+      setIsDark(theme === 'dark')
+    }
+  },[theme])
+  
   return (
     <div>
       <div
@@ -63,29 +66,35 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
           open ? "translate-x-0" : " translate-x-[-100%]"
         }`}
       >
-       <Link href={'/'}>
-       <div className="py-6 border-b-2">
-          <LazyLoadImage effect="blur" src="/images/PWM-Trangchu.jpg" className="mx-auto w-[200px] rounded-tl-lg rounded-br-lg" />
-        </div>
-       </Link>
+        <Link href={"/"}>
+          <div className="py-6 border-b-2">
+            <LazyLoadImage
+              effect="blur"
+              src="/images/PWM-Trangchu.jpg"
+              className="mx-auto w-[200px] rounded-tl-lg rounded-br-lg"
+            />
+          </div>
+        </Link>
         <div className="px-4 border-b-2 py-2">
           {data.map((item, index) => {
             const Icon = item.icon;
             return (
               <div key={index} className="flex items-center py-3">
-                <Icon fontSize={24} className='text-primary'/>
+                <Icon fontSize={24} className="text-primary" />
                 <span className="ml-2 dark:text-black">{item.title}</span>
               </div>
             );
           })}
         </div>
-       
+
         <div className="flex items-center py-4 px-4">
           <div>
             <Switch
               checked={isDark}
-              onChange={() => {changeTheme();setIsDark(!isDark)}}
-              
+              onChange={() => {
+                changeTheme();
+                setIsDark(!isDark);
+              }}
               onColor="#EA8143"
               uncheckedIcon={
                 <div className="flex items-center justify-center h-full">

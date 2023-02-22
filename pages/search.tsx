@@ -74,10 +74,10 @@ const Search: NextPage<SearchProps> = () => {
             </button>
 
             <div className="md:hidden block">
-              {showOptions && <ToolSearch species={species} />}
+              {showOptions && <ToolSearch species={species || []} />}
             </div>
             <div className="md:block hidden">
-              <ToolSearch species={species} />
+              <ToolSearch species={species || []} />
             </div>
             <div className="flex-1 md:ml-5">
               <div
@@ -118,7 +118,7 @@ const Search: NextPage<SearchProps> = () => {
                     ))}
               </div>
               <div className="flex w-full justify-end mt-5">
-                {products?.totalPage > 1 && (
+                {products && products?.totalPage > 1 && (
                   <ReactPaginate
                     breakLabel="..."
                     nextLabel=">"

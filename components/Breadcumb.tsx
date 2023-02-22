@@ -12,7 +12,7 @@ const Breadcumb: FC<BreadcumbProps> = ({ current, pre }) => {
       <nav className="rounded-md w-full">
         <ol className="list-reset flex">
           <Link href={"/"}>
-            <li className="text-primary hover:text-primaryHover transition-all">
+            <li className="text-primary whitespace-nowrap hover:text-primaryHover transition-all">
               Trang chủ
             </li>
           </Link>
@@ -31,7 +31,7 @@ const Breadcumb: FC<BreadcumbProps> = ({ current, pre }) => {
               </li>
             </>
           )}
-          <li className="text-gray-500">{current}</li>
+          <li className="text-gray-500 line-clamp-1 ">{current}</li>
         </ol>
       </nav>
     </>

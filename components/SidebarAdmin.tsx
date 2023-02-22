@@ -60,6 +60,11 @@ const SidebarAdmin: FC<SidebarAdminProps> = ({ handleClose, show }) => {
       url: "/admin/info",
       title: "Giới thiệu",
       icon: AiOutlineInfoCircle,
+      isHide: !(
+        user?.detailActions.includes("info:add") ||
+        user?.detailActions.includes("info:update") ||
+        user?.detailActions.includes("info:delete")
+      ),
     },
     {
       url: "/admin/ui-home",
@@ -93,10 +98,10 @@ const SidebarAdmin: FC<SidebarAdminProps> = ({ handleClose, show }) => {
           !show && "hidden"
         }`}
       >
-        <div className="bg-white rounded-sm px-2 flex items-center mx-4">
+        <div className="border border-white rounded-sm  flex items-center mx-4">
           <Link href={"/"}>
             {" "}
-            <LazyLoadImage effect="blur" src="/images/PWM-Learning.png" />
+            <LazyLoadImage effect="blur" className="block h-full" src="/images/logo.jpg" />
           </Link>
         </div>
         <div className="mt-10 px-2">

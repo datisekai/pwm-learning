@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -6,6 +6,7 @@ import { toast } from "react-hot-toast";
 import { FcAddImage } from "react-icons/fc";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import SliderAction from "../../../actions/Slider.action";
+import { SliderModel } from "../../../models/Slider.model";
 import { uploadImg } from "../../../utils";
 import TextField from "../../customs/TextField";
 
@@ -32,16 +33,19 @@ const ModalAddSlider: React.FC<ModalAddSliderProps> = ({
     },
   });
 
+  const queryClient = useQueryClient()
+
   const router = useRouter();
 
   const [thumbnail, setThumbnail] = useState<File>();
   const [preview, setPreview] = useState<string>("");
 
   const { mutate, isLoading } = useMutation(SliderAction.add, {
-    onSuccess: () => {
+    onSuccess: (data, variable) => {
       toast.success("Thêm thành công");
+      const dataSliderOld:SliderModel[] = queryClient.getQueryData(['sliders']) || [];
+      queryClient.setQueryData(['sliders'],[data,...dataSliderOld])
       handleClose();
-      router.replace(router.asPath);
       reset();
     },
     onError: (err) => {

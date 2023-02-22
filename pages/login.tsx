@@ -42,7 +42,7 @@ const LoginAdmin = () => {
 
   return (
    <>
-   <Meta description="Đăng nhập" title="Đăng nhập | PWM" image="/images/logo.png" />
+   <Meta description="Đăng nhập" title="Đăng nhập | PWM" image="/images/logo.jpg" />
     <div className="min-h-screen flex items-center justify-center bg-[#f5f5f5]">
       <div
         className="w-[90%] md:w-[400px] rounded-lg px-6 py-4 bg-white"
@@ -51,8 +51,8 @@ const LoginAdmin = () => {
         }}
       >
         <div className="flex justify-center">
-          <Link href={"/"}>
-            <LazyLoadImage src="/images/PWM-Learning.png" />
+          <Link  href={"/"}>
+            <LazyLoadImage src="/images/logo.jpg" className="w-[50%] rounded-tl-md rounded-br-md mx-auto" />
           </Link>
         </div>
         <h1 className="font-bold uppercase text-center mt-2">Đăng nhập</h1>

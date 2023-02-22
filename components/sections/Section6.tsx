@@ -8,11 +8,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { SpeciesModel } from "../../models/Species.model";
 import { getImageServer } from "../../utils";
 
-const data = [
-  "/images/section6-1.png",
-  "/images/section6-2.png",
-  "/images/section6-1.png",
-];
 
 interface Section6Props {
   data: SpeciesModel[];
@@ -36,7 +31,7 @@ const Section6: FC<Section6Props> = ({ data }) => {
           spaceBetween={10}
           breakpoints={{
             768: {
-              slidesPerView: 2,
+              slidesPerView: data && data.length > 1 ? 2 : 2,
             },
           }}
           navigation
@@ -44,7 +39,7 @@ const Section6: FC<Section6Props> = ({ data }) => {
         >
           {data?.map((item) => (
             <SwiperSlide key={item.id}>
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center aspect-[16/9]">
                 <LazyLoadImage
                   effect="blur"
                   src={
@@ -52,13 +47,11 @@ const Section6: FC<Section6Props> = ({ data }) => {
                       ? getImageServer(item.thumbnail)
                       : "/images/no-image.png"
                   }
-                  className="w-full rounded-lg "
+                  className="w-full h-full object-cover rounded-lg "
                 />
                 <div className="mt-2 flex flex-col">
                   <h4 className="uppercase font-bold">BST {item.name}</h4>
-                  <Link
-                    href={`/search?speciesId=${item.id}`}
-                  >
+                  <Link href={`/search?speciesId=${item.id}`}>
                     <button className="bg-[#D9D9D9] w-full text-[#898989] px-4 hover:bg-primary hover:text-white transition-all py-1 mt-2">
                       Xem chi tiết
                     </button>

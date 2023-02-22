@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -37,6 +37,8 @@ const ModalUpdatePermission: React.FC<ModalUpdatePermissionProps> = ({
     },
   });
 
+  const queryClient = useQueryClient();
+
   useEffect(() => {
     setValue("name", current?.name);
     setValue("note", current?.note);
@@ -45,10 +47,20 @@ const ModalUpdatePermission: React.FC<ModalUpdatePermissionProps> = ({
   const router = useRouter();
 
   const { mutate, isLoading } = useMutation(PermissionAction.update, {
-    onSuccess: () => {
+    onSuccess: (data, variable) => {
       toast.success("Cập nhật thành công");
+      const dataPermissionOld: PermissionModel[] =
+        queryClient.getQueryData(["permissions"]) || [];
+      queryClient.setQueryData(
+        ["permissions"],
+        dataPermissionOld.map((item) => {
+          if (item.id === variable.id) {
+            return { ...item, ...variable, updatedAt: Date.now() };
+          }
+          return item;
+        })
+      );
       handleClose();
-      router.replace(router.asPath);
     },
     onError: (err) => {
       console.log(err);

@@ -205,7 +205,7 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
 
   return (
     <>
-     <Meta image="/images/logo.png" title="Thêm sản phẩm | Admin" description="" />
+     <Meta image="/images/logo.jpg" title="Thêm sản phẩm | Admin" description="" />
       <AdminLayout>
         <div className="mt-5">
           <div className="flex items-center justify-between">
@@ -318,7 +318,7 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
                           minLength: {
                             value: 10,
                             message:
-                              "Mô tả sản phẩm của bạn quá ngắn. Vui lòng nhập ít nhất 100 kí tự",
+                              "Mô tả sản phẩm của bạn quá ngắn. Vui lòng nhập ít nhất 10 kí tự",
                           },
                           maxLength: {
                             value: 3000,

@@ -38,7 +38,7 @@ const AdminLayout: FC<AdminLayoutProps> = ({ children }) => {
             show={isShowMenu}
             handleShow={() => setIsShowMenu(!isShowMenu)}
           />
-          <div>{children}</div>
+          <div className="">{children}</div>
         </div>
       </div>
     </>

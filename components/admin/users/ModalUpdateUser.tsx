@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -40,6 +40,7 @@ const ModalUpdateUser: React.FC<ModalUpdateUserProps> = ({
   });
 
 
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     setValue('email',current?.email)
@@ -49,10 +50,16 @@ const ModalUpdateUser: React.FC<ModalUpdateUserProps> = ({
   const router = useRouter();
 
   const { mutate, isLoading } = useMutation(UserAction.update, {
-    onSuccess: () => {
+    onSuccess: (data, variables) => {
+      const dataUserOld:UserModel[] = queryClient.getQueryData(['users']) || [];
+      queryClient.setQueryData(['users'],dataUserOld.map(item => {
+        if(item.id == data.id){
+          return data;
+        }
+        return item;
+      }))
       toast.success("Cập nhật thành công");
       handleClose();
-      router.replace(router.asPath);
     },
     onError: (err) => {
       console.log(err);

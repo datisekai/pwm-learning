@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import React, { useState, useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -29,17 +29,29 @@ const ModalAddInfo: React.FC<ModalAddInfoProps> = ({ handleClose, open }) => {
     defaultValues: {
       title: "",
       content: "",
+      code: "",
     },
   });
-  const [image, setThumbnail] = useState<any>();
   const router = useRouter();
   const [preview, setPreview] = useState("");
   const [file, setFile] = React.useState<any>();
+
+  const queryClient = useQueryClient();
   const { mutate, isLoading } = useMutation(InfoAction.add, {
-    onSuccess: () => {
+    onSuccess: (data, variable) => {
       toast.success("Thêm thành công");
       handleClose();
-      router.replace(router.asPath);
+      const dataInfoOld: InfoModel[] =
+        queryClient.getQueryData(["infos"]) || [];
+
+      queryClient.setQueryData(
+        ["infos"],
+        [
+          { ...data, updatedAt: Date.now(), createAt: Date.now() },
+          ...dataInfoOld,
+        ]
+      );
+
       reset();
     },
     onError: (err) => {
@@ -50,22 +62,11 @@ const ModalAddInfo: React.FC<ModalAddInfoProps> = ({ handleClose, open }) => {
 
   const handleAdd = async (data: any) => {
     const newInfo: any = {
-      id: data.id,
-      title: data.title,
-      content: data.content,
-      image: "",
+      ...data,
     };
 
-    if (!image) {
-      toast.error("Vui lòng chọn ảnh chính");
-      return;
-    }
-
-    newInfo.image = await uploadImg(image);
-
-    if (!newInfo.image) {
-      toast.error("Ảnh chính chưa hợp lệ, vui lòng chọn ảnh khác");
-      return;
+    if (file) {
+      newInfo.image = await uploadImg(file);
     }
 
     mutate(newInfo);
@@ -80,7 +81,20 @@ const ModalAddInfo: React.FC<ModalAddInfoProps> = ({ handleClose, open }) => {
         <h2 className="font-bold">Thêm giới thiệu</h2>
         <div className="mt-4 space-y-2">
           <div className="space-y-2">
-            <label>Tiêu đề</label>
+            <label>Code</label>
+            <TextField
+              control={control}
+              error={errors}
+              name="code"
+              className={"css-field"}
+              placeholder="Nhập vào"
+              rules={{
+                required: "Không được để trống ô",
+              }}
+            />
+          </div>
+          <div className="space-y-2">
+            <label>Tiêu đề {"(với liên kết sẽ là URL)"}</label>
             <TextField
               control={control}
               error={errors}
@@ -89,16 +103,6 @@ const ModalAddInfo: React.FC<ModalAddInfoProps> = ({ handleClose, open }) => {
               placeholder="Nhập vào"
               rules={{
                 required: "Không được để trống ô",
-                minLength: {
-                  value: 5,
-                  message:
-                    "Tiêu đề của bạn quá ngắn. Vui lòng nhập ít nhất 5 kí tự",
-                },
-                maxLength: {
-                  value: 100,
-                  message:
-                    "Tiêu đề của bạn quá dài. Vui lòng nhập tối đa 100 kí tự",
-                },
               }}
             />
           </div>
@@ -112,30 +116,19 @@ const ModalAddInfo: React.FC<ModalAddInfoProps> = ({ handleClose, open }) => {
               placeholder="Nhập vào"
               rules={{
                 required: "Không được để trống ô",
-                minLength: {
-                  value: 20,
-                  message:
-                    "Nội dung của bạn quá ngắn. Vui lòng nhập ít nhất 20 kí tự",
-                },
-                maxLength: {
-                  value: 3000,
-                  message:
-                    "Tiêu đề của bạn quá dài. Vui lòng nhập tối đa 3000 kí tự",
-                },
               }}
             />
           </div>
           <div className="space-y-2">
-            <label>Hình ảnh</label>
+            <label>Hình ảnh {"(Có thể bỏ trống)"}</label>
             <div className="ml-4 ">
               <input
                 type="file"
-                value={image?.preview || ""}
                 onChange={(e) => {
                   const file: any = e.target.files ? e.target.files[0] : null;
                   if (file) {
                     setPreview(URL.createObjectURL(file));
-                    setThumbnail(file);
+                    setFile(file);
                   }
                 }}
                 className="hidden"

@@ -1,25 +1,32 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
-import { useState, useEffect, useContext } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import PermissionAction from "../../../actions/Permission.action";
 import { ActionModel } from "../../../models/Action.model";
-import { PermissionModel } from "../../../models/Permission.model";
-import { AuthContext } from "../../context";
 
-interface FunctionAdminProps {
-  permissions: PermissionModel[];
-  data: ActionModel[];
-}
+const FunctionAdmin = () => {
+  const { data, isLoading: isLoadingAction } = useQuery(
+    ["actions"],
+    PermissionAction.getActions
+  );
 
-const FunctionAdmin: React.FC<FunctionAdminProps> = ({ data, permissions }) => {
+  const { data: permissions, isLoading: isLoadingPermission } = useQuery(
+    ["permissions"],
+    PermissionAction.getAll
+  );
+
   const [detailActions, setDetailActions] = useState<number[]>([]);
-  const [permissionId, setPermissionId] = useState(permissions[0].id);
-
-  console.log(data)
+  const [permissionId, setPermissionId] = useState<number>(0);
 
   useEffect(() => {
-    const currentPermission = permissions.find(
+    if (permissions && permissions.length > 0) {
+      setPermissionId(permissions[0].id);
+    }
+  }, [permissions]);
+
+  useEffect(() => {
+    const currentPermission = permissions?.find(
       (item) => item.id === permissionId
     );
     const checkeds = currentPermission?.perdetailactions?.map(
@@ -49,10 +56,11 @@ const FunctionAdmin: React.FC<FunctionAdminProps> = ({ data, permissions }) => {
     if (!checked) {
       setDetailActions([]);
     } else {
-      const checks = data.reduce((pre: number[], cur) => {
-        const currentDetail = cur.detailactions.map((item) => item.id);
-        return [...pre, ...currentDetail];
-      }, []);
+      const checks =
+        data?.reduce((pre: number[], cur) => {
+          const currentDetail = cur.detailactions.map((item) => item.id);
+          return [...pre, ...currentDetail];
+        }, []) || [];
       setDetailActions(checks);
     }
   };
@@ -69,14 +77,6 @@ const FunctionAdmin: React.FC<FunctionAdminProps> = ({ data, permissions }) => {
     return flag;
   };
 
-  const { user } = useContext(AuthContext);
-
-  useEffect(() => {
-    if (!user?.detailActions.includes("permission:update")) {
-      router.push("/admin");
-    }
-  }, [user]);
-
   return (
     <div className="mt-5">
       <div className="flex items-center justify-between">
@@ -90,7 +90,7 @@ const FunctionAdmin: React.FC<FunctionAdminProps> = ({ data, permissions }) => {
               type="checkbox"
               checked={
                 detailActions.length ===
-                data.reduce((pre: number[], cur) => {
+                data?.reduce((pre: number[], cur) => {
                   const currentDetail = cur.detailactions.map(
                     (item) => item.id
                   );
@@ -111,7 +111,7 @@ const FunctionAdmin: React.FC<FunctionAdminProps> = ({ data, permissions }) => {
           <div className="w-[150px]">
             <select
               onChange={(e) => setPermissionId(Number(e.target.value))}
-              defaultValue={permissions[0].id}
+              defaultValue={permissionId}
               className="css-field"
             >
               {permissions?.map((item) => (

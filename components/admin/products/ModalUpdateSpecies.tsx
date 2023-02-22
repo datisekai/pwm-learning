@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -40,6 +40,8 @@ const ModalUpdateSpecies: React.FC<ModalUpdateSpeciesProps> = ({
   const [thumbnail, setThumbnail] = React.useState<File>();
   const [preview, setPreview] = React.useState<string>("");
 
+  const queryClient = useQueryClient();
+
   useEffect(() => {
     setValue("name", current?.name);
     if (current?.thumbnail) {
@@ -50,10 +52,20 @@ const ModalUpdateSpecies: React.FC<ModalUpdateSpeciesProps> = ({
   const router = useRouter();
 
   const { mutate, isLoading } = useMutation(SpeciesAction.update, {
-    onSuccess: () => {
+    onSuccess: (data) => {
       toast.success("Cập nhật thành công");
+      const dataSpeciesOld: SpeciesModel[] =
+        queryClient.getQueryData(["species", router.asPath]) || [];
+      queryClient.setQueryData(
+        ["species", router.asPath],
+        dataSpeciesOld.map((item) => {
+          if (item.id === data.id) {
+            return data;
+          }
+          return item;
+        })
+      );
       handleClose();
-      router.replace(router.asPath);
     },
     onError: (err) => {
       console.log(err);

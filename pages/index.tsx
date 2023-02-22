@@ -1,7 +1,5 @@
 import { Inter } from "@next/font/google";
 import { useQuery } from "@tanstack/react-query";
-import { GetServerSideProps, NextPage } from "next";
-import Head from "next/head";
 import PopularAction from "../actions/Popular.action";
 import SliderAction from "../actions/Slider.action";
 import SpeciesAction from "../actions/Species.action";
@@ -14,7 +12,6 @@ import Section2 from "../components/sections/Section2";
 import Section3 from "../components/sections/Section3";
 import Section6 from "../components/sections/Section6";
 import Slider from "../components/Slider";
-import { UIModel } from "../models/Ui.model";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -40,7 +37,7 @@ const Home = () => {
 
   return (
     <>
-      <Meta description="PWM tự hào là công ty chế tác và bán lẻ trang sức hàng đầu tại châu Á ❤️Khách hàng là trọng tâm ✔️Mua Online nhanh chóng, đơn giản" title="PWM | Trang sức cao cấp" image="/images/logo.png"/>
+      <Meta description="PWM tự hào là công ty chế tác và bán lẻ trang sức hàng đầu tại châu Á ❤️Khách hàng là trọng tâm ✔️Mua Online nhanh chóng, đơn giản" title="PWM | Trang sức cao cấp" image="/images/logo.jpg"/>
       <MainLayout>
         {isLoading ? (
           <LoadingSpinner />
@@ -48,7 +45,7 @@ const Home = () => {
           <div className="pb-10">
             {data?.some(
               (item: any) => item.code === "home;slider" && item.status
-            ) && <Slider data={sliders} />}
+            ) && <Slider data={sliders || []} />}
             {data?.some(
               (item: any) => item.code === "home;popular" && item.status
             ) && <Section1 data={populars} isLoading={isPopularsLoading} />}
@@ -71,7 +68,6 @@ const Home = () => {
                   )
               )}
 
-            {/* <Section5 /> */}
             {data?.some(
               (item: any) => item.code === "home;bst" && item.status
             ) && <Section6 data={species?.species} />}
@@ -84,11 +80,3 @@ const Home = () => {
 
 export default Home;
 
-// export const getServerSideProps: GetServerSideProps = async () => {
-//   const data = await UIAction.getAll();
-//   return {
-//     props: {
-//       data,
-//     },
-//   };
-// };

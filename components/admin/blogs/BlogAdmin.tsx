@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
@@ -14,19 +14,22 @@ import BlogAction from "../../../actions/Blog.action";
 import { BlogModel } from "../../../models/Blog.model";
 import { getImageServer } from "../../../utils";
 import { AuthContext } from "../../context";
+import LoadingSpinner from "../../LoadingSpinner";
 import SearchAdmin from "../../SearchAdmin";
 
-interface BlogAdminProps {
-  data: BlogModel[];
-}
-
-const BlogAdmin: React.FC<BlogAdminProps> = ({ data }) => {
+const BlogAdmin = () => {
   const router = useRouter();
-  const [currentProduct, setCurrentProduct] = React.useState(data);
+
+  const { data, isLoading: isLoadingBlog } = useQuery(
+    ["blogs"],
+    BlogAction.getAll
+  );
+
+  const [currentProduct, setCurrentProduct] = React.useState<BlogModel[]>([]);
   const [search, setSearch] = React.useState("");
 
   React.useEffect(() => {
-    setCurrentProduct(data);
+    setCurrentProduct(data || []);
   }, [data]);
 
   const { user } = useContext(AuthContext);
@@ -72,6 +75,12 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ data }) => {
     );
   };
 
+  React.useEffect(() => {
+    if (search.trim().length === 0 && data) {
+      setCurrentProduct(data);
+    }
+  }, [search]);
+
   return (
     <div className="mt-5 grid">
       <div className="flex items-center justify-between">
@@ -93,109 +102,117 @@ const BlogAdmin: React.FC<BlogAdminProps> = ({ data }) => {
         placeholder="Tìm kiếm với slug, tên, danh mục, người đăng..."
       />
       <div className="mt-4 bg-white rounded-3xl p-4 max-h-[450px] overflow-scroll shadow-master">
-          <div className="relative">
+        <div className="relative">
+          {!isLoadingBlog ? (
             <table className="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="py-3 px-6">
-                  Hình ảnh
-                </th>
-                <th scope="col" className="py-3 px-6">
-                  Slug
-                </th>
-                <th scope="col" className="py-3 px-6">
-                  Tiêu đề
-                </th>
-                <th scope="col" className="py-3 px-6">
-                  Danh mục
-                </th>
-                <th scope="col" className="py-3 px-6">
-                  Mô tả
-                </th>
-                <th scope="col" className="py-3 px-6">
-                  Lượt xem
-                </th>
-                <th scope="col" className="py-3 px-6">
-                  Người đăng
-                </th>
-                <th scope="col" className="py-3 px-6">
-                  Ngày cập nhật
-                </th>
-
-                {(user?.detailActions.includes("blog:update") ||
-                  user?.detailActions.includes("blog:delete")) && (
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
                   <th scope="col" className="py-3 px-6">
-                    Hành động
+                    Hình ảnh
                   </th>
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {currentProduct?.map((item) => (
-                <tr
-                  key={item.id}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 "
-                >
-                  <th
-                    scope="row"
-                    className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
-                  >
-                    <LazyLoadImage
-                      src={getImageServer(item.thumbnail)}
-                      alt="123"
-                      width={50}
-                      height={50}
-                    />
-                  </th>                  
-                   <td className="py-4 px-6 break-words max-w-[200px]">
-                    {item.slug}
-                  </td>
-                  <td className="py-4 px-6 break-words max-w-[200px]">
-                    {item.name}
-                  </td>
-                  <td className="py-4 px-6">{item?.categories_blog?.name}</td>
-                  <td className="py-4 px-6 break-words max-w-[200px]">
-                    {item.description.length < 60
-                      ? item.description
-                      : item.description.slice(0, 60) + "..."}
-                  </td>
-                  <td className="py-4 px-6">{item.view.count}</td>
-                  <td className="py-4 px-6 break-words max-w-[200px]">{item?.user?.email}</td>
-                  <td className="py-4 px-6">
-                    {" "}
-                    {dayjs(item.updatedAt).format("DD/MM/YYYY")}
-                  </td>
+                  <th scope="col" className="py-3 px-6">
+                    Slug
+                  </th>
+                  <th scope="col" className="py-3 px-6">
+                    Tiêu đề
+                  </th>
+                  <th scope="col" className="py-3 px-6">
+                    Danh mục
+                  </th>
+                  <th scope="col" className="py-3 px-6">
+                    Mô tả
+                  </th>
+                  <th scope="col" className="py-3 px-6">
+                    Lượt xem
+                  </th>
+                  <th scope="col" className="py-3 px-6">
+                    Người đăng
+                  </th>
+                  <th scope="col" className="py-3 px-6">
+                    Ngày cập nhật
+                  </th>
+
                   {(user?.detailActions.includes("blog:update") ||
                     user?.detailActions.includes("blog:delete")) && (
-                    <td className="py-4 px-6">
-                      <div className="flex space-x-2">
-                        <Link href={`/blog/read/${item.slug}`}>
-                          <div className="bg-slate-400 flex items-center justify-center text-white p-1 rounded-md hover:bg-slate-600 cursor-pointer">
-                            <AiFillEye fontSize={24} />
-                          </div>
-                        </Link>
-                        {user?.detailActions.includes("blog:update") && (
-                          <a href={`/admin/blog/update?id=${item.id}`}>
-                            <div className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer">
-                              <CiEdit fontSize={24} />
-                            </div>
-                          </a>
-                        )}
-                        {user?.detailActions.includes("blog:delete") && (
-                          <div
-                            onClick={() => handleDelete(item.id)}
-                            className=" bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
-                          >
-                            <RiDeleteBin6Line fontSize={24} />
-                          </div>
-                        )}
-                      </div>
-                    </td>
+                    <th scope="col" className="py-3 px-6">
+                      Hành động
+                    </th>
                   )}
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {currentProduct?.map((item) => (
+                  <tr
+                    key={item.id}
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 "
+                  >
+                    <th
+                      scope="row"
+                      className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                    >
+                      <LazyLoadImage
+                        src={getImageServer(item.thumbnail)}
+                        alt="123"
+                        width={50}
+                        height={50}
+                      />
+                    </th>
+                    <td className="py-4 px-6 break-words max-w-[200px]">
+                      {item.slug}
+                    </td>
+                    <td className="py-4 px-6 break-words max-w-[200px]">
+                      {item.name}
+                    </td>
+                    <td className="py-4 px-6">{item?.categories_blog?.name}</td>
+                    <td className="py-4 px-6 break-words max-w-[200px]">
+                      {item.description.length < 60
+                        ? item.description
+                        : item.description.slice(0, 60) + "..."}
+                    </td>
+                    <td className="py-4 px-6">{item.view.count}</td>
+                    <td className="py-4 px-6 break-words max-w-[200px]">
+                      {item?.user?.email}
+                    </td>
+                    <td className="py-4 px-6">
+                      {" "}
+                      {dayjs(item.updatedAt).format("DD/MM/YYYY")}
+                    </td>
+                    {(user?.detailActions.includes("blog:update") ||
+                      user?.detailActions.includes("blog:delete")) && (
+                      <td className="py-4 px-6">
+                        <div className="flex space-x-2">
+                          <Link href={`/blog/read/${item.slug}`}>
+                            <div className="bg-slate-400 flex items-center justify-center text-white p-1 rounded-md hover:bg-slate-600 cursor-pointer">
+                              <AiFillEye fontSize={24} />
+                            </div>
+                          </Link>
+                          {user?.detailActions.includes("blog:update") && (
+                            <a href={`/admin/blog/update?id=${item.id}`}>
+                              <div className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer">
+                                <CiEdit fontSize={24} />
+                              </div>
+                            </a>
+                          )}
+                          {user?.detailActions.includes("blog:delete") && (
+                            <div
+                              onClick={() => handleDelete(item.id)}
+                              className=" bg-red-500 flex items-center justify-center text-white p-1 rounded-md hover:bg-red-700 cursor-pointer"
+                            >
+                              <RiDeleteBin6Line fontSize={24} />
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div className="flex items-center justify-center">
+              <LoadingSpinner isFullScreen={false} />
+            </div>
+          )}
         </div>
       </div>
     </div>

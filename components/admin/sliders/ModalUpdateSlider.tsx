@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -35,6 +35,8 @@ const ModalUpdateSlider: React.FC<ModalUpdateSliderProps> = ({
     },
   });
 
+  const queryClient = useQueryClient();
+
   const [thumbnail, setThumbnail] = React.useState<File>();
   const [preview, setPreview] = React.useState<string>("");
 
@@ -48,7 +50,19 @@ const ModalUpdateSlider: React.FC<ModalUpdateSliderProps> = ({
   const router = useRouter();
 
   const { mutate, isLoading } = useMutation(SliderAction.update, {
-    onSuccess: () => {
+    onSuccess: (data, variable) => {
+      const dataSliderOld: SliderModel[] =
+        queryClient.getQueryData(["sliders"]) || [];
+      queryClient.setQueryData(
+        ["sliders"],
+        dataSliderOld.map((item) => {
+          if (item.id === variable.id) {
+            return { ...item, ...variable, updatedAt: Date.now() };
+          }
+          return item;
+        })
+      );
+
       toast.success("Cập nhật thành công");
       handleClose();
       router.replace(router.asPath);
