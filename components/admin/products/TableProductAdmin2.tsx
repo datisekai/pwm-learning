@@ -177,8 +177,8 @@ const TableProductAdmin2: FC<TableProductAdmin2Props> = ({
                     </div>
                   </div>
                 </td>
-                {dataBody?.map((body) => (
-                  <td className="py-4 px-1">
+                {dataBody?.map((body,index) => (
+                  <td key={index} className="py-4 px-1">
                     {
                       item.detailAttributes[
                         item.detailAttributes.findIndex(

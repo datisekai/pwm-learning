@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { FC, useEffect, useState } from "react";
 import { BiMenuAltLeft } from "react-icons/bi";
-import { BsSearch } from "react-icons/bs";
+import { BsCart2, BsSearch } from "react-icons/bs";
 import { HiOutlineMoon, HiOutlineSun } from "react-icons/hi";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { generateAvatar, getImageServer } from "../../utils";
@@ -40,7 +40,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
     } else {
       return (
         <HiOutlineMoon
-          className="w-6 h-6 text-white"
+          className="w-6 h-6 "
           role={"button"}
           onClick={() => setTheme("dark")}
         />
@@ -147,22 +147,41 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
                 </span>
               </div>
             </div>
-            <div className="flex  items-center space-x-2">
-              <div className="hidden hover:bg-primaryHover transition-all hover:cursor-pointer bg-primary h-[40px] w-[40px] md:flex items-center justify-center rounded-full">
-                {/* UI */}
-                {renderThemeChanger()}
+            {/* <div className="hidden text-primary hover:bg-primaryHover transition-all hover:cursor-pointer  h-[40px] w-[40px] md:flex items-center justify-center rounded-full">
+              {renderThemeChanger()}
+            </div> */}
+            <div className="flex ml-2  md:hidden w-[30px] h-[30px]  items-center justify-center">
+              <BsSearch
+                onClick={handleOpenSearch}
+                fontSize={20}
+                className=" dark:text-black"
+              />
+            </div>
+            <div className="flex  items-center space-x-3">
+              <div className="hidden md:block relative cursor-pointer">
+                <BsCart2 className="text-[24px]" />
+                <div className="absolute top-[-4px] text-xs w-[16px] h-[16px] text-center inline bg-primary text-white rounded-full right-[-8px]">
+                  1
+                </div>
               </div>
               {user ? (
-                <div className="user relative">
+                <div className="user relative hidden md:block">
                   <LazyLoadImage
                     src={generateAvatar(user && user?.email)}
                     className="w-[40px] h-[40px] rounded-full"
                   />
                   <ul className="menu-user hidden transition-all shadow-md rounded-md py-2 absolute mt-2 bg-white right-0">
-                    <li className="px-2 hover:text-primary transition-all cursor-pointer border-b-2 last:border-none py-1">
-                      {user.email}
+                    <li onClick={() => router.push('/my-info')} className="px-4 whitespace-nowrap hover:text-primary transition-all cursor-pointer border-b-2 last:border-none py-1">
+                      Thông tin cá nhân
                     </li>
-                    <li onClick={handleLogout} className="px-2 hover:text-primary transition-all cursor-pointer border-b-2 last:border-none py-1">
+                    <li onClick={() => router.push('/history')} className="px-4 whitespace-nowrap hover:text-primary transition-all cursor-pointer border-b-2 last:border-none py-1">
+                      Lịch sử đơn hàng
+                    </li>
+
+                    <li
+                      onClick={handleLogout}
+                      className="px-4 whitespace-nowrap hover:text-primary transition-all cursor-pointer border-b-2 last:border-none py-1"
+                    >
                       Đăng xuất
                     </li>
                   </ul>
@@ -174,14 +193,6 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
                   </button>
                 </Link>
               )}
-            </div>
-
-            <div className="flex md:hidden w-[30px] h-[30px]  items-center justify-center">
-              <BsSearch
-                onClick={handleOpenSearch}
-                fontSize={20}
-                className=" dark:text-black"
-              />
             </div>
           </div>
         </div>

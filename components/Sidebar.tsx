@@ -2,18 +2,31 @@ import React, { FC } from "react";
 import { BiLogIn } from "react-icons/bi";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FaUserEdit } from "react-icons/fa";
-import { MdContactSupport } from "react-icons/md";
+import { MdContactSupport, MdProductionQuantityLimits } from "react-icons/md";
 import { AiTwotoneShop } from "react-icons/ai";
-import { BsCartDash, BsFillMoonStarsFill, BsFillSunFill } from "react-icons/bs";
+import { BsCart2, BsCartDash, BsFillMoonStarsFill, BsFillSunFill } from "react-icons/bs";
 import Switch from "react-switch";
 import Link from "next/link";
 import { useTheme } from "next-themes";
+import {GiNotebook} from 'react-icons/gi'
+import { useRouter } from "next/router";
+
 interface SidebarProps {
   open: boolean;
   handleHide: () => void;
 }
 
 const data = [
+  {
+    url: "/cart",
+    title: "Giỏ hàng",
+    icon: BsCart2,
+  },
+  {
+    url: "/history",
+    title: "Lịch sử đơn hàng",
+    icon: GiNotebook,
+  },
   {
     url: "/",
     title: "Hỗ trợ",
@@ -39,6 +52,8 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
   const { systemTheme, theme, setTheme } = useTheme();
   const currentTheme = theme === "system" ? systemTheme : theme;
 
+  const router = useRouter()
+
   const changeTheme = () => {
     if (currentTheme === "light") {
       setTheme("dark");
@@ -48,11 +63,11 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
   };
 
   React.useEffect(() => {
-    if(theme){
-      setIsDark(theme === 'dark')
+    if (theme) {
+      setIsDark(theme === "dark");
     }
-  },[theme])
-  
+  }, [theme]);
+
   return (
     <div>
       <div
@@ -75,11 +90,12 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
             />
           </div>
         </Link>
+
         <div className="px-4 border-b-2 py-2">
           {data.map((item, index) => {
             const Icon = item.icon;
             return (
-              <div key={index} className="flex items-center py-3">
+              <div onClick={() => router.push(item.url)} key={index} className="flex items-center py-3">
                 <Icon fontSize={24} className="text-primary" />
                 <span className="ml-2 dark:text-black">{item.title}</span>
               </div>
@@ -87,6 +103,17 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
           })}
         </div>
 
+        <div className="px-4 border-b-2 py-2">
+          {tools.map((item, index) => {
+            const Icon = item.icon;
+            return (
+              <div onClick={() => router.push(item.url)} key={index} className="flex items-center py-3">
+                <Icon fontSize={24} className="text-primary" />
+                <span className="ml-2 dark:text-black">{item.title}</span>
+              </div>
+            );
+          })}
+        </div>
         <div className="flex items-center py-4 px-4">
           <div>
             <Switch
