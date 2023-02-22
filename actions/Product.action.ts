@@ -4,6 +4,7 @@ import { ProductModel } from "../models/Product.model";
 
 interface IProductAction{
   add:(data:any) => Promise<any>
+  add1:(data:any) => Promise<any>
   getAll:() => Promise<ProductModel[]>
   update:(data:any) => Promise<any>
   delete:(id:number | string) => Promise<any>
@@ -14,6 +15,10 @@ interface IProductAction{
 const ProductAction:IProductAction = {
   add: async (data: any) => {
     const result = await axiosClient.post("/product", data);
+    return result.data;
+  },
+  add1: async (data: any) => {
+    const result = await axiosClient.post("/product/add1", data);
     return result.data;
   },
   getAll: async () => {

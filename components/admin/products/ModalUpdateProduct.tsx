@@ -46,11 +46,13 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
     },
   });
 
+
+
   useEffect(() => {
     if (current) {
       setValue("name", current.name);
       setValue("categoryId", current.categoryId);
-      setValue("description", current.description);
+      setValue("description", current.description.replace(/<br\/>/g, '\n'));
       setPreview(getImageServer(current.thumbnail));
     }
   }, [current]);
@@ -88,7 +90,7 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
       image = preview.split("images/")[1];
     }
 
-    mutate({ ...data, id: current.id, thumbnail: image });
+    mutate({ ...data, id: current.id, thumbnail: image, description:data.description.replace(/\n/g, '<br/>') });
   };
 
   return (

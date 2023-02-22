@@ -12,19 +12,11 @@ import SpeciesAction from "../../actions/Species.action";
 const BottomHeader = () => {
   const router = useRouter();
 
-  // const { data: dataSpecies } = useQuery(["species"], SpeciesAction.home);
-  // const { data: dataCategoryBlog } = useQuery(
-  //   ["category-blog"],
-  //   CategoryBlogAction.getByUser
-  // );
   const { data: dataHeader } = useQuery(["header"], HeaderAction.getHeader);
 
   const [data, setData] = React.useState([{ url: "/", title: "Trang chủ" }]);
 
   React.useEffect(() => {
-    // if(dataCategoryBlog && dataSpecies){
-    //   setData([...data, ...dataSpecies?.species?.map((item:any) => ({url:`/search?speciesId=${item.id}`,title:item.name})),...dataCategoryBlog?.map((item:any) => ({url:`/blog/${item.slug}`, title:item.name}))])
-    // }
     if (dataHeader) {
       const home = dataHeader.species.find((item: any) => item.id === 0);
       if (home) {

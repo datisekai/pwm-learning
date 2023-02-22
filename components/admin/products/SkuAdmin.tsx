@@ -154,14 +154,14 @@ const SkuAdmin = () => {
                       >
                         <th
                           scope="row"
-                          className="py-2 md:py-4 px-3 md:px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                          className="py-2 md:py-4 px-3 md:px-6 font-medium  whitespace-nowrap dark:text-white"
                         >
-                          <LazyLoadImage
+                          {item.image ? <LazyLoadImage
                             src={getImageServer(item.image)}
                             alt="123"
                             width={50}
                             height={50}
-                          />
+                          /> : 'Không có'}
                         </th>
                         <td className="py-2 md:py-4 px-3 md:px-6 break-words max-w-[300px]">
                           {item.product.name}

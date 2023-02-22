@@ -1,16 +1,16 @@
-import React, { FC, useEffect, useState } from "react";
-import BottomHeader from "./BottomHeader";
-import TopHeader from "./TopHeader";
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import { BsSearch } from "react-icons/bs";
-import { BiMenuAltLeft } from "react-icons/bi";
+import { deleteCookie } from "cookies-next";
+import { useTheme } from "next-themes";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useTheme } from "next-themes";
-import { HiOutlineSun, HiOutlineMoon } from "react-icons/hi";
-import { getImageServer, uploadImg } from "../../utils";
+import React, { FC, useEffect, useState } from "react";
+import { BiMenuAltLeft } from "react-icons/bi";
+import { BsSearch } from "react-icons/bs";
+import { HiOutlineMoon, HiOutlineSun } from "react-icons/hi";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import { generateAvatar, getImageServer } from "../../utils";
 import { AuthContext } from "../context";
+import BottomHeader from "./BottomHeader";
 interface HeaderProps {
   handleOpen: () => void;
   handleOpenSearch: () => void;
@@ -18,7 +18,14 @@ interface HeaderProps {
 
 const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
   const { systemTheme, theme, setTheme } = useTheme();
-  const { infos }: any = React.useContext(AuthContext);
+  const { infos, user, setUser }: any = React.useContext(AuthContext);
+
+  const handleLogout = () => {
+    setUser(undefined);
+    deleteCookie("token");
+    deleteCookie("detailActions");
+    router.reload();
+  };
 
   const renderThemeChanger = () => {
     const currentTheme = theme === "system" ? systemTheme : theme;
@@ -73,14 +80,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
 
   return (
     <>
-      <div
-        className="relative top-0 right-0 left-0 z-[100]"
-        style={{
-          boxShadow:
-            "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px",
-        }}
-      >
-        {/* <TopHeader /> */}
+      <div className="relative top-0 right-0 left-0 z-[100]">
         <div className="bg-grey">
           <div className="max-w-[1200px] mx-auto py-2 md:py-4 w-[calc(100%-16px)] flex items-center justify-between">
             <BiMenuAltLeft
@@ -147,29 +147,34 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
                 </span>
               </div>
             </div>
-            <div className="hidden hover:bg-primaryHover transition-all hover:cursor-pointer bg-primary h-[40px] w-[40px] md:flex items-center justify-center rounded-full">
-              {/* UI */}
-              {renderThemeChanger()}
-            </div>
-            {/* <div className=" items-center hidden md:flex">
-              <button>Đăng nhập</button>
-              <button className="px-4 ml-2 py-2 rounded-tl-lg rounded-br-lg hover:bg-primaryHover transition-all bg-primary text-white">
-                Đăng ký
-              </button>
-              <Link href={"/cart"}>
-                <div className="ml-2 relative cursor-pointer">
-                  <Image
-                    alt="Cart"
-                    width={37}
-                    height={36}
-                    src="/images/cart.png"
+            <div className="flex  items-center space-x-2">
+              <div className="hidden hover:bg-primaryHover transition-all hover:cursor-pointer bg-primary h-[40px] w-[40px] md:flex items-center justify-center rounded-full">
+                {/* UI */}
+                {renderThemeChanger()}
+              </div>
+              {user ? (
+                <div className="user relative">
+                  <LazyLoadImage
+                    src={generateAvatar(user && user?.email)}
+                    className="w-[40px] h-[40px] rounded-full"
                   />
-                  <span className="absolute w-[20px] h-[20px] text-center flex items-center justify-center text-xs top-[-6px] right-[-8px] bg-primary text-white rounded-full">
-                    1
-                  </span>
+                  <ul className="menu-user hidden transition-all shadow-md rounded-md py-2 absolute mt-2 bg-white right-0">
+                    <li className="px-2 hover:text-primary transition-all cursor-pointer border-b-2 last:border-none py-1">
+                      {user.email}
+                    </li>
+                    <li onClick={handleLogout} className="px-2 hover:text-primary transition-all cursor-pointer border-b-2 last:border-none py-1">
+                      Đăng xuất
+                    </li>
+                  </ul>
                 </div>
-              </Link>
-            </div> */}
+              ) : (
+                <Link href={"/login"}>
+                  <button className="hidden md:flex px-4 py-2 rounded-tl-md rounded-br-md hover:bg-primaryHover cursor-pointer bg-primary text-white">
+                    Đăng nhập
+                  </button>
+                </Link>
+              )}
+            </div>
 
             <div className="flex md:hidden w-[30px] h-[30px]  items-center justify-center">
               <BsSearch
@@ -186,7 +191,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
           boxShadow:
             "rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;",
         }}
-        className="w-full sticky top-[0] right-0 z-[110] left-0 bg-green-600 py-2"
+        className="w-full sticky top-[0] right-0 z-[50] left-0 bg-green-600 py-2"
       >
         <BottomHeader />
       </div>

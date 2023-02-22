@@ -126,7 +126,7 @@ const ProductAdmin = () => {
             Quản lý sản phẩm
           </h1>
           {user?.detailActions.includes("product:add") && (
-            <Link href={"/admin/product/add"}>
+            <Link href={"/admin/product/add1"}>
               <div className="flex items-center px-2 py-2 rounded-lg bg-green-500 hover:bg-green-700">
                 <AiFillPlusCircle fontSize={24} className="text-white" />
                 <button className=" text-white ml-2">Thêm sản phẩm</button>

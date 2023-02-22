@@ -11,6 +11,7 @@ import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import 'photoswipe/dist/photoswipe.css'
+import "suneditor/dist/css/suneditor.min.css"
 
 
 // If you want you can use SCSS instead of css

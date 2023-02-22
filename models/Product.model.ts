@@ -11,7 +11,6 @@ interface User {
 interface Detailattribute {
   id: number;
   name: string;
-  productId: number;
   attributeId: number;
   createdAt: Date;
   updatedAt: Date;
@@ -31,7 +30,6 @@ interface SkuValues {
 interface Attribute {
   id: number;
   name: string;
-  productId: number;
   createdAt: Date;
   updatedAt: Date;
   detailattributes?: Detailattribute[];

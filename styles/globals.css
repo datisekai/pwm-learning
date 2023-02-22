@@ -299,3 +299,19 @@ span.lazy-load-image-background {
     background-color: #EA8143;
     height: 3px;
 }
+
+.user::after{
+    content: "";
+    display: block;
+    position: absolute;
+    width: 50px;
+    height: 20px;
+    background-color: transparent;
+    right:0;
+}
+
+
+
+.user:hover .menu-user{
+    display: block;
+}

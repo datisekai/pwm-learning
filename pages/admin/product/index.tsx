@@ -1,6 +1,7 @@
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { useContext } from "react";
+import AttributeAdmin from "../../../components/admin/products/AttributeAdmin";
 import PCategoryAdmin from "../../../components/admin/products/PCategoryAdmin";
 import ProductAdmin from "../../../components/admin/products/ProductAdmin";
 import SkuAdmin from "../../../components/admin/products/SkuAdmin";
@@ -9,10 +10,7 @@ import { AuthContext } from "../../../components/context";
 import AdminLayout from "../../../components/layouts/AdminLayout";
 import Meta from "../../../components/Meta";
 
-
-
 const ProductAdminManager = () => {
- 
   const router = useRouter();
 
   const { user } = useContext(AuthContext);
@@ -40,6 +38,11 @@ const ProductAdminManager = () => {
       title: "Thể loại",
       hide: !user?.detailActions.includes("category:view"),
     },
+    {
+      id: 4,
+      title: "Phân loại",
+      hide: !user?.detailActions.includes("product:view"),
+    },
   ];
 
   return (
@@ -49,34 +52,34 @@ const ProductAdminManager = () => {
         <div className="mt-5">
           <ul className="flex flex-wrap text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:border-gray-700 dark:text-gray-400">
             {[
-              dataTab.map((item, index) => !item.hide && (
-                <li
-                  key={item.id}
-                  onClick={() => router.push(`/admin/product?tab=${index}`)}
-                  className="mr-2 cursor-pointer"
-                >
-                  <span
-                    className={`inline-block p-4 rounded-t-lg  ${
-                      item.id === +tab
-                        ? "text-primary bg-gray-100"
-                        : "hover:bg-gray-100 hover:text-primary"
-                    }`}
-                  >
-                    {item.title}
-                  </span>
-                </li>
-              )),
+              dataTab.map(
+                (item, index) =>
+                  !item.hide && (
+                    <li
+                      key={item.id}
+                      onClick={() => router.push(`/admin/product?tab=${index}`)}
+                      className="mr-2 cursor-pointer"
+                    >
+                      <span
+                        className={`inline-block p-4 rounded-t-lg  ${
+                          item.id === +tab
+                            ? "text-primary bg-gray-100"
+                            : "hover:bg-gray-100 hover:text-primary"
+                        }`}
+                      >
+                        {item.title}
+                      </span>
+                    </li>
+                  )
+              ),
             ]}
           </ul>
           <div>
-            {+tab === 0 && (
-              <ProductAdmin  />
-            )}
+            {+tab === 0 && <ProductAdmin />}
             {+tab === 1 && <SkuAdmin />}
             {+tab === 2 && <SpeciesAdmin />}
-            {+tab === 3 && (
-              <PCategoryAdmin />
-            )}
+            {+tab === 3 && <PCategoryAdmin />}
+            {+tab === 4 && <AttributeAdmin />}
           </div>
         </div>
       </AdminLayout>

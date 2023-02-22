@@ -2,8 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import React, { useMemo, useState } from "react";
 import { AiOutlineRight } from "react-icons/ai";
+import { MdZoomOutMap } from "react-icons/md";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { Gallery, Item } from "react-photoswipe-gallery";
+import { Gallery, Item, useGallery } from "react-photoswipe-gallery";
 import { Swiper, SwiperSlide } from "swiper/react";
 import ProductAction from "../../actions/Product.action";
 import Breadcumb from "../../components/Breadcumb";
@@ -19,6 +20,7 @@ interface ProductDetailProps {
 }
 
 const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
+  const { open } = useGallery();
   const { data } = useQuery(["recommend-product", detail.id], () =>
     ProductAction.search({ categoryId: detail.categoryId })
   );
@@ -80,6 +82,12 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
   const sizeImage = useMemo(() => {
     let widthRender = 400;
     let heightRender = 300;
+
+    if (width > 800) {
+      widthRender = 600;
+      heightRender = 450;
+    }
+
     if (width < 600) {
       widthRender = 300;
       heightRender = 200;
@@ -90,6 +98,7 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
       height: heightRender,
     };
   }, [width]);
+
   return (
     <>
       <Meta
@@ -100,9 +109,9 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
       <MainLayout>
         <div className="max-w-[1200px] mx-auto py-4 px-2">
           <Breadcumb current={detail.name} />
-          <div className="flex items-center mt-4 flex-col md:flex-row">
+          <div className="flex  items-center mt-4 flex-col md:flex-row">
             <Gallery>
-              <div className="flex w-full md:w-[60%]  flex-col-reverse md:flex-row items-center">
+              <div className="flex  w-full md:w-[60%]  flex-col-reverse md:flex-row items-center">
                 <div className="relative mt-2 md:mt-0 w-full max-h-[500px] md:w-[110px] flex flex-row md:flex-col overflow-x-scroll list-image">
                   <Swiper
                     direction={"horizontal"}
@@ -128,7 +137,7 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
                               ref={ref as any}
                               onClick={(e) => {
                                 setIndexImage(index);
-                                open(e);
+                                // open(e);
                               }}
                               className={`w-[100px] cursor-pointer  aspect-[1/1] rounded-lg mt-2 first:mt-0 ${
                                 indexImage === index && "border border-primary"
@@ -148,17 +157,22 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
                     height={sizeImage.height}
                   >
                     {({ ref, open }) => (
-                      <img
-                        ref={ref as any}
-                        onClick={open}
-                        className=" w-full rounded-lg text-center"
-                        src={getImageServer(listImage[indexImage])}
-                      />
+                      <div className="relative" onClick={open}>
+                        <img
+                          ref={ref as any}
+                          className=" w-full rounded-lg text-center"
+                          src={getImageServer(listImage[indexImage])}
+                        />
+                        <div className="absolute p-1 rounded-full shadow-md right-0 top-0">
+                          <MdZoomOutMap className="text-[22px] text-primary" />
+                        </div>
+                      </div>
                     )}
                   </Item>
                 </div>
               </div>
             </Gallery>
+
             <div className="md:ml-2 flex-1">
               <h1 className="text-2xl mt-4 md:mt-0">{detail.name}</h1>
               <div className="mt-2 flex items-center space-x-4">
@@ -268,7 +282,7 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
               </div>
             </div>
           </div>
-          <p className="mt-4 md:mt-0">{detail.description}</p>
+          <div dangerouslySetInnerHTML={{ __html: detail.description }} />
 
           {recommendProducts?.length > 0 && (
             <Section4 title="Sản phẩm được đề xuất" data={recommendProducts} />
