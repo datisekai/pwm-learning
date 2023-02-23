@@ -22,18 +22,18 @@ const DetailHistory: NextPage<DetailHistoryProps> = ({ data }) => {
         description=""
       />
       <MainLayout>
-        <div className="mt-10 mx-10 ">
+        <div className="mt-10 md:mx-10 mx-4">
           <div className="flex">
             <h1 className="font-sans text-2xl text-orange-600 font-bold">
               Chi tiết đơn hàng #111111:
             </h1>
             <h3 className="font-sans text-2xl ml-5">Giao hàng thành công</h3>
           </div>
-          <div className="grid grid-cols-2 gap-20 mt-5">
+          <div className="grid grid-cols-2 md:gap-20 gap-4 mt-5">
             <div className="font-bold">Địa chỉ người nhận</div>
             <div className="font-bold">Hình thức thanh toán</div>
           </div>
-          <div className="grid grid-cols-2 gap-20 mt-5">
+          <div className="grid grid-cols-2 md:gap-20 gap-4 mt-5">
             <div className="rounded-md bg-gray-200 p-4 dark:text-black">
               <p className="font-bold">ABC</p>
               <p>Địa chỉ: ....</p>
@@ -47,7 +47,7 @@ const DetailHistory: NextPage<DetailHistoryProps> = ({ data }) => {
               Thanh toán tiền mặt khi nhận hàng
             </div>
           </div>
-          <div className="mt-7 mx-2 bg-white rounded-3xl p-4 overflow-x-scroll shadow-master">
+          <div className="mt-7 mx-2 bg-white rounded-3xl p-4 max-h-[450px] overflow-scroll shadow-master">
             <div className="relative">
               <table className="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
                 <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
@@ -70,13 +70,13 @@ const DetailHistory: NextPage<DetailHistoryProps> = ({ data }) => {
                 </thead>
                 <tbody>
                   <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                    <td className="py-4 px-6 break-words max-w-[300px]">
+                    <td className="py-4 px-2 break-words max-w-[300px] min-w-[80px]">
                       <LazyLoadImage
                         src={"../../images/2.jpg"}
-                        className="m-auto w-[50px] h-[50px] sm:block hidden"
+                        className="m-auto w-[50px] h-[50px]"
                       />
                     </td>
-                    <td className="py-4 px-6 break-words max-w-[300px]">
+                    <td className="py-4 px-6 break-words max-w-[300px] min-w-[120px]">
                       Bộ trang sức kim cương
                     </td>
                     <td className="py-4 px-6">1.000.000 đ</td>
@@ -88,11 +88,69 @@ const DetailHistory: NextPage<DetailHistoryProps> = ({ data }) => {
                       </button>
                     </td>
                   </tr>
+                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <td className="py-4 px-2 break-words max-w-[300px] min-w-[80px]">
+                      <LazyLoadImage
+                        src={"../../images/2.jpg"}
+                        className="m-auto w-[50px] h-[50px]"
+                      />
+                    </td>
+                    <td className="py-4 px-6 break-words max-w-[300px] min-w-[120px]">
+                      Bộ trang sức kim cương
+                    </td>
+                    <td className="py-4 px-6">1.000.000 đ</td>
+                    <td className="py-4 px-6">2</td>
+                    <td className="py-4 px-6">1.900.000 đ</td>
+                    <td>
+                      <button className="text-white font-bold bg-primary px-4 py-1 inline rounded-lg">
+                        Đánh giá
+                      </button>
+                    </td>
+                  </tr>
+                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <td className="py-4 px-2 break-words max-w-[300px] min-w-[80px]">
+                      <LazyLoadImage
+                        src={"../../images/2.jpg"}
+                        className="m-auto w-[50px] h-[50px]"
+                      />
+                    </td>
+                    <td className="py-4 px-6 break-words max-w-[300px] min-w-[120px]">
+                      Bộ trang sức kim cương
+                    </td>
+                    <td className="py-4 px-6">1.000.000 đ</td>
+                    <td className="py-4 px-6">2</td>
+                    <td className="py-4 px-6">1.900.000 đ</td>
+                    <td>
+                      <button className="text-white font-bold bg-primary px-4 py-1 inline rounded-lg">
+                        Đánh giá
+                      </button>
+                    </td>
+                  </tr>
+                  <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <td className="py-4 px-2 break-words max-w-[300px] min-w-[80px]">
+                      <LazyLoadImage
+                        src={"../../images/2.jpg"}
+                        className="m-auto w-[50px] h-[50px]"
+                      />
+                    </td>
+                    <td className="py-4 px-6 break-words max-w-[300px] min-w-[120px]">
+                      Bộ trang sức kim cương
+                    </td>
+                    <td className="py-4 px-6">1.000.000 đ</td>
+                    <td className="py-4 px-6">2</td>
+                    <td className="py-4 px-6">1.900.000 đ</td>
+                    <td>
+                      <button className="text-white font-bold bg-primary px-4 py-1 inline rounded-lg">
+                        Đánh giá
+                      </button>
+                    </td>
+                  </tr>
+                  
                 </tbody>
               </table>
             </div>
           </div>
-          <div className="overflow-auto mb-10">
+          <div className="overflow-auto mb-5">
             <div className="float-right mt-10 grid grid-cols-2 gap-10 ">
               <label className="font-bold text-xl">Tổng cộng: </label>
               <p className="font-bold text-primary text-xl">100.000.000 đ</p>
