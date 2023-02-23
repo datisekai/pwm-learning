@@ -158,7 +158,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
               />
             </div>
             <div className="flex  items-center space-x-3">
-              <div className="hidden md:block relative cursor-pointer">
+              <div onClick={() => router.push('/cart')} className="hidden md:block relative cursor-pointer">
                 <BsCart2 className="text-[24px]" />
                 <div className="absolute top-[-4px] text-xs w-[16px] h-[16px] text-center inline bg-primary text-white rounded-full right-[-8px]">
                   1
@@ -171,7 +171,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
                     className="w-[40px] h-[40px] rounded-full"
                   />
                   <ul className="menu-user hidden transition-all shadow-md rounded-md py-2 absolute mt-2 bg-white right-0">
-                    <li onClick={() => router.push('/my-info')} className="px-4 whitespace-nowrap hover:text-primary transition-all cursor-pointer border-b-2 last:border-none py-1">
+                    <li onClick={() => router.push('/profile')} className="px-4 whitespace-nowrap hover:text-primary transition-all cursor-pointer border-b-2 last:border-none py-1">
                       Thông tin cá nhân
                     </li>
                     <li onClick={() => router.push('/history')} className="px-4 whitespace-nowrap hover:text-primary transition-all cursor-pointer border-b-2 last:border-none py-1">

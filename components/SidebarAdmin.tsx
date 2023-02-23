@@ -21,7 +21,6 @@ const SidebarAdmin: FC<SidebarAdminProps> = ({ handleClose, show }) => {
 
   const { user } = useContext(AuthContext);
 
-
   const data = [
     {
       url: "/admin",
@@ -98,10 +97,14 @@ const SidebarAdmin: FC<SidebarAdminProps> = ({ handleClose, show }) => {
           !show && "hidden"
         }`}
       >
-        <div className="border border-white rounded-sm  flex items-center mx-4">
+        <div className="border border-white rounded-sm  flex items-center mx-4 aspect-[83/32]">
           <Link href={"/"}>
             {" "}
-            <LazyLoadImage effect="blur" className="block h-full" src="/images/logo.jpg" />
+            <LazyLoadImage
+              effect="blur"
+              className="block"
+              src="/images/logo.jpg"
+            />
           </Link>
         </div>
         <div className="mt-10 px-2">
