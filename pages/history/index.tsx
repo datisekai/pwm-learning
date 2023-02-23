@@ -21,7 +21,7 @@ export default function Home() {
           <h1 className="font-sans text-2xl text-orange-600 font-bold">
             HISTORY ORDER
           </h1>
-          <div className="w-full mt-5">
+          <div className="w-full mt-2">
             <ul
               className="flex mb-0 list-none flex-wrap pt-3 pb-4 flex-row"
               role="tablist"
@@ -64,7 +64,7 @@ export default function Home() {
                   Đang xử lý
                 </a>
               </li>
-              <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
+              <li className="-mb-px mr-2 last:mr-0 flex-auto text-center md:mt-0 mt-4">
                 <a
                   className={
                     "text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal " +
@@ -83,7 +83,7 @@ export default function Home() {
                   Đang vận chuyển
                 </a>
               </li>
-              <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
+              <li className="-mb-px mr-2 last:mr-0 flex-auto text-center md:mt-0 mt-4">
                 <a
                   className={
                     "text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal " +
@@ -102,7 +102,7 @@ export default function Home() {
                   Đã giao
                 </a>
               </li>
-              <li className="-mb-px mr-2 last:mr-0 flex-auto text-center">
+              <li className="-mb-px mr-2 last:mr-0 flex-auto text-center md:mt-0 mt-4">
                 <a
                   className={
                     "text-xs font-bold uppercase px-5 py-3 shadow-lg rounded block leading-normal " +

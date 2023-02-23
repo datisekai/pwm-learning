@@ -18,12 +18,12 @@ export default function Home() {
         description=""
       />
       <MainLayout>
-        <div className="px-2 py-4 lg:p-10 rounded-md bg-gray-200 m-10 lg:flex block">
+        <div className="px-2 py-4 lg:p-10 rounded-md bg-gray-200 md:m-10 m-5 lg:flex block">
           <div className="lg:w-8/12 xl:w-7/12 w-full">
             <h1 className="font-sans text-2xl text-orange-600 font-bold text-center">
               YOUR CART
             </h1>
-            <div className="bg-white rounded-md mt-5">
+            <div className="bg-white rounded-md mt-5 md:block hidden">
               <div className="grid grid-flow-col items-center px-3 py-10 gap-4">
                 <div className="flex">
                   <LazyLoadImage
@@ -50,27 +50,29 @@ export default function Home() {
                 </div>
               </div>
             </div>
-            <div className="bg-white rounded-md mt-5">
-            <div className="grid grid-flow-col items-center px-3 py-10 gap-4">
+            <div className="bg-white rounded-md mt-5 md:hidden block">
+              <div className="grid grid-flow-col items-center px-3 py-10 gap-4">
                 <div className="flex">
                   <LazyLoadImage
                     src={"../../images/2.jpg"}
                     className="m-auto w-[50px] h-[50px]"
                   />
                 </div>
-                <div className="text-center font-bold text-base dark:text-black">
-                  Bộ trang sức Kim Cương
-                </div>
-                <div className="items-center flex">
-                  <RiSubtractLine className="text-[25px] m-auto mx-2 dark:text-black hover:cursor-pointer" />
-                  <input
-                    value={1}
-                    className="w-10 h-10 text-center border-2 rounded-md border-black"
-                  />
-                  <GrFormAdd className="text-[25px] m-auto mx-2 hover:cursor-pointer" />
-                </div>
-                <div className="font-bold text-center p-4 text-base dark:text-black">
-                  22.222.222 đ
+                <div>
+                  <div className="text-center font-bold text-base dark:text-black">
+                    Bộ trang sức Kim Cương
+                  </div>
+                  <div className="items-center justify-center flex mt-4">
+                    <RiSubtractLine className="text-[25px] m-auto mx-2 dark:text-black hover:cursor-pointer" />
+                    <input
+                      value={1}
+                      className="w-9 h-9 text-center border-2 rounded-md border-black"
+                    />
+                    <GrFormAdd className="text-[25px] m-auto mx-2 hover:cursor-pointer" />
+                  </div>
+                  <div className="font-bold text-center mt-4 text-base dark:text-black">
+                    22.222.222 đ
+                  </div>
                 </div>
                 <div>
                   <BiTrash className="text-[25px] m-auto dark:text-black hover:cursor-pointer" />

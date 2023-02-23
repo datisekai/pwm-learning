@@ -14,7 +14,7 @@ const Section7: FC<Section7> = ({ status, data }) => {
         <table className="table-auto w-full text-sm text-center text-gray-500 dark:text-gray-400 mb-2 border-y-[1px] border-orange-400">
           <thead className="text-gray-700 uppercase dark:bg-gray-700 dark:text-gray-400 ">
             <tr>
-              <th className="py-2 px-6"></th>
+              <th className="py-2 px-6 sm:block hidden"></th>
               <th className="py-2 px-6">Sản phẩm</th>
               <th className="py-2 px-6">Đơn giá</th>
               <th className="py-2 px-6">Số lượng</th>
@@ -22,24 +22,28 @@ const Section7: FC<Section7> = ({ status, data }) => {
           </thead>
           <tbody>
             <tr className="bg-white dark:bg-gray-800">
-              <td className="py-2 px-6 flex items-center ">
+              <td className="py-2 px-6 items-center sm:flex hidden">
                 <LazyLoadImage
                   src={"../../images/2.jpg"}
-                  className="m-auto w-[50px] h-[50px] sm:block hidden"
+                  className="m-auto w-[50px] h-[50px]"
                 />
               </td>
-              <td className="break-words max-w-[200px] py-2 px-6">Bộ trang sức kim cương</td>
+              <td className="break-words max-w-[200px] py-2 px-6">
+                Bộ trang sức kim cương
+              </td>
               <td className="py-2 px-6">100.000 đ</td>
               <td className="py-2 px-6">2</td>
             </tr>
             <tr className="bg-white dark:bg-gray-800">
-              <td className="py-2 px-6">
+              <td className="py-2 px-6 items-center sm:flex hidden">
                 <LazyLoadImage
                   src={"../../images/2.jpg"}
-                  className="m-auto w-[50px] h-[50px] sm:block hidden"
+                  className="m-auto w-[50px] h-[50px]"
                 />
               </td>
-              <td className="break-words max-w-[200px] py-2 px-6">Bộ trang sức kim cương</td>
+              <td className="break-words max-w-[200px] py-2 px-6">
+                Bộ trang sức kim cương
+              </td>
               <td className="py-2 px-6">100.000 đ</td>
               <td className="py-2 px-6">2</td>
             </tr>
@@ -65,7 +69,7 @@ const Section7: FC<Section7> = ({ status, data }) => {
         <table className="table-auto w-full text-sm text-center text-gray-500 dark:text-gray-400 mb-2 border-y-[1px] border-orange-400">
           <thead className="text-gray-700 uppercase dark:bg-gray-700 dark:text-gray-400 ">
             <tr>
-              <th className="py-2 px-6"></th>
+              <th className="py-2 px-6 sm:block hidden"></th>
               <th className="py-2 px-6">Sản phẩm</th>
               <th className="py-2 px-6">Đơn giá</th>
               <th className="py-2 px-6">Số lượng</th>
@@ -73,13 +77,15 @@ const Section7: FC<Section7> = ({ status, data }) => {
           </thead>
           <tbody>
             <tr className="bg-white dark:bg-gray-800 ">
-              <td className="py-2 px-6">
+              <td className="py-2 px-6 items-center sm:flex hidden">
                 <LazyLoadImage
                   src={"../../images/2.jpg"}
-                  className="m-auto w-[50px] h-[50px] sm:block hidden"
+                  className="m-auto w-[50px] h-[50px]"
                 />
               </td>
-              <td className="break-words max-w-[200px] py-2 px-6">Bộ trang sức kim cương</td>
+              <td className="break-words max-w-[200px] py-2 px-6">
+                Bộ trang sức kim cương
+              </td>
               <td className="py-2 px-6">100.000 đ</td>
               <td className="py-2 px-6">2</td>
             </tr>
