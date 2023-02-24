@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { deleteCookie, getCookie, setCookie } from "cookies-next";
+import { getCookie } from "cookies-next";
 const axiosClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_SERVER_URL,
 });

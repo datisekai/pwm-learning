@@ -13,14 +13,14 @@ import MainLayout from "../../components/layouts/MainLayout";
 import Meta from "../../components/Meta";
 import Section4 from "../../components/sections/Section4";
 import { ProductModel } from "../../models/Product.model";
+import { ProductDetailModel } from "../../models/ProductDetail.model";
 import { formatPrices, getImageServer } from "../../utils";
 
 interface ProductDetailProps {
-  detail: ProductModel;
+  detail: ProductDetailModel;
 }
 
 const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
-  const { open } = useGallery();
   const { data } = useQuery(["recommend-product", detail.id], () =>
     ProductAction.search({ categoryId: detail.categoryId })
   );
@@ -40,7 +40,9 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
 
   const listImage = [
     detail.thumbnail,
-    ...detail.skus.map((item) => item.image),
+    ...detail.skus
+      .filter((item) => item.image !== null)
+      .map((item) => item.image),
   ];
 
   const [detailAt, setDetailAt] = useState<
@@ -99,6 +101,8 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
     };
   }, [width]);
 
+  console.log(detail)
+
   return (
     <>
       <Meta
@@ -117,7 +121,7 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
                     direction={"horizontal"}
                     className="mySwiper"
                     slidesPerView={3}
-                    spaceBetween={0}
+                    spaceBetween={10}
                     breakpoints={{
                       768: {
                         direction: "vertical",
@@ -249,13 +253,11 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
                 </div>
               ))}
 
-              <a href="#">
-                <div className="flex  mt-4 justify-center w-full">
-                  <button className="w-full hover:bg-primaryHover transition-all uppercase border-none outline-none bg-primary rounded-lg text-white px-2 py-2">
-                    Hotline 1900 111 111
-                  </button>
-                </div>
-              </a>
+              <div className="flex  mt-4 justify-center w-full">
+                <button className="w-full hover:bg-primaryHover transition-all uppercase border-none outline-none bg-primary rounded-lg text-white px-2 py-2">
+                  Thêm vào giỏ
+                </button>
+              </div>
               <div className="mt-4">
                 <div className="flex items-center">
                   <div>

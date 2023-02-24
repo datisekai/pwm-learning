@@ -90,22 +90,6 @@ const ProductAdminManager = () => {
 export default ProductAdminManager;
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  // const data = await Promise.all([
-  //   ProductAction.getAll(),
-  //   CategoryAction.getAll(),
-  //   SpeciesAction.getAll(),
-  //   SkuAction.getAll(),
-  // ]);
-  // const tab = query.tab as string;
-  // return {
-  //   props: {
-  //     products: data[0],
-  //     categories: data[1],
-  //     species: data[2],
-  //     skus: data[3],
-  //     tab: tab || 0,
-  //   },
-  // };
   const detailActions = JSON.parse(req.cookies["detailActions"] || "[]");
 
   if (

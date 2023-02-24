@@ -19,7 +19,7 @@ import AdminLayout from "../../../components/layouts/AdminLayout";
 import Meta from "../../../components/Meta";
 import TranslationArea from "../../../components/TranslationArea";
 import { AttributeAdd, Detailattribute } from "../../../models/Attribute.model";
-import { uploadImg } from "../../../utils";
+import { getCombinationsByAttributeId, uploadImg } from "../../../utils";
 
 export interface Sku {
   price: string;
@@ -55,7 +55,6 @@ const AddProduct: React.FC<AddProductProps> = () => {
   const { data: categories } = useQuery(["categories"], CategoryAction.getAll);
 
   const { data: attributes } = useQuery(["attributes"], AttributeAction.getAll);
-
 
   const initGroupClassify = (uuid: string) => ({
     detailattributes: [],
@@ -105,11 +104,17 @@ const AddProduct: React.FC<AddProductProps> = () => {
       return;
     }
 
+    if(skus.some(item => item.discount.trim() == "" || item.price.trim() == "" || item.skuPhanLoai.trim() == "")){
+      toast.error("Vui lòng nhập đầy đủ thông tin biến thể")
+      return;
+    }
+
     let avatar = await uploadImg(thumbnail);
 
     let images = await Promise.all(
       skus.map((item) => (item.file ? uploadImg(item.file) : null))
     );
+    
 
     const skusSending = skus.map((item, index) => {
       return {
@@ -133,35 +138,7 @@ const AddProduct: React.FC<AddProductProps> = () => {
     mutate(sending);
   };
 
-  function getCombinationsByAttributeId(arr: Attribute[]): Attribute[][] {
-    const attributeMap: { [key: number]: Attribute[] } = {};
-    arr.forEach((attribute) => {
-      const { id, name, attributeId } = attribute;
-      if (!attributeMap[attributeId]) {
-        attributeMap[attributeId] = [];
-      }
-      attributeMap[attributeId].push({ id, name, attributeId });
-    });
-
-    const result: Attribute[][] = [];
-    function getCombinationsHelper(i: number, combination: Attribute[]) {
-      if (i === keys.length) {
-        result.push(combination);
-        return;
-      }
-
-      const attributeId = keys[i];
-      const attributes = attributeMap[attributeId];
-      for (let j = 0; j < attributes.length; j++) {
-        const newCombination = [...combination, attributes[j]];
-        getCombinationsHelper(i + 1, newCombination);
-      }
-    }
-
-    const keys = Object.keys(attributeMap).map(Number);
-    getCombinationsHelper(0, []);
-    return result;
-  }
+  
 
   const dataTable = useMemo(() => {
     if (groupClassify.length === 1 && groupClassify[0].id === 0) {
@@ -298,26 +275,16 @@ const AddProduct: React.FC<AddProductProps> = () => {
                   <div className="mt-2 flex items-center">
                     <span className="w-[150px]">Mô tả sản phẩm</span>
                     <div className="ml-4 flex-1">
-                      {/* <TextArea
+                      <TextArea
                         control={control}
                         error={errors}
                         rules={{
                           required: "Không được để trống ô",
-                          minLength: {
-                            value: 10,
-                            message:
-                              "Mô tả sản phẩm của bạn quá ngắn. Vui lòng nhập ít nhất 10 kí tự",
-                          },
-                          maxLength: {
-                            value: 3000,
-                            message:
-                              "Mô tả sản phẩm của bạn quá dài. Vui lòng nhập tối đa 3000 kí tự",
-                          },
                         }}
                         name="description"
                         placeholder="Nhập vào"
                         className="w-full border px-4 py-1 rounded-md outline-none"
-                      /> */}
+                      />
                     </div>
                   </div>
 

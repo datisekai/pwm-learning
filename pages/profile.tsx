@@ -1,6 +1,9 @@
+import { useMutation } from "@tanstack/react-query";
 import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import UserAction from "../actions/User.action";
 import { AuthContext } from "../components/context";
 import TextField from "../components/customs/TextField";
 import MainLayout from "../components/layouts/MainLayout";
@@ -8,7 +11,7 @@ import Meta from "../components/Meta";
 import { generateAvatar } from "../utils";
 
 const MyInfo = () => {
-  const { user } = useContext(AuthContext);
+  const { user, setUser } = useContext(AuthContext);
 
   const {
     control,
@@ -21,15 +24,31 @@ const MyInfo = () => {
       name: "",
       email: "",
       phone: "",
-      gender: "male",
     },
   });
 
   useEffect(() => {
     if (user) {
       setValue("email", user?.email);
+      setValue("name", user?.name);
+      setValue("phone", user?.phone);
     }
   }, [user]);
+
+  const { mutate, isLoading } = useMutation(UserAction.updateMyInfo, {
+    onSuccess: (data) => {
+      setUser(data);
+      toast.success("Cập nhật thành công");
+    },
+    onError: (err) => {
+      console.log(err);
+      toast.error("Có lỗi xảy ra, vui lòng thử lại sau");
+    },
+  });
+
+  const handleUpdate = (data: any) => {
+    mutate(data);
+  };
 
   return (
     <>
@@ -45,14 +64,14 @@ const MyInfo = () => {
               <div className="flex items-center space-x-2">
                 <LazyLoadImage
                   className="w-[50px] h-[50px] rounded-full"
-                  src={generateAvatar(user && user?.email)}
+                  src={generateAvatar(user && (user?.name || user?.email))}
                 />
-                <span>{user?.email?.split("@")[0]}</span>
+                <span>{user?.name || user?.email?.split("@")[0]}</span>
               </div>
 
               <div className="flex items-center space-x-2">
                 <span>Tích điểm:</span>
-                <span className="text-primary">1200</span>
+                <span className="text-primary">{user?.point || 0}</span>
               </div>
             </div>
             <div className="flex-1 bg-white p-4 rounded-md shadow">
@@ -98,51 +117,13 @@ const MyInfo = () => {
                     />
                   </div>
                 </div>
-                <div className="flex items-center space-x-4">
-                  <label className="w-[120px] text-right md:w-[200px] text-gray-500">
-                    Giới tính
-                  </label>
-                  <div className="flex items-center space-x-2">
-                    <div className="space-x-2 flex items-center">
-                      <input
-                        type="radio"
-                        onChange={(e) =>
-                          e.target.checked && setValue("gender", e.target.value)
-                        }
-                        name="gender"
-                        value="male"
-                        id="gender-male"
-                      />
-                      <label htmlFor="gender-male">Nam</label>
-                    </div>
-                    <div className="space-x-2 flex items-center">
-                      <input
-                        onChange={(e) =>
-                          e.target.checked && setValue("gender", e.target.value)
-                        }
-                        type="radio"
-                        name="gender"
-                        value="female"
-                        id="gender-female"
-                      />
-                      <label htmlFor="gender-female">Nữ</label>
-                    </div>
-                    <div className="space-x-2 flex items-center">
-                      <input
-                        onChange={(e) =>
-                          e.target.checked && setValue("gender", e.target.value)
-                        }
-                        type="radio"
-                        name="gender"
-                        value="other"
-                        id="gender-other"
-                      />
-                      <label htmlFor="gender-other">Khác</label>
-                    </div>
-                  </div>
-                </div>
+
                 <div className="ml-[136px] md:ml-[216px]">
-                  <button className="px-4  rounded-md py-2 bg-primary text-white hover:bg-primaryHover">
+                  <button
+                    onClick={handleSubmit(handleUpdate)}
+                    disabled={isLoading}
+                    className="px-4  rounded-md py-2 bg-primary text-white hover:bg-primaryHover"
+                  >
                     Lưu
                   </button>
                 </div>

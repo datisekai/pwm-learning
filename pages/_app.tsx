@@ -14,10 +14,8 @@ import 'photoswipe/dist/photoswipe.css'
 import "suneditor/dist/css/suneditor.min.css"
 
 
-// If you want you can use SCSS instead of css
 
 
-// import plugins if you need
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },

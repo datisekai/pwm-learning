@@ -1,41 +1,24 @@
-import { CategoryModel } from "./Category.model";
+export interface Category {
+  id: number;
+  name: string;
+  speciesId: number;
+  createdAt: Date;
+  updatedAt: Date;
+  status: boolean;
+}
 
-interface User {
+export interface User {
   id: number;
   email: string;
+  name?: any;
+  phone?: any;
   status: boolean;
   createdAt: Date;
   updatedAt: Date;
+  point: number;
 }
 
-interface Detailattribute {
-  id: number;
-  name: string;
-  attributeId: number;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-interface SkuValues {
-  id: number;
-  productId: number;
-  attributeId: number;
-  detailAttributeId: number;
-  skuId: number;
-  createdAt: Date;
-  updatedAt: Date;
-  detailattributeId: number;
-}
-
-interface Attribute {
-  id: number;
-  name: string;
-  createdAt: Date;
-  updatedAt: Date;
-  detailattributes?: Detailattribute[];
-}
-
-interface Sku {
+export interface Sku {
   id: number;
   productId: number;
   sku: string;
@@ -44,16 +27,34 @@ interface Sku {
   image: string;
   createdAt: Date;
   updatedAt: Date;
-  skuvalues:SkuValues[]
+  status: boolean;
 }
 
-interface Popular {
+export interface Detailattribute {
   id: number;
-  productId: number;
+  name: string;
+  attributeId: number;
   createdAt: Date;
   updatedAt: Date;
 }
 
+export interface Attribute {
+  id: number;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+  status: boolean;
+  detailattributes: Detailattribute[];
+}
+
+export interface Productattribute {
+  id: number;
+  productId: number;
+  attributeId: number;
+  createdAt: Date;
+  updatedAt: Date;
+  attribute: Attribute;
+}
 
 export interface ProductModel {
   id: number;
@@ -65,10 +66,11 @@ export interface ProductModel {
   userId: number;
   createdAt: Date;
   updatedAt: Date;
-  category: CategoryModel;
+  slug: string;
+  category: Category;
   user: User;
-  attributes: Attribute[];
   skus: Sku[];
-  popular?:Popular | null
-  slug:string
+  popular?: any;
+  productattributes: Productattribute[];
 }
+

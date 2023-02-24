@@ -19,6 +19,9 @@ import { AuthContext } from "../../context";
 import LoadingSpinner from "../../LoadingSpinner";
 import SearchAdmin from "../../SearchAdmin";
 import ModalUpdateProduct from "./ModalUpdateProduct";
+import { CgEditContrast } from "react-icons/cg";
+import ModalUpdateProductAtt from "./ModalUpdateProductAtt";
+import AttributeAction from "../../../actions/Attribute.action";
 
 const ProductAdmin = () => {
   const [openModal, setOpenModal] = React.useState(false);
@@ -26,6 +29,10 @@ const ProductAdmin = () => {
   const [currentProduct, setCurrentProduct] = React.useState<ProductModel[]>(
     []
   );
+  const [openUpdateAtt, setOpenUpdateAtt] = React.useState(false);
+
+  const { data: attributes } = useQuery(["attributes"], AttributeAction.getAll);
+
   const [search, setSearch] = React.useState("");
   const router = useRouter();
 
@@ -231,6 +238,17 @@ const ProductAdmin = () => {
                                 <CiEdit fontSize={24} />
                               </div>
                             )}
+                            {user?.detailActions.includes("product:update") && (
+                              <div
+                                onClick={() => {
+                                  setCurrent(item);
+                                  setOpenUpdateAtt(true);
+                                }}
+                                className=" bg-blue-600 flex items-center justify-center text-white p-1 rounded-md hover:bg-blue-700 cursor-pointer"
+                              >
+                                <CgEditContrast fontSize={24} />
+                              </div>
+                            )}
                             {user?.detailActions.includes("product:delete") && (
                               <div
                                 onClick={() => handleDelete(item.id)}
@@ -259,6 +277,12 @@ const ProductAdmin = () => {
         handleClose={() => setOpenModal(false)}
         open={openModal}
         categories={categories || []}
+      />
+      <ModalUpdateProductAtt
+        current={current}
+        handleClose={() => setOpenUpdateAtt(false)}
+        open={openUpdateAtt}
+        attributes={attributes}
       />
     </>
   );
