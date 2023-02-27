@@ -35,3 +35,14 @@ export interface SkuModel {
   product: Product;
   skuvalues: Skuvalue[];
 }
+
+export interface SkuCartModel{
+  id:number,
+  productId:number,
+  image:string | null,
+  discount:number,
+  sku:string,
+  qty:number
+  productName:string,
+  categoryName:string
+}

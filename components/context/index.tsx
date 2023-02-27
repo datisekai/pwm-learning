@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { createContext } from "react";
 import InfoAction from "../../actions/Info.action";
+import { SkuCartModel } from "../../models/Sku.model";
 
 export const AuthContext = createContext<any>(undefined);
 
@@ -14,12 +15,17 @@ const AuthContextProvider: React.FC<AuthProps> = ({ children }) => {
     ["info-footer"],
     InfoAction.getAll
   );
+
+  const [cart, setCart] = React.useState<SkuCartModel[]>([])
+
   return (
     <AuthContext.Provider
       value={{
         setUser,
         user,
         infos,
+        cart, 
+        setCart
       }}
     >
       {children}

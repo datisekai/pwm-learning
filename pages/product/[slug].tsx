@@ -5,15 +5,18 @@ import { AiOutlineRight } from "react-icons/ai";
 import { MdZoomOutMap } from "react-icons/md";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { Gallery, Item, useGallery } from "react-photoswipe-gallery";
+import swal from "sweetalert";
 import { Swiper, SwiperSlide } from "swiper/react";
 import ProductAction from "../../actions/Product.action";
 import Breadcumb from "../../components/Breadcumb";
+import { AuthContext } from "../../components/context";
 import useWindowSize from "../../components/hooks/useWindowSize";
 import MainLayout from "../../components/layouts/MainLayout";
 import Meta from "../../components/Meta";
 import Section4 from "../../components/sections/Section4";
 import { ProductModel } from "../../models/Product.model";
 import { ProductDetailModel } from "../../models/ProductDetail.model";
+import { SkuCartModel } from "../../models/Sku.model";
 import { formatPrices, getImageServer } from "../../utils";
 
 interface ProductDetailProps {
@@ -21,6 +24,8 @@ interface ProductDetailProps {
 }
 
 const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
+  const { cart, setCart } = React.useContext(AuthContext);
+
   const { data } = useQuery(["recommend-product", detail.id], () =>
     ProductAction.search({ categoryId: detail.categoryId })
   );
@@ -101,7 +106,44 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
     };
   }, [width]);
 
-  console.log(detail)
+  console.log(currentSku);
+  console.log(detail);
+
+  const handleAddToCart = () => {
+    swal({
+      title: "Bạn có chắc chắn muốn thêm vào giỏ?",
+      icon: "warning",
+      buttons: ["Hủy", "OK"],
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        const isExist = cart.find(
+          (item: SkuCartModel) => item.id === currentSku.id
+        );
+
+        if (isExist) {
+          setCart(
+            cart.map((item: SkuCartModel) =>
+              item.id === currentSku.id ? { ...item, qty: item.qty + 1 } : item
+            )
+          );
+        } else {
+          const data: SkuCartModel = {
+            id: currentSku.id,
+            categoryName: detail.category.name,
+            discount: currentSku.discount,
+            image: currentSku.image != null ? currentSku.image : detail.thumbnail,
+            productId: detail.id,
+            productName: detail.name,
+            qty: 1,
+            sku: currentSku.sku,
+          };
+
+          setCart([data, ...cart]);
+        }
+      }
+    });
+  };
 
   return (
     <>
@@ -164,7 +206,7 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
                       <div className="relative" onClick={open}>
                         <img
                           ref={ref as any}
-                          className=" w-full rounded-lg text-center"
+                          className=" w-full max-h-[500px] object-contain rounded-lg text-center"
                           src={getImageServer(listImage[indexImage])}
                         />
                         <div className="absolute p-1 rounded-full shadow-md right-0 top-0">
@@ -254,7 +296,10 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
               ))}
 
               <div className="flex  mt-4 justify-center w-full">
-                <button className="w-full hover:bg-primaryHover transition-all uppercase border-none outline-none bg-primary rounded-lg text-white px-2 py-2">
+                <button
+                  onClick={handleAddToCart}
+                  className="w-full hover:bg-primaryHover transition-all uppercase border-none outline-none bg-primary rounded-lg text-white px-2 py-2"
+                >
                   Thêm vào giỏ
                 </button>
               </div>

@@ -80,7 +80,7 @@ const Footer = () => {
                 <BsTelephoneFill className="text-xl" />
               </div>
             </a>}
-            {infoRenders.zalo && <a href={`https://zalo.me/${infoRenders.zalo}`}>
+            {infoRenders.zalo && <a href={`https://zalo.me/${infoRenders.zalo.content}`}>
               <div className="p-1 border hover:bg-primary transition-all hover:cursor-pointer rounded-md">
                 <SiZalo className="text-xl" />
               </div>

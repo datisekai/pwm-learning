@@ -18,7 +18,7 @@ interface HeaderProps {
 
 const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
   const { systemTheme, theme, setTheme } = useTheme();
-  const { infos, user, setUser }: any = React.useContext(AuthContext);
+  const { infos, user, setUser, cart }: any = React.useContext(AuthContext);
 
   const handleLogout = () => {
     setUser(undefined);
@@ -164,7 +164,7 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
               >
                 <BsCart2 className="text-[24px]" />
                 <div className="absolute top-[-4px] text-xs w-[16px] h-[16px] text-center inline bg-primary text-white rounded-full right-[-8px]">
-                  1
+                  {cart?.length || 0}
                 </div>
               </div>
               {user ? (
@@ -174,12 +174,14 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
                     className="w-[40px] h-[40px] rounded-full"
                   />
                   <ul className="menu-user hidden transition-all shadow-md rounded-md py-2 absolute mt-2 bg-white right-0">
-                   {user?.detailActions?.length > 0 &&  <li
-                      onClick={() => router.push("/admin")}
-                      className="px-4 whitespace-nowrap hover:text-primary transition-all cursor-pointer border-b-2 last:border-none py-1"
-                    >
-                      Dashboard
-                    </li>}
+                    {user?.detailActions?.length > 0 && (
+                      <li
+                        onClick={() => router.push("/admin")}
+                        className="px-4 whitespace-nowrap hover:text-primary transition-all cursor-pointer border-b-2 last:border-none py-1"
+                      >
+                        Dashboard
+                      </li>
+                    )}
                     <li
                       onClick={() => router.push("/profile")}
                       className="px-4 whitespace-nowrap hover:text-primary transition-all cursor-pointer border-b-2 last:border-none py-1"
