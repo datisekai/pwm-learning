@@ -1,5 +1,6 @@
 import { Inter } from "@next/font/google";
 import { useQuery } from "@tanstack/react-query";
+import { GetServerSideProps } from "next";
 import PopularAction from "../actions/Popular.action";
 import SliderAction from "../actions/Slider.action";
 import SpeciesAction from "../actions/Species.action";
@@ -37,7 +38,11 @@ const Home = () => {
 
   return (
     <>
-      <Meta description="PWM tự hào là công ty chế tác và bán lẻ trang sức hàng đầu tại châu Á ❤️Khách hàng là trọng tâm ✔️Mua Online nhanh chóng, đơn giản" title="PWM | Trang sức cao cấp" image="/images/logo.jpg"/>
+      <Meta
+        description="PWM tự hào là công ty chế tác và bán lẻ trang sức hàng đầu tại châu Á ❤️Khách hàng là trọng tâm ✔️Mua Online nhanh chóng, đơn giản"
+        title="PWM | Trang sức cao cấp"
+        image="/images/logo.jpg"
+      />
       <MainLayout>
         {isLoading ? (
           <LoadingSpinner />
@@ -80,3 +85,20 @@ const Home = () => {
 
 export default Home;
 
+export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+  const token = req.cookies["token"];
+
+  const detailActions = JSON.parse(req.cookies["detailActions"] || "[]");
+
+  if (token && detailActions.length > 0) {
+    return {
+      redirect: {
+        destination: "/admin",
+      },
+      props: {},
+    };
+  }
+  return {
+    props: {},
+  };
+};
