@@ -2,6 +2,7 @@ import { deleteCookie } from "cookies-next";
 import { useRouter } from "next/router";
 import React, { FC, useContext, useState } from "react";
 import { BiLogOut, BiMenuAltLeft, BiMenuAltRight } from "react-icons/bi";
+import { BsBack } from "react-icons/bs";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { generateAvatar } from "../../utils";
 import { AuthContext } from "../context";
@@ -36,7 +37,7 @@ const HeaderAdmin: FC<HeaderAdminProps> = ({ handleShow, show }) => {
         <span>{user && user.email}</span>
         <LazyLoadImage
           effect="blur"
-          src={generateAvatar(user && user.email)}
+          src={generateAvatar(user && (user?.name || user?.email))}
           className="ml-2 w-[40px] h-[40px] rounded-full"
         />
 
@@ -44,6 +45,11 @@ const HeaderAdmin: FC<HeaderAdminProps> = ({ handleShow, show }) => {
           style={{ boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px" }}
           className="py-2 child-tool-user hidden right-0 select-none px-4 absolute w-[200px] bottom-[-44px] bg-white rounded-md"
         >
+          <div onClick={() => router.push('/')} className="hover:text-primary cursor-pointer flex items-center space-x-2">
+            <BsBack className="text-primary" fontSize={20}/>
+            <span className="text-black">Homepage</span>
+          </div>
+         
           <div onClick={handleLogout} className="hover:text-primary cursor-pointer flex items-center space-x-2">
             <BiLogOut className="text-primary" fontSize={20}/>
             <span className="text-black">Đăng xuất</span>

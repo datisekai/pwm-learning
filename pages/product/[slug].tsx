@@ -1,22 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
-import Lightbox from "lightbox-react";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import { useRouter } from "next/router";
 import React, { useMemo, useState } from "react";
-import { toast } from "react-hot-toast";
 import { AiOutlineRight } from "react-icons/ai";
+import { MdZoomOutMap } from "react-icons/md";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { Gallery, Item, useGallery } from "react-photoswipe-gallery";
 import { Swiper, SwiperSlide } from "swiper/react";
 import ProductAction from "../../actions/Product.action";
 import Breadcumb from "../../components/Breadcumb";
+import useWindowSize from "../../components/hooks/useWindowSize";
 import MainLayout from "../../components/layouts/MainLayout";
 import Meta from "../../components/Meta";
 import Section4 from "../../components/sections/Section4";
 import { ProductModel } from "../../models/Product.model";
+import { ProductDetailModel } from "../../models/ProductDetail.model";
 import { formatPrices, getImageServer } from "../../utils";
 
 interface ProductDetailProps {
-  detail: ProductModel;
+  detail: ProductDetailModel;
 }
 
 const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
@@ -37,11 +38,11 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
 
   const [indexImage, setIndexImage] = useState(0);
 
-  const [isOpenLightBox, setIsOpenLightBox] = useState(false);
-
   const listImage = [
     detail.thumbnail,
-    ...detail.skus.map((item) => item.image),
+    ...detail.skus
+      .filter((item) => item.image !== null)
+      .map((item) => item.image),
   ];
 
   const [detailAt, setDetailAt] = useState<
@@ -79,6 +80,29 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
     return sku;
   }, [detailAt]);
 
+  const { width } = useWindowSize();
+  const sizeImage = useMemo(() => {
+    let widthRender = 400;
+    let heightRender = 300;
+
+    if (width > 800) {
+      widthRender = 600;
+      heightRender = 450;
+    }
+
+    if (width < 600) {
+      widthRender = 300;
+      heightRender = 200;
+    }
+
+    return {
+      width: widthRender,
+      height: heightRender,
+    };
+  }, [width]);
+
+  console.log(detail)
+
   return (
     <>
       <Meta
@@ -89,55 +113,70 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
       <MainLayout>
         <div className="max-w-[1200px] mx-auto py-4 px-2">
           <Breadcumb current={detail.name} />
-          <div className="flex items-center mt-4 flex-col md:flex-row">
-            <div className="flex w-full md:w-[60%]  flex-col-reverse md:flex-row items-center">
-              <div className="relative mt-2 md:mt-0 w-full max-h-[500px] md:w-[110px] flex flex-row md:flex-col overflow-x-scroll list-image">
-                <Swiper
-                  direction={"horizontal"}
-                  className="mySwiper"
-                  slidesPerView={3}
-                  spaceBetween={0}
-                  breakpoints={{
-                    768: {
-                      direction: "vertical",
-                      slidesPerView: "auto",
-                    },
-                  }}
-                >
-                  {listImage.map((item, index) => (
-                    <SwiperSlide key={index}>
-                      <LazyLoadImage
-                        onClick={() => {
-                          setIndexImage(index);
-                          setIsOpenLightBox(true);
-                        }}
-                        src={getImageServer(item)}
-                        className={`w-[100px] cursor-pointer  aspect-[1/1] rounded-lg mt-2 first:mt-0 ${
-                          indexImage === index && "border border-primary"
-                        }`}
-                      />
-                    </SwiperSlide>
-                  ))}
-                </Swiper>
-                {/* {listImage.map((item, index) => (
-                  <LazyLoadImage
-                    key={index}
-                    onClick={() => setIndexImage(index)}
-                    src={getImageServer(item)}
-                    className={`w-[110px] cursor-pointer  aspect-[1/1] rounded-lg mt-2 first:mt-0 ${
-                      indexImage === index && "border border-primary"
-                    }`}
-                  />
-                ))} */}
+          <div className="flex  items-center mt-4 flex-col md:flex-row">
+            <Gallery>
+              <div className="flex  w-full md:w-[60%]  flex-col-reverse md:flex-row items-center">
+                <div className="relative mt-2 md:mt-0 w-full max-h-[500px] md:w-[110px] flex flex-row md:flex-col overflow-x-scroll list-image">
+                  <Swiper
+                    direction={"horizontal"}
+                    className="mySwiper"
+                    slidesPerView={3}
+                    spaceBetween={10}
+                    breakpoints={{
+                      768: {
+                        direction: "vertical",
+                        slidesPerView: "auto",
+                      },
+                    }}
+                  >
+                    {listImage.map((item, index) => (
+                      <SwiperSlide key={index}>
+                        <Item
+                          original={getImageServer(item)}
+                          width={sizeImage.width}
+                          height={sizeImage.height}
+                        >
+                          {({ ref, open }) => (
+                            <img
+                              ref={ref as any}
+                              onClick={(e) => {
+                                setIndexImage(index);
+                                // open(e);
+                              }}
+                              className={`w-[100px] cursor-pointer  aspect-[1/1] rounded-lg mt-2 first:mt-0 ${
+                                indexImage === index && "border border-primary"
+                              }`}
+                              src={getImageServer(item)}
+                            />
+                          )}
+                        </Item>
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                </div>
+                <div className="md:ml-2 md:p-2 flex-1 text-center mx-auto">
+                  <Item
+                    original={getImageServer(listImage[indexImage])}
+                    width={sizeImage.width}
+                    height={sizeImage.height}
+                  >
+                    {({ ref, open }) => (
+                      <div className="relative" onClick={open}>
+                        <img
+                          ref={ref as any}
+                          className=" w-full rounded-lg text-center"
+                          src={getImageServer(listImage[indexImage])}
+                        />
+                        <div className="absolute p-1 rounded-full shadow-md right-0 top-0">
+                          <MdZoomOutMap className="text-[22px] text-primary" />
+                        </div>
+                      </div>
+                    )}
+                  </Item>
+                </div>
               </div>
-              <div className="md:ml-2 md:p-2 flex-1 text-center mx-auto">
-                <LazyLoadImage
-                  onClick={() => setIsOpenLightBox(true)}
-                  src={getImageServer(listImage[indexImage])}
-                  className=" w-full rounded-lg text-center"
-                />
-              </div>
-            </div>
+            </Gallery>
+
             <div className="md:ml-2 flex-1">
               <h1 className="text-2xl mt-4 md:mt-0">{detail.name}</h1>
               <div className="mt-2 flex items-center space-x-4">
@@ -214,13 +253,11 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
                 </div>
               ))}
 
-              <a href="#">
-                <div className="flex  mt-4 justify-center w-full">
-                  <button className="w-full hover:bg-primaryHover transition-all uppercase border-none outline-none bg-primary rounded-lg text-white px-2 py-2">
-                    Hotline 1900 111 111
-                  </button>
-                </div>
-              </a>
+              <div className="flex  mt-4 justify-center w-full">
+                <button className="w-full hover:bg-primaryHover transition-all uppercase border-none outline-none bg-primary rounded-lg text-white px-2 py-2">
+                  Thêm vào giỏ
+                </button>
+              </div>
               <div className="mt-4">
                 <div className="flex items-center">
                   <div>
@@ -247,7 +284,7 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
               </div>
             </div>
           </div>
-          <p className="mt-4 md:mt-0">{detail.description}</p>
+          <div dangerouslySetInnerHTML={{ __html: detail.description }} />
 
           {recommendProducts?.length > 0 && (
             <Section4 title="Sản phẩm được đề xuất" data={recommendProducts} />
@@ -257,26 +294,6 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
           )}
           {/* <Section4 title="Sự kết hợp hoàn hảo" /> */}
         </div>
-        {isOpenLightBox && (
-          <Lightbox
-            mainSrc={getImageServer(listImage[indexImage])}
-            nextSrc={getImageServer(
-              listImage[(indexImage + 1) % listImage.length]
-            )}
-            prevSrc={getImageServer(
-              listImage[(indexImage + listImage.length - 1) % listImage.length]
-            )}
-            onCloseRequest={() => setIsOpenLightBox(false)}
-            onMovePrevRequest={() => {
-              setIndexImage(
-                (indexImage + listImage.length - 1) % listImage.length
-              );
-            }}
-            onMoveNextRequest={() => {
-              setIndexImage((indexImage + 1) % listImage.length);
-            }}
-          />
-        )}
       </MainLayout>
     </>
   );

@@ -13,6 +13,7 @@ interface IUserAction {
   delete: (id: number | string) => Promise<any>;
   add: (data: any) => Promise<UserModel>;
   getAll: () => Promise<UserModel[]>;
+  updateMyInfo: (data: any) => Promise<any>;
 }
 
 const UserAction: IUserAction = {
@@ -46,6 +47,14 @@ const UserAction: IUserAction = {
     } catch (error) {
       console.log(error);
       return [];
+    }
+  },
+  updateMyInfo: async (data) => {
+    try {
+      const result = await axiosClient.put("/user", data);
+      return result.data;
+    } catch (error) {
+      console.log(error);
     }
   },
 };

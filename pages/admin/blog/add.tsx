@@ -1,23 +1,22 @@
-import React, { useState, useEffect, useMemo, useRef } from "react";
-import AdminLayout from "../../../components/layouts/AdminLayout";
-import TextField from "../../../components/customs/TextField";
+import { useMutation } from "@tanstack/react-query";
+import { GetServerSideProps, NextPage } from "next";
+import dynamic from "next/dynamic";
+import { useRouter } from "next/router";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import { FcAddImage } from "react-icons/fc";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "suneditor/dist/css/suneditor.min.css"; // Import Sun Editor's CSS File
+import BlogAction from "../../../actions/Blog.action";
+import CategoryBlogAction from "../../../actions/CategoryBlog.action";
 import Select from "../../../components/customs/Select";
 import TextArea from "../../../components/customs/TextArea";
-import { v4 as uuidv4 } from "uuid";
-import dynamic from "next/dynamic";
-import "suneditor/dist/css/suneditor.min.css"; // Import Sun Editor's CSS File
-import { LazyLoadImage } from "react-lazy-load-image-component";
-import { FcAddImage } from "react-icons/fc";
-import { GetServerSideProps, NextPage } from "next";
-import CategoryBlogAction from "../../../actions/CategoryBlog.action";
-import { CategoryBlogModel } from "../../../models/CategoryBlog.model";
-import { toast } from "react-hot-toast";
-import { useMutation } from "@tanstack/react-query";
-import BlogAction from "../../../actions/Blog.action";
-import { useRouter } from "next/router";
-import { uploadImg } from "../../../utils";
+import TextField from "../../../components/customs/TextField";
+import AdminLayout from "../../../components/layouts/AdminLayout";
 import Meta from "../../../components/Meta";
+import { CategoryBlogModel } from "../../../models/CategoryBlog.model";
+import { uploadImg } from "../../../utils";
 
 const TranslationArea = dynamic(
   () => import("../../../components/TranslationArea"),

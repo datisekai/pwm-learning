@@ -1,5 +1,6 @@
 import { useRouter } from "next/router";
-import React from "react";
+import React, { useState } from "react";
+// import MultiRangeSlider, { ChangeResult } from "multi-range-slider-react";
 
 interface BoxSearchProps {
   title: string;
@@ -9,6 +10,10 @@ interface BoxSearchProps {
 
 const BoxSearch: React.FC<BoxSearchProps> = ({ data, title, name }) => {
   const router = useRouter();
+
+  const [minValue, setMinValue] = useState(25);
+	const [maxValue, setMaxValue] = useState(75);
+
   return (
     <div className="border-b-2 pb-2 md:last:border-none">
       <h2 className="font-bold uppercase">{title}</h2>
@@ -81,6 +86,17 @@ const BoxSearch: React.FC<BoxSearchProps> = ({ data, title, name }) => {
             </div>
           </div>
         ))}
+        {/* <MultiRangeSlider
+					min={0}
+					max={100}
+					step={5}
+					minValue={minValue}
+					maxValue={maxValue}
+					onInput={(e: ChangeResult) => {
+						setMinValue(e.minValue);
+						setMaxValue(e.maxValue);
+					}} */}
+				{/* ></MultiRangeSlider> */}
       </div>
     </div>
   );

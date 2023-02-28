@@ -53,6 +53,8 @@ const ModalAddInfo: React.FC<ModalAddInfoProps> = ({ handleClose, open }) => {
       );
 
       reset();
+      setFile(undefined)
+      setPreview("")
     },
     onError: (err) => {
       console.log(err);

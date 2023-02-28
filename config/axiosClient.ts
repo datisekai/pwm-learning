@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from "axios";
-import { deleteCookie, getCookie, setCookie } from "cookies-next";
+import { getCookie } from "cookies-next";
 const axiosClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_SERVER_URL,
 });
@@ -32,9 +32,9 @@ axiosClient.interceptors.response.use(
     console.log(error);
     if (error?.response?.status === 401) {
       if (typeof window !== "undefined") {
-        window.location.href = "/login";
-        deleteCookie('detailActions');
-        deleteCookie('token');
+        // window.location.href = "/login";
+        // deleteCookie('detailActions');
+        // deleteCookie('token');
       }
     }
     return Promise.reject(error?.response?.data);

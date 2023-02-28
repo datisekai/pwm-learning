@@ -6,14 +6,57 @@ import plugins from "suneditor/src/plugins";
 
 interface TranslationProps {
   initialContent?: string;
-  onChange:any
+  onChange: any;
+  height?: string;
+  buttonList?: string[];
 }
 
 const TranslationArea: FC<TranslationProps> = ({
   initialContent = "",
   onChange,
+  height = "500px",
+  buttonList = [
+    "font",
+    "fontSize",
+    "formatBlock",
+    "bold",
+    "underline",
+    "italic",
+    "paragraphStyle",
+    "blockquote",
+    "strike",
+    "subscript",
+    "superscript",
+    "fontColor",
+    "hiliteColor",
+    "textStyle",
+    "removeFormat",
+    "undo",
+    "redo",
+    "outdent",
+    "indent",
+    "align",
+    "horizontalRule",
+    "list",
+    "lineHeight",
+    "table",
+    "link",
+    "image",
+    // 'video',
+    // 'audio',
+    // You must add the 'katex' library at options to use the 'math' plugin.
+    // 'math',
+    // You must add the "imageGalleryUrl".
+    // 'imageGallery',
+    "fullScreen",
+    "showBlocks",
+    "codeView",
+    "preview",
+    // 'print'
+    // 'save',
+    // 'template'
+  ],
 }) => {
-
   const handleImageUploadError = (errorMessage: any, result: any) => {
     console.log(errorMessage, result);
   };
@@ -46,47 +89,7 @@ const TranslationArea: FC<TranslationProps> = ({
     height: 250,
     lang: en,
     buttonList: [
-      [
-        "font",
-        "fontSize",
-        "formatBlock",
-        "bold",
-        "underline",
-        "italic",
-        "paragraphStyle",
-        "blockquote",
-        "strike",
-        "subscript",
-        "superscript",
-        "fontColor",
-        "hiliteColor",
-        "textStyle",
-        "removeFormat",
-        "undo",
-        "redo",
-        "outdent",
-        "indent",
-        "align",
-        "horizontalRule",
-        "list",
-        "lineHeight",
-        "table",
-        "link",
-        "image",
-        // 'video',
-        // 'audio',
-        // You must add the 'katex' library at options to use the 'math' plugin.
-        // 'math',
-        // You must add the "imageGalleryUrl".
-        // 'imageGallery',
-        "fullScreen",
-        "showBlocks",
-        "codeView",
-        "preview",
-        // 'print'
-        // 'save',
-        // 'template'
-      ],
+      buttonList
     ],
   };
 
@@ -95,7 +98,7 @@ const TranslationArea: FC<TranslationProps> = ({
       <SunEditor
         autoFocus={true}
         width="100%"
-        height="500px"
+        height={height}
         onImageUploadBefore={handleImageUploadBefore}
         onImageUploadError={handleImageUploadError}
         setOptions={options}

@@ -79,7 +79,7 @@ const ModalUpdateSku: React.FC<ModalUpdateSkuProps> = ({
   const handleUpdate = async (data: any) => {
     let image = preview;
     if (file) {
-      image = await uploadImg(file);
+      image = getImageServer(await uploadImg(file));
     }
     mutate({ ...data, id: current?.id, image: image.split("images/")[1] });
   };

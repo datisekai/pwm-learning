@@ -4,16 +4,22 @@ import { ProductModel } from "../models/Product.model";
 
 interface IProductAction{
   add:(data:any) => Promise<any>
+  add1:(data:any) => Promise<any>
   getAll:() => Promise<ProductModel[]>
   update:(data:any) => Promise<any>
   delete:(id:number | string) => Promise<any>
   search:(query:any) => Promise<{products:ProductModel[], totalPage:number}>,
   detail:(slug:string) => Promise<ProductModel>
+  updateAttr:(data:any) => Promise<ProductModel>
 }
 
 const ProductAction:IProductAction = {
   add: async (data: any) => {
     const result = await axiosClient.post("/product", data);
+    return result.data;
+  },
+  add1: async (data: any) => {
+    const result = await axiosClient.post("/product/add1", data);
     return result.data;
   },
   getAll: async () => {
@@ -55,6 +61,14 @@ const ProductAction:IProductAction = {
       return result.data      
     } catch (error) {
       return null
+    }
+  },
+  updateAttr:async(data) => {
+    try {
+      const result = await axiosClient.put(`/product/attribute/${data.productId}`,data);
+      return result.data
+    } catch (error) {
+      console.log(error)
     }
   }
 };
