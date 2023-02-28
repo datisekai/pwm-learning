@@ -21,6 +21,10 @@ const initCol = [
     attributeId: 0,
     name: "% Giảm",
   },
+  {
+    attributeId: 0,
+    name: "Giá hiển thị",
+  },
 ];
 
 const TableProductAdmin2: FC<TableProductAdmin2Props> = ({
@@ -112,6 +116,12 @@ const TableProductAdmin2: FC<TableProductAdmin2Props> = ({
           onChange={(e) => handleChangeAllSku("discount", e.target.value)}
           className="border outline-none text-sm px-2 py-1 rounded-md"
           placeholder="% giảm"
+        />
+         <input
+          type="text"
+          onChange={(e) => handleChangeAllSku("priceDisplay", e.target.value)}
+          className="border outline-none text-sm px-2 py-1 rounded-md"
+          placeholder="Giá hiển thị"
         />
       </div>
 
@@ -219,6 +229,17 @@ const TableProductAdmin2: FC<TableProductAdmin2Props> = ({
                     className="w-full outline-none border rounded-md px-2 py-1"
                     placeholder="Nhập vào"
                     value={skus[index].discount}
+                  />
+                </td>
+                <td className="py-4 px-1">
+                  <input
+                    onChange={(e) =>
+                      handleChangeData(index, "priceDisplay", e.target.value)
+                    }
+                    type="text"
+                    className="w-full outline-none border rounded-md px-2 py-1"
+                    placeholder="Nhập vào"
+                    value={skus[index].priceDisplay}
                   />
                 </td>
               </tr>

@@ -34,15 +34,16 @@ export interface SkuModel {
   updatedAt: Date;
   product: Product;
   skuvalues: Skuvalue[];
+  priceDisplay?:string
 }
 
-export interface SkuCartModel{
-  id:number,
-  productId:number,
-  image:string | null,
-  discount:number,
-  sku:string,
-  qty:number
-  productName:string,
-  categoryName:string
+export interface SkuCartModel {
+  id: number;
+  productId: number;
+  image: string | null;
+  discount: number;
+  sku: string;
+  qty: number;
+  productName: string;
+  categoryName: string;
 }

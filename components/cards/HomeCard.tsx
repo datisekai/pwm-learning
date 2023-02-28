@@ -31,6 +31,8 @@ const HomeCard: React.FC<HomeCardProps> = ({ data }) => {
     });
     return max;
   }, [data]);
+
+
   return (
     <Link href={`/product/${data.slug}`}>
       <div className="w-full h-full pb-2 border shadow-custom-100">

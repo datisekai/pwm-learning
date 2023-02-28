@@ -56,7 +56,15 @@ export interface Productattribute {
   attribute: Attribute;
 }
 
-export interface ProductModel {
+export interface ProductImage {
+  id: number;
+  productId: number;
+  image: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface  ProductModel {
   id: number;
   name: string;
   thumbnail: string;
@@ -72,5 +80,6 @@ export interface ProductModel {
   skus: Sku[];
   popular?: any;
   productattributes: Productattribute[];
+  productimages:ProductImage[]
 }
 

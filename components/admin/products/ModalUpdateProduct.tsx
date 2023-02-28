@@ -27,9 +27,9 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
   current,
   categories,
 }) => {
-  const [file, setFile] = React.useState<any>();
+  const [file, setFile] = React.useState<File[]>();
 
-  const [preview, setPreview] = React.useState("");
+  const [preview, setPreview] = React.useState<string[]>([]);
 
   const {
     control,
@@ -46,14 +46,14 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
     },
   });
 
-
-
   useEffect(() => {
     if (current) {
       setValue("name", current.name);
       setValue("categoryId", current.categoryId);
-      setValue("description", current.description.replace(/<br\/>/g, '\n'));
-      setPreview(getImageServer(current.thumbnail));
+      setValue("description", current.description.replace(/<br\/>/g, "\n"));
+      setPreview(
+        current.productimages.map((item) => getImageServer(item.image))
+      );
     }
   }, [current]);
 
@@ -83,14 +83,20 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
   });
 
   const handleUpdate = async (data: any) => {
-    let image = "";
-    if (file) {
-      image = await uploadImg(file);
-    } else {
-      image = preview.split("images/")[1];
+    const sending: any = {
+      ...data,
+      id: current.id,
+      description: data.description.replace(/\n/g, "<br/>"),
+    };
+    if (file && file.length > 0) {
+      sending.thumbnails = await Promise.all(
+        Array.from(file).map((item) => uploadImg(item))
+      );
+
+      sending.thumbnail = sending.thumbnails[0];
     }
 
-    mutate({ ...data, id: current.id, thumbnail: image, description:data.description.replace(/\n/g, '<br/>') });
+    mutate(sending);
   };
 
   return (
@@ -107,18 +113,37 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
             <div className="">
               <input
                 type="file"
+                multiple={true}
                 onChange={(e) => {
-                  const files = e.target && e.target.files && e.target.files[0];
-                  setFile(files);
-                  files && setPreview(URL.createObjectURL(files));
+                  const files: any =
+                    e.target && e.target.files && e.target.files;
+                  if (files) {
+                    const currentPreviews: any = [];
+                    for (let i = 0; i < files.length; i++) {
+                      currentPreviews.push(URL.createObjectURL(files[i]));
+                    }
+                    setPreview(currentPreviews);
+                    setFile(files);
+                  }
                 }}
                 className="hidden"
                 accept="image/*"
                 id="mainImage"
               />
               <label htmlFor="mainImage">
-                {preview ? (
-                  <LazyLoadImage alt="" width={60} height="60" src={preview} />
+                {preview && preview.length > 0 ? (
+                  <div className="flex flex-wrap space-x-2 space-y-1">
+                    {preview.map((item, index) => (
+                      <div key={index}>
+                        <LazyLoadImage
+                          alt=""
+                          width={60}
+                          height="60"
+                          src={item}
+                        />
+                      </div>
+                    ))}
+                  </div>
                 ) : (
                   <FcAddImage fontSize={40} />
                 )}
@@ -135,16 +160,6 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
               placeholder="Nhập vào"
               rules={{
                 required: "Không được để trống ô",
-                minLength: {
-                  value: 10,
-                  message:
-                    "Tên sản phẩm của bạn quá ngắn. Vui lòng nhập ít nhất 10 kí tự",
-                },
-                maxLength: {
-                  value: 120,
-                  message:
-                    "Tên sản phẩm của bạn quá dài. Vui lòng nhập tối đa 120 kí tự",
-                },
               }}
             />
           </div>
@@ -171,16 +186,6 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
               placeholder="Nhập vào"
               rules={{
                 required: "Không được để trống ô",
-                minLength: {
-                  value: 10,
-                  message:
-                    "Tên sản phẩm của bạn quá ngắn. Vui lòng nhập ít nhất 100 kí tự",
-                },
-                maxLength: {
-                  value: 3000,
-                  message:
-                    "Tên sản phẩm của bạn quá dài. Vui lòng nhập tối đa 3000 kí tự",
-                },
               }}
             />
           </div>

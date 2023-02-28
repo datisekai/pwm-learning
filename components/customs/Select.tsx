@@ -27,7 +27,7 @@ const Select: FC<SelectProps> = ({
         control={control}
         rules={rules}
         render={({ field }) => (
-          <select {...field} className={className}>
+          <select defaultValue={''}  {...field} className={className}>
               <option selected={false}  value={""}>Vui lòng chọn</option>  
             {data?.map((item) => (
               <option key={item.value} value={item.value}>{item.text}</option>

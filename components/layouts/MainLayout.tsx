@@ -27,9 +27,9 @@ const MainLayout: FC<MainLayoutProps> = ({ children }) => {
         setUser(result);
         setCookie("detailActions", result?.detailActions);
 
-        if (result?.detailActions?.length > 0) {
-          router.push("/admin");
-        }
+        // if (result?.detailActions?.length > 0) {
+        //   router.push("/admin");
+        // }
       } else {
         setUser(undefined);
       }

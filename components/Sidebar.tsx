@@ -1,15 +1,27 @@
 import React, { FC } from "react";
-import { BiLogIn } from "react-icons/bi";
+import { BiLogIn, BiLogOutCircle } from "react-icons/bi";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FaUserEdit } from "react-icons/fa";
 import { MdContactSupport, MdProductionQuantityLimits } from "react-icons/md";
-import { AiTwotoneShop } from "react-icons/ai";
-import { BsCart2, BsCartDash, BsFillMoonStarsFill, BsFillSunFill } from "react-icons/bs";
+import {
+  AiFillDashboard,
+  AiOutlineInfoCircle,
+  AiTwotoneShop,
+} from "react-icons/ai";
+import {
+  BsCart2,
+  BsCartDash,
+  BsFillMoonStarsFill,
+  BsFillSunFill,
+} from "react-icons/bs";
 import Switch from "react-switch";
 import Link from "next/link";
 import { useTheme } from "next-themes";
-import {GiNotebook} from 'react-icons/gi'
+import { GiNotebook } from "react-icons/gi";
 import { useRouter } from "next/router";
+import { AuthContext } from "./context";
+import { generateAvatar } from "../utils";
+import { deleteCookie } from "cookies-next";
 
 interface SidebarProps {
   open: boolean;
@@ -52,7 +64,7 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
   const { systemTheme, theme, setTheme } = useTheme();
   const currentTheme = theme === "system" ? systemTheme : theme;
 
-  const router = useRouter()
+  const router = useRouter();
 
   const changeTheme = () => {
     if (currentTheme === "light") {
@@ -67,6 +79,15 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
       setIsDark(theme === "dark");
     }
   }, [theme]);
+
+  const { user, setUser } = React.useContext(AuthContext);
+
+  const handleLogout = () => {
+    setUser(undefined);
+    deleteCookie("token");
+    deleteCookie("detailActions");
+    router.reload();
+  };
 
   return (
     <div>
@@ -91,11 +112,47 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
           </div>
         </Link>
 
+        {user && (
+          <div className="px-4 border-b-2 py-2">
+            <div className="flex items-center py-3">
+              <LazyLoadImage
+                className="w-[40px] aspect-[1/1] rounded-full"
+                src={generateAvatar(user?.name || user?.email.split("@")[0])}
+              />
+              <span className="ml-2 dark:text-black">
+                {user?.name || user.email.split("@")[0]}
+              </span>
+            </div>
+            <div
+              onClick={() => router.push("/admin")}
+              className="flex items-center py-3"
+            >
+              <AiFillDashboard fontSize={24} className="text-primary" />
+              <span className="ml-2 dark:text-black">Dashboard</span>
+            </div>
+            <div
+              onClick={() => router.push("/profile")}
+              className="flex items-center py-3"
+            >
+              <AiOutlineInfoCircle fontSize={24} className="text-primary" />
+              <span className="ml-2 dark:text-black">Thông tin cá nhân</span>
+            </div>
+            <div onClick={handleLogout} className="flex items-center py-3">
+              <BiLogOutCircle fontSize={24} className="text-primary" />
+              <span className="ml-2 dark:text-black">Đăng xuất</span>
+            </div>
+          </div>
+        )}
+
         <div className="px-4 border-b-2 py-2">
           {data.map((item, index) => {
             const Icon = item.icon;
             return (
-              <div onClick={() => router.push(item.url)} key={index} className="flex items-center py-3">
+              <div
+                onClick={() => router.push(item.url)}
+                key={index}
+                className="flex items-center py-3"
+              >
                 <Icon fontSize={24} className="text-primary" />
                 <span className="ml-2 dark:text-black">{item.title}</span>
               </div>
@@ -103,17 +160,18 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
           })}
         </div>
 
-        <div className="px-4 border-b-2 py-2">
-          {tools.map((item, index) => {
-            const Icon = item.icon;
-            return (
-              <div onClick={() => router.push(item.url)} key={index} className="flex items-center py-3">
-                <Icon fontSize={24} className="text-primary" />
-                <span className="ml-2 dark:text-black">{item.title}</span>
-              </div>
-            );
-          })}
-        </div>
+        {!user && (
+          <div className="px-4 border-b-2 py-2">
+            <div
+              onClick={() => router.push("/login")}
+              className="flex items-center py-3"
+            >
+              <BiLogIn fontSize={24} className="text-primary" />
+              <span className="ml-2 dark:text-black">Đăng nhập</span>
+            </div>
+          </div>
+        )}
+
         <div className="flex items-center py-4 px-4">
           <div>
             <Switch

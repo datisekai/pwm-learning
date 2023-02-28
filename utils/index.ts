@@ -85,3 +85,7 @@ export function getCombinationsByAttributeId(arr: Attribute[]): Attribute[][] {
   getCombinationsHelper(0, []);
   return result;
 }
+
+export function isNumber(value: string): boolean {
+  return !isNaN(+value);
+}

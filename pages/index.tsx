@@ -85,20 +85,20 @@ const Home = () => {
 
 export default Home;
 
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const token = req.cookies["token"];
+// export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
+//   const token = req.cookies["token"];
 
-  const detailActions = JSON.parse(req.cookies["detailActions"] || "[]");
+//   // const detailActions = JSON.parse(req.cookies["detailActions"] || "[]");
 
-  if (token && detailActions.length > 0) {
-    return {
-      redirect: {
-        destination: "/admin",
-      },
-      props: {},
-    };
-  }
-  return {
-    props: {},
-  };
-};
+//   // if (token && detailActions.length > 0) {
+//   //   return {
+//   //     redirect: {
+//   //       destination: "/admin",
+//   //     },
+//   //     props: {},
+//   //   };
+//   // }
+//   return {
+//     props: {},
+//   };
+// };

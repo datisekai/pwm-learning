@@ -118,6 +118,9 @@ const SkuAdmin = () => {
                     <th scope="col" className="py-2 md:py-3 px-3 md:px-6">
                       SKU
                     </th>
+                    <th scope="col" className="py-2 md:py-3 px-3 md:px-6">
+                      Giá hiển thị
+                    </th>
                     {(user?.detailActions.includes("product:update") ||
                       user?.detailActions.includes("product:delete")) && (
                       <th scope="col" className="py-3 px-6">
@@ -156,7 +159,7 @@ const SkuAdmin = () => {
                           scope="row"
                           className="py-2 md:py-4 px-3 md:px-6 font-medium  whitespace-nowrap dark:text-white"
                         >
-                          {item.image ? <LazyLoadImage
+                          {item.image != "null" || !item.image ? <LazyLoadImage
                             src={getImageServer(item.image)}
                             alt="123"
                             width={50}
@@ -177,6 +180,9 @@ const SkuAdmin = () => {
                         </td>
                         <td className="py-2 md:py-4 px-3 md:px-6">
                           {item.sku}
+                        </td>
+                        <td className="py-2 md:py-4 px-3 md:px-6">
+                          {item.priceDisplay ? item.priceDisplay : 'Không có'}
                         </td>
                         {(user?.detailActions.includes("product:update") ||
                           user?.detailActions.includes("product:delete")) && (

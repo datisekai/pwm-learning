@@ -19,7 +19,11 @@ import AdminLayout from "../../../components/layouts/AdminLayout";
 import Meta from "../../../components/Meta";
 import TranslationArea from "../../../components/TranslationArea";
 import { AttributeAdd, Detailattribute } from "../../../models/Attribute.model";
-import { getCombinationsByAttributeId, uploadImg } from "../../../utils";
+import {
+  getCombinationsByAttributeId,
+  isNumber,
+  uploadImg,
+} from "../../../utils";
 
 export interface Sku {
   price: string;
@@ -28,6 +32,7 @@ export interface Sku {
   preview: string;
   skuPhanLoai: string;
   detailAttributes: Attribute[];
+  priceDisplay: string;
 }
 
 interface Attribute {
@@ -69,14 +74,15 @@ const AddProduct: React.FC<AddProductProps> = () => {
 
   const router = useRouter();
 
-  const [thumbnail, setThumbnail] = useState<any>();
-  const [preview, setPreview] = useState("");
+  const [thumbnails, setThumbnails] = useState<File[]>([]);
+  const [preview, setPreview] = useState([]);
 
   const [skus, setSkus] = useState<Sku[]>([]);
 
   const maxLength = 120;
 
   const name = watch("name");
+
 
   const { mutate, isLoading } = useMutation(ProductAction.add1, {
     onSuccess: () => {
@@ -89,7 +95,7 @@ const AddProduct: React.FC<AddProductProps> = () => {
   });
 
   const handleAdd = async (data: any) => {
-    if (!thumbnail) {
+    if (!thumbnails || thumbnails.length <= 0) {
       toast.error("Vui lòng chọn hình ảnh chính");
       return;
     }
@@ -104,17 +110,34 @@ const AddProduct: React.FC<AddProductProps> = () => {
       return;
     }
 
-    if(skus.some(item => item.discount.trim() == "" || item.price.trim() == "" || item.skuPhanLoai.trim() == "")){
-      toast.error("Vui lòng nhập đầy đủ thông tin biến thể")
+    if (
+      skus.some(
+        (item) =>
+          item.discount.trim() == "" ||
+          item.price.trim() == "" ||
+          item.skuPhanLoai.trim() == ""
+      )
+    ) {
+      toast.error("Vui lòng nhập đầy đủ thông tin biến thể");
       return;
     }
 
-    let avatar = await uploadImg(thumbnail);
+
+    
+    if (
+      skus.some((item) => !isNumber(item.price) || !isNumber(item.discount))
+    ) {
+      toast.error("Giá và % giảm phải là số");
+      return;
+    }
+
+    let avatars = await Promise.all(
+      Array.from(thumbnails).map((item) => uploadImg(item))
+    );
 
     let images = await Promise.all(
       skus.map((item) => (item.file ? uploadImg(item.file) : null))
     );
-    
 
     const skusSending = skus.map((item, index) => {
       return {
@@ -130,15 +153,14 @@ const AddProduct: React.FC<AddProductProps> = () => {
       name: data.name,
       categoryId: data.category,
       description: data.description,
-      thumbnail: avatar,
+      thumbnails: avatars,
+      thumbnail: avatars[0],
       attributes: groupClassify.map((item) => +item.id),
       skus: skusSending,
     };
 
     mutate(sending);
   };
-
-  
 
   const dataTable = useMemo(() => {
     if (groupClassify.length === 1 && groupClassify[0].id === 0) {
@@ -165,6 +187,7 @@ const AddProduct: React.FC<AddProductProps> = () => {
       preview: "",
       detailAttributes: item,
       skuPhanLoai: "",
+      priceDisplay: "",
     }));
 
     setSkus(newData);
@@ -200,14 +223,20 @@ const AddProduct: React.FC<AddProductProps> = () => {
                     <div className="ml-4 ">
                       <input
                         type="file"
-                        value={thumbnail?.preview || ""}
+                        multiple={true}
                         onChange={(e) => {
-                          const file: any = e.target.files
-                            ? e.target.files[0]
+                          const files: any = e.target.files
+                            ? e.target.files
                             : null;
-                          if (file) {
-                            setPreview(URL.createObjectURL(file));
-                            setThumbnail(file);
+                          if (files) {
+                            const currentPreviews: any = [];
+                            for (let i = 0; i < files.length; i++) {
+                              currentPreviews.push(
+                                URL.createObjectURL(files[i])
+                              );
+                            }
+                            setPreview(currentPreviews);
+                            setThumbnails(files);
                           }
                         }}
                         className="hidden"
@@ -216,12 +245,18 @@ const AddProduct: React.FC<AddProductProps> = () => {
                         accept="image/*"
                       />
                       <label htmlFor="mainImage" className="cursor-pointer ">
-                        {preview ? (
-                          <LazyLoadImage
-                            src={preview}
-                            className="w-[40px] h-[40px]"
-                            effect="blur"
-                          />
+                        {preview && preview.length > 0 ? (
+                          <div className="flex flex-wrap items-center space-x-2 space-y-1">
+                            {preview.map((item, index) => (
+                              <div key={index}>
+                                <LazyLoadImage
+                                  src={item}
+                                  className="w-[40px] h-[40px]"
+                                  effect="blur"
+                                />
+                              </div>
+                            ))}
+                          </div>
                         ) : (
                           <FcAddImage fontSize={40} />
                         )}

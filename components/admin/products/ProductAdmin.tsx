@@ -66,6 +66,8 @@ const ProductAdmin = () => {
     },
   });
 
+  console.log(products)
+
   const handleDelete = (id: number | string) => {
     swal({
       title: "Bạn có chắc chắn muốn xóa?",

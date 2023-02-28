@@ -152,6 +152,7 @@ const ModalUpdateProductAtt: React.FC<ModalUpdateProductAttProps> = ({
       preview: "",
       detailAttributes: item,
       skuPhanLoai: "",
+      priceDisplay:""
     }));
 
     setSkus(newData);

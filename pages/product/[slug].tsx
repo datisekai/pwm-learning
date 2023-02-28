@@ -44,7 +44,7 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
   const [indexImage, setIndexImage] = useState(0);
 
   const listImage = [
-    detail.thumbnail,
+    ...detail.productimages.map(item => item.image),
     ...detail.skus
       .filter((item) => item.image !== null)
       .map((item) => item.image),
@@ -106,8 +106,6 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
     };
   }, [width]);
 
-  console.log(currentSku);
-  console.log(detail);
 
   const handleAddToCart = () => {
     swal({
@@ -223,12 +221,12 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
               <h1 className="text-2xl mt-4 md:mt-0">{detail.name}</h1>
               <div className="mt-2 flex items-center space-x-4">
                 <div className="text-2xl text-primary">
-                  {formatPrices(
+                  {currentSku.priceDisplay ? currentSku.priceDisplay : formatPrices(
                     currentSku?.price -
                       (currentSku?.price * currentSku?.discount) / 100
                   )}
                 </div>
-                {currentSku?.discount > 0 && (
+                {currentSku?.discount > 0 && !currentSku.priceDisplay && (
                   <div className="text-xl text-[#999] line-through">
                     {formatPrices(currentSku?.price)}
                   </div>

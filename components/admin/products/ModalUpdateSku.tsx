@@ -42,6 +42,7 @@ const ModalUpdateSku: React.FC<ModalUpdateSkuProps> = ({
       price: 0,
       discount: 0,
       sku: "",
+      priceDisplay:""
     },
   });
 
@@ -49,6 +50,7 @@ const ModalUpdateSku: React.FC<ModalUpdateSkuProps> = ({
     setValue("price", current?.price);
     setValue("discount", current?.discount);
     setValue("sku", current?.sku);
+    setValue("priceDisplay", current?.priceDisplay || "");
     setPreview(getImageServer(current?.image));
   }, [current]);
 
@@ -151,6 +153,17 @@ const ModalUpdateSku: React.FC<ModalUpdateSkuProps> = ({
                   message: "Trường này phải là số",
                 },
               }}
+            />
+          </div>
+          <div className="space-y-2">
+            <label>Giá hiển thị {`VD: 1x.000.000`}</label>
+            <TextField
+              control={control}
+              error={errors}
+              name="priceDisplay"
+              className={"css-field"}
+              placeholder="Nhập vào"
+              
             />
           </div>
           <div className="space-y-2">

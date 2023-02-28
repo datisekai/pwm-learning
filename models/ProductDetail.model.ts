@@ -86,6 +86,15 @@
     detailattributes: Detailattribute2[];
 }
 
+
+
+ interface ProductImage {
+    id: number;
+    productId: number;
+    image: string;
+    createdAt: Date;
+    updatedAt: Date;
+  }
 export interface ProductDetailModel {
     id: number;
     name: string;
@@ -102,4 +111,5 @@ export interface ProductDetailModel {
     category: Category;
     productattributes: Productattribute[];
     attributes: Attribute2[];
+    productimages:ProductImage[]
 }
