@@ -35,7 +35,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <QueryClientProvider client={queryClient}>
           <AuthContextProvider>
             <Component {...pageProps} />
-            <Toaster position="top-right"/>
+            <Toaster />
           </AuthContextProvider>
         </QueryClientProvider>
       </ThemeProvider>

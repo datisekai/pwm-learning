@@ -1,60 +1,47 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import dayjs from "dayjs";
-import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { toast } from "react-hot-toast";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import swal from "sweetalert";
-import PermissionAction from "../../actions/Permission.action";
-import UserAction from "../../actions/User.action";
-import ModalAddUser from "../../components/admin/users/ModalAddUser";
-import ModalUpdateUser from "../../components/admin/users/ModalUpdateUser";
+import PointAction from "../../actions/Point.action";
+import ModalAddPoint from "../../components/admin/points/ModalAddPoint";
+import ModalUpdatePoint from "../../components/admin/points/ModalUpdatePoint";
 import { AuthContext } from "../../components/context";
 import AdminLayout from "../../components/layouts/AdminLayout";
 import LoadingSpinner from "../../components/LoadingSpinner";
 import Meta from "../../components/Meta";
-import { UserModel } from "../../models/User.model";
-
-const UserAdmin = () => {
+import { formatPrices } from "../../utils";
+const PointAdmin = () => {
   const [openModalAdd, setOpenModalAdd] = useState(false);
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [current, setCurrent] = useState<any>();
 
-  const { user } = useContext(AuthContext);
+  const { data: points, isLoading: isLoadingPoint } = useQuery(
+    ["points"],
+    PointAction.getAll
+  );
 
   const router = useRouter();
-  const { page = 1 } = router.query;
 
-  const { data: permissions, isLoading: isLoadingPermission } = useQuery(
-    ["permissions"],
-    PermissionAction.getAll
-  );
-  const { data: users, isLoading: isLoadingUser } = useQuery(
-    ["users"],
-    UserAction.getAll
-  );
+  const { user } = useContext(AuthContext);
 
   const queryClient = useQueryClient();
 
-  const { mutate, isLoading: isLoadingDelete } = useMutation(
-    UserAction.delete,
-    {
-      onSuccess: (data, variables) => {
-        queryClient.setQueryData(
-          ["users"],
-          users?.filter((item) => item.id != variables)
-        );
-        toast.success("Đã chuyển vào thùng rác");
-        router.replace(router.asPath);
-      },
-      onError: (err) => {
-        console.log(err);
-        toast.error("Có lỗi xảy ra, vui lòng thử lại");
-      },
-    }
-  );
+  const { mutate, isLoading } = useMutation(PointAction.delete, {
+    onSuccess: (data, variable) => {
+      queryClient.setQueryData(
+        ["points"],
+        points?.filter((item) => item.id !== variable)
+      );
+      toast.success("Đã chuyển vào thùng rác");
+    },
+    onError: (err) => {
+      console.log(err);
+      toast.error("Có lỗi xảy ra, vui lòng thử lại");
+    },
+  });
 
   const handleDelete = (id: string | number) => {
     swal({
@@ -72,87 +59,72 @@ const UserAdmin = () => {
 
   return (
     <>
-      <Meta
-        image="/images/logo.jpg"
-        title="Người dùng | Admin"
-        description=""
-      />
+      <Meta image="/images/logo.jpg" title="Point | Admin" description="" />
       <AdminLayout>
         <>
           <div className="mt-5 grid">
             <div className="flex items-center justify-between">
               <h1 className="text-white bg-primary px-4 py-2 inline rounded-lg">
-                Quản lý người dùng
+                Quản lý điểm
               </h1>
-              {user?.detailActions.includes("user:add") && (
+              {user?.detailActions.includes("point:add") && (
                 <button
                   onClick={() => setOpenModalAdd(true)}
                   className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-700"
                 >
-                  Thêm người dùng
+                  Thêm điểm
                 </button>
               )}
             </div>
-            <div className="mt-4 bg-white rounded-3xl p-4 max-h-[450px]  overflow-x-auto shadow-master">
+            <div className="mt-4 bg-white rounded-3xl p-4 max-h-[450px] overflow-scroll shadow-master">
               <div className="relative">
-                {!isLoadingUser || !isLoadingPermission ? (
+                {!isLoadingPoint ? (
                   <table className="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                       <tr>
-                        <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                          Email
+                        <th scope="col" className="py-3 px-6">
+                          Mã điểm
                         </th>
-                        
-                        <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                          Loại quyền
+                        <th scope="col" className="py-3 px-6">
+                          Giá nhỏ nhất
                         </th>
-                        <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                          Tên
+                        <th scope="col" className="py-3 px-6">
+                          Giá lớn nhất
                         </th>
-                        <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                          Ngày tạo
+                        <th scope="col" className="py-3 px-6">
+                          Điểm
                         </th>
-                        <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
-                          Tích điểm
-                        </th>
-                        {(user?.detailActions.includes("user:update") ||
-                          user?.detailActions.includes("user:delete")) && (
-                          <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
+
+                        {(user?.detailActions.includes("point:update") ||
+                          user?.detailActions.includes("point:delete")) && (
+                          <th scope="col" className="py-3 px-6">
                             Hành động
                           </th>
                         )}
                       </tr>
                     </thead>
                     <tbody>
-                      {users?.map((item: UserModel) => (
+                      {points?.map((item) => (
                         <tr
                           key={item.id}
                           className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                         >
                           <th
                             scope="row"
-                            className="break-words max-w-[200px] px-2 py-3 md:py-4 md:px-6 font-medium text-gray-900 line-clamp-1 dark:text-white"
+                            className="py-4 px-6 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                           >
-                            {item.email}
+                            {item.id}
                           </th>
-                          <td className="px-2 py-3 md:py-4 md:px-6 break-words max-w-[200px]">
-                            {item.permission.name}
-                          </td>
-                          <td className="px-2 py-3 md:py-4 md:px-6 break-words max-w-[200px]">
-                            {item.name || "Không có"}
-                          </td>
-                          <td className="px-2 py-3 md:py-4 md:px-6">
-                            {dayjs(item.createdAt).format("DD/MM/YYYY")}
-                          </td>
-                          <td className="px-2 py-3 md:py-4 md:px-6">
-                            {item.point} điểm
-                          </td>
-                          {(user?.detailActions.includes("user:update") ||
-                            user?.detailActions.includes("user:delete")) && (
-                            <td className="px-2 py-3 md:py-4 md:px-6">
+                          <td className="py-4 px-6">{formatPrices(item.minPrice)}</td>
+                          <td className="py-4 px-6">{formatPrices(item.maxPrice)}</td>
+                          <td className="py-4 px-6">{item.point} điểm</td>
+
+                          {(user?.detailActions.includes("point:update") ||
+                            user?.detailActions.includes("point:delete")) && (
+                            <td className="py-4 px-6">
                               <div className="flex">
                                 {user?.detailActions.includes(
-                                  "user:update"
+                                  "point:update"
                                 ) && (
                                   <div
                                     onClick={() => {
@@ -165,7 +137,7 @@ const UserAdmin = () => {
                                   </div>
                                 )}
                                 {user?.detailActions.includes(
-                                  "user:delete"
+                                  "point:delete"
                                 ) && (
                                   <div
                                     onClick={() => handleDelete(item.id)}
@@ -189,14 +161,12 @@ const UserAdmin = () => {
               </div>
             </div>
           </div>
-          <ModalAddUser
-            data={permissions || []}
+          <ModalAddPoint
             handleClose={() => setOpenModalAdd(false)}
             open={openModalAdd}
           />
-          <ModalUpdateUser
+          <ModalUpdatePoint
             current={current}
-            data={permissions || []}
             handleClose={() => setOpenModalUpdate(false)}
             open={openModalUpdate}
           />
@@ -206,21 +176,4 @@ const UserAdmin = () => {
   );
 };
 
-export default UserAdmin;
-
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-  const detailActions = JSON.parse(req.cookies["detailActions"] || "[]");
-
-  if (!detailActions.includes("user:view")) {
-    return {
-      props: {},
-      redirect: {
-        destination: "/admin",
-      },
-    };
-  }
-
-  return {
-    props: {},
-  };
-};
+export default PointAdmin;

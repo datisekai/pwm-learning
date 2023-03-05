@@ -146,6 +146,7 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
           };
 
           setCart([data, ...cart]);
+          toast.success("Đã thêm vào giỏ hàng của bạn")
         }
       }
     });

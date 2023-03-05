@@ -34,6 +34,8 @@ const ModalAddUser: React.FC<ModalAddUserProps> = ({
       email: "",
       password: "",
       permissionId: "",
+      name:"",
+      phone:""
     },
   });
 
@@ -116,6 +118,35 @@ const ModalAddUser: React.FC<ModalAddUserProps> = ({
             />
           </div>
         </div>
+
+        <div className="space-y-2">
+            <label>Tên</label>
+            <TextField
+              control={control}
+              error={errors}
+              name="name"
+              className={"css-field"}
+              placeholder="Nhập vào"
+             
+            />
+          </div>
+
+          <div className="space-y-2">
+            <label>Số điện thoại</label>
+            <TextField
+              control={control}
+              error={errors}
+              name="phone"
+              className={"css-field"}
+              placeholder="Nhập vào"
+              rules={{
+                pattern: {
+                  value: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im,
+                  message: "Định dạng SDT chưa đúng",
+                },
+              }}
+            />
+          </div>
 
         <div className="mt-4 flex items-center justify-between">
           <button

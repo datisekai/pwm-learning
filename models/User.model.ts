@@ -14,4 +14,7 @@ export interface UserModel {
   createdAt: Date;
   updatedAt: Date;
   permission: Permission;
+  point:number
+  name?:string
+  phone?:string
 }

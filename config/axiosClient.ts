@@ -1,10 +1,10 @@
 import axios, { AxiosResponse } from "axios";
-import { getCookie } from "cookies-next";
+import { deleteCookie, getCookie } from "cookies-next";
 const axiosClient = axios.create({
   baseURL: process.env.NEXT_PUBLIC_SERVER_URL,
 });
 
-axiosClient.interceptors.request.use((config:any) => {
+axiosClient.interceptors.request.use((config: any) => {
   if (config.url?.indexOf("login") !== -1) {
     return config;
   }
@@ -32,9 +32,9 @@ axiosClient.interceptors.response.use(
     console.log(error);
     if (error?.response?.status === 401) {
       if (typeof window !== "undefined") {
-        // window.location.href = "/login";
-        // deleteCookie('detailActions');
-        // deleteCookie('token');
+        window.location.href = "/login";
+        deleteCookie("detailActions");
+        deleteCookie("token");
       }
     }
     return Promise.reject(error?.response?.data);

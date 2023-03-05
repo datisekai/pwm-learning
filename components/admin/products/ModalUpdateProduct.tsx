@@ -46,6 +46,8 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
     },
   });
 
+
+
   useEffect(() => {
     if (current) {
       setValue("name", current.name);

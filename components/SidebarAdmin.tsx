@@ -5,11 +5,12 @@ import { BsIntersect, BsPeople } from "react-icons/bs";
 import { TbDiamond } from "react-icons/tb";
 import { BiNews } from "react-icons/bi";
 import { VscTools } from "react-icons/vsc";
-import { MdOutlineFaceRetouchingNatural } from "react-icons/md";
+import { RiFileList3Line } from "react-icons/ri";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { AuthContext } from "./context";
 import { TfiLayoutSlider } from "react-icons/tfi";
+import { TiPointOfInterest } from "react-icons/ti";
 
 interface SidebarAdminProps {
   show: boolean;
@@ -39,6 +40,19 @@ const SidebarAdmin: FC<SidebarAdminProps> = ({ handleClose, show }) => {
       icon: TbDiamond,
       isHide: !user?.detailActions.includes("product:view"),
     },
+    {
+      url: "/admin/order",
+      title: "Đơn hàng",
+      icon: RiFileList3Line,
+      isHide: !user?.detailActions.includes("order:view"),
+    },
+    {
+      url: "/admin/point",
+      title: "Tích điểm",
+      icon: TiPointOfInterest,
+      isHide: !user?.detailActions.includes("point:view"),
+    },
+
     {
       url: "/admin/blog",
       title: "Bài đăng",
@@ -114,13 +128,14 @@ const SidebarAdmin: FC<SidebarAdminProps> = ({ handleClose, show }) => {
               return (
                 <Link key={index} href={item.url}>
                   <div
-                    className={`flex items-center px-4 rounded-lg  py-3 mt-1 hover:bg-white hover:text-primary transition-all text-white ${
+                    className={`flex  items-center px-4 rounded-lg  py-3 mt-1 hover:bg-white hover:text-primary transition-all ${
                       item.url === "/admin" && router.asPath === "/admin"
                         ? "bg-white text-primary"
                         : item.url !== "/admin" &&
-                          router.asPath.includes(item.url) &&
-                          "bg-white text-primary"
-                    }`}
+                          router.asPath.includes(item.url)
+                        ? "bg-white text-primary"
+                        : "text-white"
+                    } `}
                   >
                     <Icon fontSize={22} />
                     <span className="ml-4 ">{item.title}</span>

@@ -13,7 +13,7 @@ interface Detailattribute {
   name: string;
 }
 
-interface Skuvalue {
+export interface Skuvalue {
   id: number;
   attributeId: number;
   detailAttributeId: number;

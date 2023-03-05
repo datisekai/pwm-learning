@@ -10,8 +10,16 @@ import Meta from "../components/Meta";
 import React from "react";
 import { SkuCartModel } from "../models/Sku.model";
 import { formatPrices, getImageServer } from "../utils";
+import { useForm } from "react-hook-form";
+import TextField from "../components/customs/TextField";
+import swal from "sweetalert";
+import { toast } from "react-hot-toast";
+import { useMutation } from "@tanstack/react-query";
+import OrderAction from "../actions/Order.action";
+import { useRouter } from "next/router";
 
-const inter = Inter({ subsets: ["latin"] });
+const cssInputCurrent = "px-2 py-1 mt-2 w-full bg-orange-300 rounded";
+
 export default function Home() {
   const { cart, setCart } = React.useContext(AuthContext);
 
@@ -32,6 +40,66 @@ export default function Home() {
     setCart(newCart);
   };
 
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({
+    defaultValues: {
+      name: "",
+      phone: "",
+      address: "",
+    },
+  });
+
+  const router = useRouter();
+  const { mutate, isLoading } = useMutation(OrderAction.add, {
+    onSuccess: () => {
+      swal(
+        "Đặt hàng thành công",
+        "Chúng tôi sẽ liên hệ với bạn ngay sau khi xác nhận đơn hàng",
+        "success"
+      );
+      setCart([])
+      router.push("/history");
+    },
+    onError: () => {
+      toast.error("Có lỗi xảy ra, vui lòng thử lại");
+    },
+  });
+
+  const shipping = 0;
+
+  const subTotal = React.useMemo(() => {
+    return cart.reduce((pre: number, cur: any) => {
+      return pre + (cur.price - (cur.price * cur.discount) / 100) * cur.qty;
+    }, 0);
+  }, [cart]);
+
+  const handleOrder = (data: any) => {
+    if (cart.length === 0) {
+      toast.error("Vui lòng thêm sản phẩm vào giỏ hàng");
+      return;
+    }
+
+    swal({
+      title: "Bạn có chắc chắn thanh toán",
+      text: `Số tiền cần thanh toán là ${formatPrices(shipping + subTotal)}`,
+      icon: "warning",
+      buttons: ["Hủy", "OK"],
+      dangerMode: true,
+    }).then((willDelete) => {
+      if (willDelete) {
+        const payload = {
+          ...data,
+          skus: cart,
+        };
+
+        mutate(payload);
+      }
+    });
+  };
+
   return (
     <>
       <Meta
@@ -43,7 +111,7 @@ export default function Home() {
         <div className="px-2 py-4 lg:p-10 rounded-md bg-gray-200 md:m-10 m-5 lg:flex block">
           <div className="lg:w-8/12 xl:w-7/12 w-full">
             <h1 className="font-sans text-2xl text-orange-600 font-bold text-center">
-              YOUR CART
+              Giỏ hàng của bạn
             </h1>
             <div className="bg-white rounded-md mt-5 md:block hidden">
               {cart?.length === 0 && (
@@ -52,9 +120,9 @@ export default function Home() {
               {cart?.map((item: SkuCartModel) => (
                 <div
                   key={item.id}
-                  className="grid grid-flow-col items-center px-3 py-10 gap-4"
+                  className="grid grid-cols-5 items-center px-3 py-10 gap-4"
                 >
-                  <div className="flex">
+                  <div className="flex ">
                     <LazyLoadImage
                       src={
                         item.image
@@ -65,7 +133,7 @@ export default function Home() {
                     />
                   </div>
                   <div className="text-center font-bold text-base dark:text-black">
-                    <div>{item.productName}</div>
+                    <div className="line-clamp-2">{item.productName}</div>
                   </div>
                   <div className="items-center flex">
                     <RiSubtractLine
@@ -98,7 +166,13 @@ export default function Home() {
                     </div>
                     <p></p>
                   </div>
-                  <div>
+                  <div
+                    onClick={() =>
+                      setCart(
+                        cart.filter((element: any) => element.id !== item.id)
+                      )
+                    }
+                  >
                     <BiTrash className="text-[25px] m-auto dark:text-black hover:cursor-pointer" />
                   </div>
                 </div>
@@ -136,10 +210,10 @@ export default function Home() {
           </div>
           <div className="lg:w-4/12 xl:w-5/12 w-full rounded-md bg-orange-500 lg:ml-10 p-5 lg:mt-0 mt-5">
             <h1 className="font-sans text-2xl text-white font-bold text-center">
-              PAYMENT
+              Thanh toán
             </h1>
             <div className="mt-5">
-              <label className="text-gray-100 font-bold">Payment method</label>
+              <label className="text-gray-100 font-bold">Phương thức thanh toán</label>
               <div className="grid grid-cols-3 gap-6 mt-3">
                 <div className="rounded-md border-2 border-black p-2 shadow-2xl hover:cursor-pointer">
                   <LazyLoadImage
@@ -147,7 +221,7 @@ export default function Home() {
                     className="m-auto w-[50px] h-[50px]"
                   />
                 </div>
-                <div className="rounded-md border-2 border-black p-2 shadow-2xl hover:cursor-pointer">
+                {/* <div className="rounded-md border-2 border-black p-2 shadow-2xl hover:cursor-pointer">
                   <LazyLoadImage
                     src={"../../images/paycard.png"}
                     className="m-auto w-[50px] h-[50px]"
@@ -158,45 +232,80 @@ export default function Home() {
                     src={"../../images/momo.svg"}
                     className="m-auto w-[50px] h-[50px]"
                   />
-                </div>
+                </div> */}
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="mt-3">
                 <label className="text-gray-100 font-bold">Họ tên</label>
-                <input className="px-2 py-1 mt-2 w-full bg-orange-300 rounded" />
+                <TextField
+                  errorTextColor="text-white"
+                  control={control}
+                  error={errors}
+                  name="name"
+                  className={cssInputCurrent}
+                  rules={{ required: "Không được bỏ trống" }}
+                />
               </div>
 
               <div className="mt-3">
                 <label className="text-gray-100 font-bold">Số điện thoại</label>
-                <input className="px-2 py-1 mt-2 w-full bg-orange-300 rounded" />
+                <TextField
+                  errorTextColor="text-white"
+                  control={control}
+                  error={errors}
+                  name="phone"
+                  className={cssInputCurrent}
+                  rules={{
+                    required: "Không được bỏ trống",
+                    pattern: {
+                      value:
+                        /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im,
+                      message: "Định dạng SDT chưa đúng",
+                    },
+                  }}
+                />
               </div>
             </div>
-            <div className="mt-3">
+            <div>
               <label className="text-gray-100 font-bold">Địa chỉ</label>
-              <input className="px-2 py-1 mt-2 w-full bg-orange-300 rounded" />
+              <TextField
+                errorTextColor="text-white"
+                control={control}
+                error={errors}
+                name="address"
+                className={cssInputCurrent}
+                rules={{ required: "Không được bỏ trống" }}
+              />
             </div>
 
             <div className="border-t-2 mt-7 border-orange-400">
               <div className="grid grid-cols-2 mt-3">
                 <div className="text-gray-100 font-bold">Subtotal</div>
                 <div className="text-right text-gray-100 font-bold">
-                  $3.000.00
+                  {formatPrices(subTotal)}
                 </div>
               </div>
               <div className="grid grid-cols-2 mt-3">
                 <div className="text-gray-100 font-bold">Shipping</div>
-                <div className="text-right text-gray-100 font-bold">$20.00</div>
+                <div className="text-right text-gray-100 font-bold">
+                  {formatPrices(shipping)}
+                </div>
               </div>
               <div className="grid grid-cols-2 mt-3">
                 <div className="text-gray-100 font-bold">Total</div>
                 <div className="text-right text-gray-100 font-bold">
-                  $3.820.00
+                  {formatPrices(subTotal + shipping)}
                 </div>
               </div>
             </div>
-            <div className="rounded-md bg-green-600 py-2 px-3 mt-5 items-center text-[30px] flex hover:cursor-pointer">
-              <div className="text-gray-100 font-bold w-3/4">$3.820.00</div>
+            <div
+              onClick={!isLoading ? handleSubmit(handleOrder) : undefined}
+              className="rounded-md hover:bg-green-800 transition-all bg-green-600 py-2 px-3 mt-5 items-center text-[30px] flex hover:cursor-pointer"
+            >
+              <div className="text-gray-100 font-bold w-3/4">
+                {formatPrices(subTotal + shipping)}
+              </div>
               <div className="flex text-gray-100 font-bold items-center w-1/4">
                 Pay <BsFillArrowRightSquareFill className="ml-3 text-[30px]" />
               </div>

@@ -83,7 +83,6 @@ const AddProduct: React.FC<AddProductProps> = () => {
 
   const name = watch("name");
 
-
   const { mutate, isLoading } = useMutation(ProductAction.add1, {
     onSuccess: () => {
       toast.success("Thêm thành công");

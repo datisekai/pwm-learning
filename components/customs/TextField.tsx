@@ -10,6 +10,7 @@ interface TextFieldProps {
   placeholder?: string;
   rules?: any;
   showError?: boolean;
+  errorTextColor?:string
 }
 
 const TextField: FC<TextFieldProps> = ({
@@ -21,6 +22,7 @@ const TextField: FC<TextFieldProps> = ({
   placeholder = "",
   rules,
   showError = true,
+  errorTextColor ='text-primary'
 }) => {
   return (
     <>
@@ -38,7 +40,7 @@ const TextField: FC<TextFieldProps> = ({
         )}
       />
       {showError && (
-        <p className="py-1 text-primary text-sm">
+        <p className={`py-1 text-sm ${errorTextColor}`}>
           {error[name] && error[name].message}
         </p>
       )}
