@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
 import React, { useMemo, useState } from "react";
+import { toast } from "react-hot-toast";
 import { AiOutlineRight } from "react-icons/ai";
 import { MdZoomOutMap } from "react-icons/md";
 import { LazyLoadImage } from "react-lazy-load-image-component";
@@ -24,7 +25,7 @@ interface ProductDetailProps {
 }
 
 const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
-  const { cart, setCart } = React.useContext(AuthContext);
+  const { cart, setCart,user } = React.useContext(AuthContext);
 
   const { data } = useQuery(["recommend-product", detail.id], () =>
     ProductAction.search({ categoryId: detail.categoryId })
@@ -108,6 +109,12 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
 
 
   const handleAddToCart = () => {
+
+    if(!user){
+      toast.error("Bạn cần đăng nhập để thêm vào giỏ hàng");
+      return;
+    }
+
     swal({
       title: "Bạn có chắc chắn muốn thêm vào giỏ?",
       icon: "warning",
@@ -135,6 +142,7 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
             productName: detail.name,
             qty: 1,
             sku: currentSku.sku,
+            price:currentSku.price
           };
 
           setCart([data, ...cart]);

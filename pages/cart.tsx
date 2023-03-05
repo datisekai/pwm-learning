@@ -9,11 +9,28 @@ import MainLayout from "../components/layouts/MainLayout";
 import Meta from "../components/Meta";
 import React from "react";
 import { SkuCartModel } from "../models/Sku.model";
-import { getImageServer } from "../utils";
+import { formatPrices, getImageServer } from "../utils";
 
 const inter = Inter({ subsets: ["latin"] });
 export default function Home() {
   const { cart, setCart } = React.useContext(AuthContext);
+
+  const handleChangeQty = (id: number, value: number) => {
+    if (value < 1) {
+      return;
+    }
+    const newCart = cart.map((item: any) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          qty: value,
+        };
+      }
+      return item;
+    });
+
+    setCart(newCart);
+  };
 
   return (
     <>
@@ -29,12 +46,21 @@ export default function Home() {
               YOUR CART
             </h1>
             <div className="bg-white rounded-md mt-5 md:block hidden">
-              {cart?.length === 0 && <p className="text-center">Chưa có sản phẩm</p>}
+              {cart?.length === 0 && (
+                <p className="text-center">Chưa có sản phẩm</p>
+              )}
               {cart?.map((item: SkuCartModel) => (
-                <div key={item.id} className="grid grid-flow-col items-center px-3 py-10 gap-4">
+                <div
+                  key={item.id}
+                  className="grid grid-flow-col items-center px-3 py-10 gap-4"
+                >
                   <div className="flex">
                     <LazyLoadImage
-                      src={item.image ? getImageServer(item.image) : '/images/logo.jpg'}
+                      src={
+                        item.image
+                          ? getImageServer(item.image)
+                          : "/images/logo.jpg"
+                      }
                       className="m-auto w-[50px] h-[50px]"
                     />
                   </div>
@@ -42,18 +68,35 @@ export default function Home() {
                     <div>{item.productName}</div>
                   </div>
                   <div className="items-center flex">
-                    <RiSubtractLine className="text-[25px] m-auto mx-2 dark:text-black hover:cursor-pointer" />
+                    <RiSubtractLine
+                      onClick={() =>
+                        item.qty > 1 && handleChangeQty(item.id, item.qty - 1)
+                      }
+                      className="text-[25px] m-auto mx-2 dark:text-black hover:cursor-pointer"
+                    />
                     <input
                       value={item.qty}
-                      className="w-10 h-10 text-center border-2 rounded-md border-black"
+                      onChange={(e) =>
+                        handleChangeQty(item.id, +e.target.value)
+                      }
+                      className="w-10 outline-none h-10 text-center border-2 rounded-md border-black"
                     />
-                    <GrFormAdd className="text-[25px] m-auto mx-2 hover:cursor-pointer" />
+                    <GrFormAdd
+                      onClick={() => handleChangeQty(item.id, item.qty + 1)}
+                      className="text-[25px] m-auto mx-2 hover:cursor-pointer"
+                    />
                   </div>
-                  <div className="flex items-center space-x-2 font-bold text-center p-4 text-base dark:text-black">
-                   <div>
-                   22.222.222 đ
-                   </div>
-                   <p></p>
+                  <div className="flex items-center space-x-2  text-center p-4 text-base dark:text-black">
+                    <div className="space-x-2">
+                      <span className="font-bold">
+                        {formatPrices(
+                          (item.price - (item.price * item.discount) / 100) *
+                            item.qty
+                        )}
+                      </span>
+                      <span className="text-primary">x{item.qty}</span>
+                    </div>
+                    <p></p>
                   </div>
                   <div>
                     <BiTrash className="text-[25px] m-auto dark:text-black hover:cursor-pointer" />

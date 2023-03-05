@@ -63,11 +63,13 @@ const Section1: FC<Section1Props> = ({ data, isLoading }) => {
               {!isLoading
                 ? data?.map((item) => (
                     <SwiperSlide key={item.id}>
-                      <img
-                        onClick={() => router.push(`/product/${item.product.slug}`)}
-                        src={getImageServer(item.product.thumbnail)}
-                        className="w-full aspect-[16/9] object-fill cursor-pointer"
-                      />
+                      <Link href={`/product/${item.product.slug}`}>
+                        <img
+                         
+                          src={getImageServer(item.product.thumbnail)}
+                          className="w-full aspect-[16/9] object-fill cursor-pointer"
+                        />
+                      </Link>
                     </SwiperSlide>
                   ))
                 : [1, 2, 3].map((item) => (

@@ -46,4 +46,5 @@ export interface SkuCartModel {
   qty: number;
   productName: string;
   categoryName: string;
+  price:number
 }
