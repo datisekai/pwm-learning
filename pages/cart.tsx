@@ -120,7 +120,7 @@ export default function Home() {
               </h1>
               <div className="bg-white rounded-md mt-5 md:block hidden">
                 {cart?.length === 0 && (
-                  <p className="text-center">Chưa có sản phẩm</p>
+                  <p className="text-center py-2">Chưa có sản phẩm</p>
                 )}
                 {cart?.map((item: SkuCartModel) => (
                   <div
@@ -184,33 +184,72 @@ export default function Home() {
                 ))}
               </div>
               <div className="bg-white rounded-md mt-5 md:hidden block">
-                <div className="grid grid-flow-col items-center px-3 py-10 gap-4">
-                  <div className="flex">
-                    <LazyLoadImage
-                      src={"../../images/2.jpg"}
-                      className="m-auto w-[50px] h-[50px]"
-                    />
-                  </div>
-                  <div>
-                    <div className="text-center font-bold text-base dark:text-black">
-                      Bộ trang sức Kim Cương
+                {cart?.length === 0 && (
+                  <p className="text-center py-2">Chưa có sản phẩm</p>
+                )}
+                {cart?.length > 0 &&
+                  cart.map((item: any) => (
+                    <div
+                      key={item.id}
+                      className="grid grid-flow-col items-center px-3 py-10 gap-4"
+                    >
+                      <div className="flex">
+                        <LazyLoadImage
+                          src={
+                            item.image
+                              ? getImageServer(item.image)
+                              : "/images/logo.jpg"
+                          }
+                          className="m-auto w-[50px] h-[50px]"
+                        />
+                      </div>
+                      <div>
+                        <div className="text-center font-bold text-base dark:text-black">
+                          {item.productName}
+                        </div>
+                        <div className="items-center justify-center flex mt-4">
+                          <RiSubtractLine
+                            onClick={() =>
+                              item.qty > 1 &&
+                              handleChangeQty(item.id, item.qty - 1)
+                            }
+                            className="text-[25px] m-auto mx-2 dark:text-black hover:cursor-pointer"
+                          />
+                          <input
+                            value={item.qty}
+                            onChange={(e) =>
+                              handleChangeQty(item.id, +e.target.value)
+                            }
+                            className="w-9 h-9 text-center border-2 rounded-md border-black"
+                          />
+                          <GrFormAdd
+                            onClick={() =>
+                              handleChangeQty(item.id, item.qty + 1)
+                            }
+                            className="text-[25px] m-auto mx-2 hover:cursor-pointer"
+                          />
+                        </div>
+                        <div className="font-bold text-center mt-4 text-base dark:text-black">
+                          {formatPrices(
+                            (item.price - (item.price * item.discount) / 100) *
+                              item.qty
+                          )}
+                        </div>
+                      </div>
+                      <div>
+                        <BiTrash
+                          onClick={() =>
+                            setCart(
+                              cart.filter(
+                                (element: any) => element.id !== item.id
+                              )
+                            )
+                          }
+                          className="text-[25px] m-auto dark:text-black hover:cursor-pointer"
+                        />
+                      </div>
                     </div>
-                    <div className="items-center justify-center flex mt-4">
-                      <RiSubtractLine className="text-[25px] m-auto mx-2 dark:text-black hover:cursor-pointer" />
-                      <input
-                        value={1}
-                        className="w-9 h-9 text-center border-2 rounded-md border-black"
-                      />
-                      <GrFormAdd className="text-[25px] m-auto mx-2 hover:cursor-pointer" />
-                    </div>
-                    <div className="font-bold text-center mt-4 text-base dark:text-black">
-                      22.222.222 đ
-                    </div>
-                  </div>
-                  <div>
-                    <BiTrash className="text-[25px] m-auto dark:text-black hover:cursor-pointer" />
-                  </div>
-                </div>
+                  ))}
               </div>
             </div>
             <div className="lg:w-4/12 xl:w-5/12 w-full rounded-md bg-orange-500 lg:ml-10 p-5 lg:mt-0 mt-5">

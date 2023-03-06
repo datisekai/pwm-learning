@@ -134,7 +134,7 @@ const Order = () => {
                                 )}
                                 {user?.detailActions.includes(
                                   "order:update"
-                                ) && (
+                                ) && item.status !== 3 && (
                                   <div
                                     onClick={() => {
                                       setCurrent(item);

@@ -28,29 +28,6 @@ interface SidebarProps {
   handleHide: () => void;
 }
 
-const data = [
-  {
-    url: "/cart",
-    title: "Giỏ hàng",
-    icon: BsCart2,
-  },
-  {
-    url: "/history",
-    title: "Lịch sử đơn hàng",
-    icon: GiNotebook,
-  },
-  {
-    url: "/",
-    title: "Hỗ trợ",
-    icon: MdContactSupport,
-  },
-  {
-    url: "/",
-    title: "Hệ thống cửa hàng",
-    icon: AiTwotoneShop,
-  },
-];
-
 const tools = [
   {
     url: "/",
@@ -88,6 +65,31 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
     deleteCookie("detailActions");
     router.reload();
   };
+
+  const data = [
+    {
+      url: "/cart",
+      title: "Giỏ hàng",
+      icon: BsCart2,
+      hide: !user,
+    },
+    {
+      url: "/history",
+      title: "Lịch sử đơn hàng",
+      icon: GiNotebook,
+      hide: !user,
+    },
+    {
+      url: "/",
+      title: "Hỗ trợ",
+      icon: MdContactSupport,
+    },
+    {
+      url: "/",
+      title: "Hệ thống cửa hàng",
+      icon: AiTwotoneShop,
+    },
+  ];
 
   return (
     <div>
@@ -148,17 +150,19 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
 
         <div className="px-4 border-b-2 py-2">
           {data.map((item, index) => {
-            const Icon = item.icon;
-            return (
-              <div
-                onClick={() => router.push(item.url)}
-                key={index}
-                className="flex items-center py-3"
-              >
-                <Icon fontSize={24} className="text-primary" />
-                <span className="ml-2 dark:text-black">{item.title}</span>
-              </div>
-            );
+            if (!item.hide) {
+              const Icon = item.icon;
+              return (
+                <div
+                  onClick={() => router.push(item.url)}
+                  key={index}
+                  className="flex items-center py-3"
+                >
+                  <Icon fontSize={24} className="text-primary" />
+                  <span className="ml-2 dark:text-black">{item.title}</span>
+                </div>
+              );
+            }
           })}
         </div>
 

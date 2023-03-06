@@ -66,7 +66,6 @@ const ProductAdmin = () => {
     },
   });
 
-  console.log(products)
 
   const handleDelete = (id: number | string) => {
     swal({

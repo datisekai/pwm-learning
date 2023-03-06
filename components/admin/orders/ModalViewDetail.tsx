@@ -45,7 +45,11 @@ const ModalViewDetail: React.FC<ModalViewDetailProps> = ({
               <p>Điện thoại: {current?.infoorder.phone}</p>
             </div>
             <div className="rounded-md bg-gray-200 p-4 dark:text-black">
-              {!current?.staff ? <p>Chưa có</p> : <p>Email: {current?.staff?.email}</p>}
+              {!current?.staff ? (
+                <p>Chưa có</p>
+              ) : (
+                <p>Email: {current?.staff?.email}</p>
+              )}
             </div>
           </div>
           <div className="mt-5 mx-2 bg-white rounded-3xl p-4 max-h-[450px] overflow-scroll shadow-master">
@@ -121,6 +125,7 @@ const ModalViewDetail: React.FC<ModalViewDetailProps> = ({
 
         <div className="mt-4 flex items-center justify-between">
           <button
+            onClick={handleClose}
             type="button"
             className="text-gray-500 bg-gray-100 hover:bg-gray-300 focus:ring-4 focus:outline-none focus:ring-gray-200 rounded-lg border border-gray-200 text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-500 dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-gray-600"
           >

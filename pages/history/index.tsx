@@ -18,7 +18,6 @@ export default function Home() {
 
   const {data, isLoading} = useQuery(['history-order', status], () => OrderAction.search(status.toString()))
 
-console.log(data)
   return (
     <>
       <Meta

@@ -11,7 +11,7 @@ interface Section7 {
 const Section7: FC<Section7> = ({ data }) => {
   return (
     <div className="mt-5">
-      {data.length === 0 && <div className="text-center">Chưa có đơn hàng</div>}
+      {data.length === 0 && <div className="text-center bg-white py-2 rounded-md">Chưa có đơn hàng</div>}
       {data?.map((item) => (
         <div
           key={item.id}
