@@ -123,13 +123,15 @@ const Sidebar: FC<SidebarProps> = ({ handleHide, open }) => {
                 {user?.name || user.email.split("@")[0]}
               </span>
             </div>
-            <div
-              onClick={() => router.push("/admin")}
-              className="flex items-center py-3"
-            >
-              <AiFillDashboard fontSize={24} className="text-primary" />
-              <span className="ml-2 dark:text-black">Dashboard</span>
-            </div>
+            {user?.detailActions.length > 0 && (
+              <div
+                onClick={() => router.push("/admin")}
+                className="flex items-center py-3"
+              >
+                <AiFillDashboard fontSize={24} className="text-primary" />
+                <span className="ml-2 dark:text-black">Dashboard</span>
+              </div>
+            )}
             <div
               onClick={() => router.push("/profile")}
               className="flex items-center py-3"

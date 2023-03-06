@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import React, { createContext } from "react";
 import InfoAction from "../../actions/Info.action";
 import { SkuCartModel } from "../../models/Sku.model";
+import useLocalStorage from "../hooks/useLocalStorage";
 
 export const AuthContext = createContext<any>(undefined);
 
@@ -16,7 +17,17 @@ const AuthContextProvider: React.FC<AuthProps> = ({ children }) => {
     InfoAction.getAll
   );
 
-  const [cart, setCart] = React.useState<SkuCartModel[]>([])
+  // const [cart, setCart] = React.useState<SkuCartModel[]>([]);
+
+  const [cart, setCart] = useLocalStorage("cart", []);
+
+  // React.useEffect(() => {
+  //   setCart(cart);
+  // }, [cartLocal]);
+
+  // React.useEffect(() => {
+  //   setCartLocal(cart);
+  // }, [cart]);
 
   return (
     <AuthContext.Provider
@@ -24,8 +35,8 @@ const AuthContextProvider: React.FC<AuthProps> = ({ children }) => {
         setUser,
         user,
         infos,
-        cart, 
-        setCart
+        cart,
+        setCart,
       }}
     >
       {children}

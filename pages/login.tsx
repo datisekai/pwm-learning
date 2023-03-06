@@ -29,7 +29,12 @@ const LoginAdmin = () => {
     onSuccess: (data) => {
       setCookie("token", data.token);
       toast.success("Đăng nhập thành công");
-      router.push("/admin");
+      setCookie("detailActions", data?.detailActions);
+      if(data.detailActions.length > 0){
+        router.push("/admin");
+      }else{
+        router.push('/')
+      }
     },
     onError: (err: any) => {
       err && err?.message && toast.error(err.message);

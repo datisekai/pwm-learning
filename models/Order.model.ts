@@ -1,4 +1,15 @@
-interface Detailorder {
+ interface Product {
+  name: string;
+  slug: string;
+  thumbnail: string;
+}
+
+ interface Sku {
+  image: string;
+  product: Product;
+}
+
+ interface Detailorder {
   id: number;
   orderId: number;
   skuId: number;
@@ -6,10 +17,13 @@ interface Detailorder {
   discount: number;
   createdAt: Date;
   updatedAt: Date;
+  sku: Sku;
+  qty:number
 }
 
-interface Infoorder {
+ interface Infoorder {
   id: number;
+  name: string;
   phone: string;
   address: string;
   orderId: number;
@@ -17,12 +31,12 @@ interface Infoorder {
   updatedAt: Date;
 }
 
-interface Customer {
+ interface Customer {
   id: number;
   email: string;
 }
 
-interface Staff {
+ interface Staff {
   id: number;
   email: string;
 }

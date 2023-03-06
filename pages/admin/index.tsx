@@ -97,7 +97,7 @@ const HomeAdmin = () => {
                   <div className="w-[80px] dark:text-black">Trạng thái</div>
                 </div>
               </div>
-              {latest?.product?.map((item:any) => (
+              {latest?.product?.map((item: any) => (
                 <div key={item.id} className="mt-2">
                   <div className=" flex justify-between overflow-x-scroll table-home text-sm">
                     <div className="w-[150px] line-clamp-2 dark:text-black">
@@ -158,10 +158,20 @@ export default HomeAdmin;
 
 export const getServerSideProps: GetServerSideProps = async ({ req }) => {
   const token = req.cookies["token"];
+  const detailActions = JSON.parse(req.cookies["detailActions"] || "[]");
 
   if (token) {
+    if (detailActions.length > 0) {
+      return {
+        props: {},
+      };
+    }
     return {
       props: {},
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
     };
   }
 

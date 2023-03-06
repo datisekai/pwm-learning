@@ -5,24 +5,27 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useContext, useState } from "react";
 import { toast } from "react-hot-toast";
-import { AiFillPlusCircle } from "react-icons/ai";
+import { AiFillEye, AiFillPlusCircle } from "react-icons/ai";
 import { CiEdit } from "react-icons/ci";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import swal from "sweetalert";
 import OrderAction from "../../../actions/Order.action";
 import ModalUpdateOrder from "../../../components/admin/orders/ModalUpdateOrder";
+import ModalViewDetail from "../../../components/admin/orders/ModalViewDetail";
 import { AuthContext } from "../../../components/context";
 import dataStatus from "../../../components/data/status";
 import AdminLayout from "../../../components/layouts/AdminLayout";
 import LoadingSpinner from "../../../components/LoadingSpinner";
 import Meta from "../../../components/Meta";
+import { OrderModel } from "../../../models/Order.model";
 import { formatPrices, getImageServer } from "../../../utils";
 
 const Order = () => {
-  const [openModalAdd, setOpenModalAdd] = useState(false);
+  const [openModalView, setOpenModalView] = useState(false);
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [current, setCurrent] = useState<any>();
+  const [currentView, setCurrentView] = useState<undefined | OrderModel>();
   const router = useRouter();
 
   const { data, isLoading: isLoadingOrder } = useQuery(
@@ -30,73 +33,7 @@ const Order = () => {
     OrderAction.getAll
   );
 
-  console.log(data);
   const { user } = useContext(AuthContext);
-
-
-  const queryClient = useQueryClient();
-
-  const { mutate, isLoading } = useMutation(OrderAction.delete, {
-    onSuccess: (response, variable) => {
-      toast.success("Đã xóa thành công");
-      queryClient.setQueryData(
-        ["order"],
-        data?.filter((item) => item.id !== variable)
-      );
-    },
-    onError: (err) => {
-      console.log(err);
-      toast.error("Có lỗi xảy ra, vorder lòng thử lại");
-    },
-  });
-
-  const handleDelete = (id: string | number) => {
-    swal({
-      title: "Bạn có chắc chắn muốn xóa?",
-      text: "Khi xóa, đối tượng sẽ được chuyển vào thùng rác",
-      icon: "warning",
-      buttons: ["Hủy", "Xóa"],
-      dangerMode: true,
-    }).then((willDelete) => {
-      if (willDelete) {
-        mutate(id);
-      }
-    });
-  };
-
-  const { mutate: updateStatus, isLoading: loadingOrder } = useMutation(
-    OrderAction.update,
-    {
-      onSuccess: (response, variable) => {
-        const currentUpdate = data?.find((item) => item.id === variable.id);
-        if (currentUpdate) {
-          if (currentUpdate.status) {
-            toast.success("Đã ẩn thành công");
-          } else {
-            toast.success("Đã hiển thị thành công");
-          }
-
-          queryClient.setQueryData(
-            ["order"],
-            data?.map((item) => {
-              if (item.id === variable.id) {
-                return { ...item, status: !currentUpdate.status };
-              }
-              return item;
-            })
-          );
-        }
-      },
-      onError: (err) => {
-        console.log(err);
-        toast.error("Có lỗi xảy ra, vorder lòng thử lại");
-      },
-    }
-  );
-
-  const handleOrder = (data: { id: number; checked: boolean }) => {
-    updateStatus({ id: data.id, status: data.checked });
-  };
 
   return (
     <>
@@ -123,6 +60,9 @@ const Order = () => {
                   <table className="table-auto w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                       <tr>
+                        <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
+                          #
+                        </th>
                         <th scope="col" className="py-2 px-3 md:py-3 md:px-6">
                           Khách hàng
                         </th>
@@ -156,13 +96,16 @@ const Order = () => {
                           className="bg-white border-b dark:bg-gray-800 dark:border-gray-700"
                         >
                           <td className="px-2 py-3 md:py-4 md:px-6 break-words max-w-[200px]">
+                            #{item.id}
+                          </td>
+                          <td className="px-2 py-3 md:py-4 md:px-6 break-words max-w-[200px]">
                             {item.customer.email || "Không có"}
                           </td>
                           <td className="px-2 py-3 md:py-4 md:px-6">
                             {formatPrices(item.total) || "Không có"}
                           </td>
                           <td className="px-2 py-3 md:py-4 md:px-6 break-words max-w-[200px]">
-                            {item.staff.email || "Chưa có"}
+                            {item.staff ? item.staff.email : "Chưa có"}
                           </td>
                           <td className="px-2 py-3 md:py-4 md:px-6">
                             {dayjs(item.createdAt).format("DD/MM/YYYY")}
@@ -175,23 +118,36 @@ const Order = () => {
                               (element) => element.value === item.status
                             )?.text || "Không có"}
                           </td>
-                          {/* {(user?.detailActions.includes("order:update") ||
-                            user?.detailActions.includes("order:delete")) && ( */}
-                          <td className="px-2 py-3 md:py-4 md:px-6">
-                            <div className="flex">
-                              {user?.detailActions.includes("order:update") && (
-                                <div
-                                  onClick={() => {
-                                    setCurrent(item);
-                                    setOpenModalUpdate(true);
-                                  }}
-                                  className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
-                                >
-                                  <CiEdit fontSize={24} />
-                                </div>
-                              )}
-                            </div>
-                          </td>
+                          {user?.detailActions.includes("order:update") && (
+                            <td className="px-2 py-3 md:py-4 md:px-6">
+                              <div className="flex space-x-1">
+                                {user?.detailActions.includes("order:view") && (
+                                  <div
+                                    onClick={() => {
+                                      setCurrentView(item);
+                                      setOpenModalView(true);
+                                    }}
+                                    className="bg-slate-400 flex items-center justify-center text-white p-1 rounded-md hover:bg-slate-600 cursor-pointer"
+                                  >
+                                    <AiFillEye fontSize={24} />
+                                  </div>
+                                )}
+                                {user?.detailActions.includes(
+                                  "order:update"
+                                ) && (
+                                  <div
+                                    onClick={() => {
+                                      setCurrent(item);
+                                      setOpenModalUpdate(true);
+                                    }}
+                                    className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
+                                  >
+                                    <CiEdit fontSize={24} />
+                                  </div>
+                                )}
+                              </div>
+                            </td>
+                          )}
                         </tr>
                       ))}
                     </tbody>
@@ -210,6 +166,11 @@ const Order = () => {
             open={openModalUpdate}
             users={[]}
           />
+          <ModalViewDetail
+            handleClose={() => setOpenModalView(false)}
+            open={openModalView}
+            current={currentView}
+          />
         </>
       </AdminLayout>
     </>
@@ -217,3 +178,40 @@ const Order = () => {
 };
 
 export default Order;
+
+export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+  const token = req.cookies["token"];
+  const detailActions = JSON.parse(req.cookies["detailActions"] || "[]");
+
+  if (token) {
+    if (detailActions.length > 0) {
+      if (detailActions.includes("order:view")) {
+        return {
+          props: {},
+        };
+      }
+      return {
+        props: {},
+        redirect: {
+          destination: "/admin",
+          permanent: false,
+        },
+      };
+    }
+    return {
+      props: {},
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+    redirect: {
+      destination: "/login",
+      permanent: false,
+    },
+  };
+};

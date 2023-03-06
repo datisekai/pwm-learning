@@ -1,16 +1,17 @@
 import axiosClient from "../config/axiosClient";
 import { OrderModel } from "../models/Order.model";
 
-interface IOrderAction{
-  getAll:() => Promise<OrderModel[]>
-  add:(data:any) => Promise<any>
-  addByAdmin:(data:any) => Promise<any>
-  update:(data:any) => Promise<any>
-  delete:(id:number | string) => Promise<any>
-  search:(status:string) => Promise<OrderModel[]>
+interface IOrderAction {
+  getAll: () => Promise<OrderModel[]>;
+  add: (data: any) => Promise<any>;
+  addByAdmin: (data: any) => Promise<any>;
+  update: (data: any) => Promise<any>;
+  delete: (id: number | string) => Promise<any>;
+  search: (status: string) => Promise<OrderModel[]>;
+  getById: (id: number | string) => Promise<OrderModel>;
 }
 
-const OrderAction:IOrderAction = {
+const OrderAction: IOrderAction = {
   getAll: async () => {
     try {
       const result = await axiosClient.get(`/order`);
@@ -36,15 +37,19 @@ const OrderAction:IOrderAction = {
     const result = await axiosClient.delete(`/order/${id}`);
     return result.data;
   },
-  search:async(status) => {
+  search: async (status) => {
     try {
-      const result = await axiosClient.get(`/order/me`);
+      const result = await axiosClient.get(`/order/me`, { params: { status } });
       return result.data;
     } catch (error) {
       console.log(error);
       return [];
     }
-  }
+  },
+  getById: async (id) => {
+    const result = await axiosClient.get(`/order/detail/${id}`);
+    return result.data
+  },
 };
 
 export default OrderAction;

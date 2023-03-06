@@ -7,7 +7,7 @@ interface IUserAction {
   login: (data: {
     email: string;
     password: string;
-  }) => Promise<{ token: string }>;
+  }) => Promise<{ token: string; detailActions: any[] }>;
   myInfo: () => Promise<any>;
   update: (data: any) => Promise<UserModel>;
   delete: (id: number | string) => Promise<any>;

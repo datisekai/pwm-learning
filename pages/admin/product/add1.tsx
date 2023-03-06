@@ -143,7 +143,7 @@ const AddProduct: React.FC<AddProductProps> = () => {
         price: item.price,
         discount: item.discount,
         sku: item.skuPhanLoai,
-        image: images[index],
+        image: images[index] || undefined,
         detailAttributes: item.detailAttributes,
       };
     });

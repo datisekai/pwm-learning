@@ -33,6 +33,7 @@
     "react-photoswipe-gallery": "^2.2.6",
     "react-select": "^5.7.0",
     "react-switch": "^7.0.0",
+    "sharp": "^0.31.3",
     "suneditor": "^2.44.3",
     "suneditor-react": "^3.4.1",
     "sweetalert": "^2.1.2",
