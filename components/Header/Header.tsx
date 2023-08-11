@@ -11,6 +11,8 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { generateAvatar, getImageServer } from "../../utils";
 import { AuthContext } from "../context";
 import BottomHeader from "./BottomHeader";
+import dynamic from "next/dynamic";
+const CartCount = dynamic(() => import("./CartCount"), { ssr: false });
 interface HeaderProps {
   handleOpen: () => void;
   handleOpenSearch: () => void;
@@ -162,10 +164,8 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
                 onClick={() => router.push("/cart")}
                 className="hidden md:block relative cursor-pointer"
               >
-                <BsCart2 className="text-[24px]" />
-                <div className="absolute top-[-4px] text-xs w-[16px] h-[16px] text-center inline bg-primary text-white rounded-full right-[-8px]">
-                  {cart?.length || 0}
-                </div>
+                <BsCart2 className="text-[24px] text-zinc-900" />
+                <CartCount quantity={cart?.length || 0} />
               </div>
               {user ? (
                 <div className="user relative hidden md:block">
@@ -177,27 +177,27 @@ const Header: FC<HeaderProps> = ({ handleOpen, handleOpenSearch }) => {
                     {user?.detailActions?.length > 0 && (
                       <li
                         onClick={() => router.push("/admin")}
-                        className="px-4 whitespace-nowrap hover:text-primary transition-all cursor-pointer border-b-2 last:border-none py-1"
+                        className="px-4 whitespace-nowrap hover:text-primary transition-all cursor-pointer border-b-2 last:border-none py-1 text-zinc-900"
                       >
                         Dashboard
                       </li>
                     )}
                     <li
                       onClick={() => router.push("/profile")}
-                      className="px-4 whitespace-nowrap hover:text-primary transition-all cursor-pointer border-b-2 last:border-none py-1"
+                      className="px-4 whitespace-nowrap hover:text-primary transition-all cursor-pointer border-b-2 last:border-none py-1 text-zinc-900"
                     >
                       Thông tin cá nhân
                     </li>
                     <li
                       onClick={() => router.push("/history")}
-                      className="px-4 whitespace-nowrap hover:text-primary transition-all cursor-pointer border-b-2 last:border-none py-1"
+                      className="px-4 whitespace-nowrap hover:text-primary transition-all cursor-pointer border-b-2 last:border-none py-1 text-zinc-900"
                     >
                       Lịch sử đơn hàng
                     </li>
 
                     <li
                       onClick={handleLogout}
-                      className="px-4 whitespace-nowrap hover:text-primary transition-all cursor-pointer border-b-2 last:border-none py-1"
+                      className="px-4 whitespace-nowrap hover:text-primary transition-all cursor-pointer border-b-2 last:border-none py-1 text-zinc-900"
                     >
                       Đăng xuất
                     </li>

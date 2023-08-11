@@ -23,7 +23,7 @@ const ModalViewDetail: React.FC<ModalViewDetailProps> = ({
         className="fixed inset-0 bg-[rgba(0,0,0,0.6)] z-[60]"
         onClick={handleClose}
       ></div>
-      <div className="w-[90%] max-h-[500px] overflow-y-scroll md:w-[70%]  p-4 rounded-lg bg-white fixed z-[70] top-[50%] translate-y-[-50%] translate-x-[-50%] left-[50%] ">
+      <div className="w-[90%] max-h-[720px] md:w-[70%]  p-4 rounded-lg bg-white fixed z-[70] top-[50%] translate-y-[-50%] translate-x-[-50%] left-[50%] ">
         <div className=" md:mx-10 mx-0">
           <div className="flex">
             <h1 className="font-sans text-2xl text-orange-600 font-bold">

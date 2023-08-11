@@ -8,7 +8,6 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import { SpeciesModel } from "../../models/Species.model";
 import { getImageServer } from "../../utils";
 
-
 interface Section6Props {
   data: SpeciesModel[];
 }
@@ -39,7 +38,7 @@ const Section6: FC<Section6Props> = ({ data }) => {
         >
           {data?.map((item) => (
             <SwiperSlide key={item.id}>
-              <div className="flex flex-col items-center aspect-[16/9]">
+              <div className="flex flex-col items-center">
                 <LazyLoadImage
                   effect="blur"
                   src={
@@ -47,7 +46,7 @@ const Section6: FC<Section6Props> = ({ data }) => {
                       ? getImageServer(item.thumbnail)
                       : "/images/no-image.png"
                   }
-                  className="w-full h-full object-cover rounded-lg "
+                  className="w-full h-full object-cover rounded-lg aspect-[16/9]"
                 />
                 <div className="mt-2 flex flex-col">
                   <h4 className="uppercase font-bold">BST {item.name}</h4>

@@ -39,18 +39,17 @@ const MainLayout: FC<MainLayoutProps> = ({ children }) => {
     }
   }, []);
 
-
   React.useEffect(() => {
     const getMyInfo = async () => {
       const result = await UserAction.myInfo();
       if (result) {
         setUser(result);
-        setCookie('detailActions',result?.detailActions)
+        setCookie("detailActions", result?.detailActions);
       } else {
         setUser(undefined);
       }
     };
-    if(getCookie('token')){
+    if (getCookie("token")) {
       getMyInfo();
     }
   }, []);

@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { GetStaticPaths, GetStaticProps, NextPage } from "next";
-import React, { useMemo, useState } from "react";
+import React, { useCallback, useMemo, useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { AiOutlineRight } from "react-icons/ai";
 import { MdZoomOutMap } from "react-icons/md";
@@ -19,13 +19,13 @@ import { ProductModel } from "../../models/Product.model";
 import { ProductDetailModel } from "../../models/ProductDetail.model";
 import { SkuCartModel } from "../../models/Sku.model";
 import { formatPrices, getImageServer } from "../../utils";
-
+import ImageViewer from "react-simple-image-viewer";
 interface ProductDetailProps {
   detail: ProductDetailModel;
 }
 
 const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
-  const { cart, setCart,user } = React.useContext(AuthContext);
+  const { cart, setCart, user } = React.useContext(AuthContext);
 
   const { data } = useQuery(["recommend-product", detail.id], () =>
     ProductAction.search({ categoryId: detail.categoryId })
@@ -45,16 +45,24 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
   const [indexImage, setIndexImage] = useState(0);
 
   const listImage = [
-    ...detail.productimages.map(item => item.image),
+    ...detail.productimages.map((item) => getImageServer(item.image)),
     ...detail.skus
       .filter((item) => item.image !== null)
-      .map((item) => item.image),
+      .map((item) => getImageServer(item.image)),
   ];
 
   const [detailAt, setDetailAt] = useState<
     { attributeId: number; detailId: number }[]
   >([]);
-
+  // 88888888888888888888888888888888888888888888888888
+  const [isViewerOpen, setIsViewerOpen] = useState(false);
+  const openImageViewer = useCallback(() => {
+    setIsViewerOpen(true);
+  }, []);
+  const closeImageViewer = () => {
+    setIsViewerOpen(false);
+  };
+  //88888888888888888888888888888888888888888888888
   React.useEffect(() => {
     if (detail && detail.skus) {
       setDetailAt(
@@ -107,10 +115,8 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
     };
   }, [width]);
 
-
   const handleAddToCart = () => {
-
-    if(!user){
+    if (!user) {
       toast.error("Bạn cần đăng nhập để thêm vào giỏ hàng");
       return;
     }
@@ -137,16 +143,17 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
             id: currentSku.id,
             categoryName: detail.category.name,
             discount: currentSku.discount,
-            image: currentSku.image != null ? currentSku.image : detail.thumbnail,
+            image:
+              currentSku.image != null ? currentSku.image : detail.thumbnail,
             productId: detail.id,
             productName: detail.name,
             qty: 1,
             sku: currentSku.sku,
-            price:currentSku.price
+            price: currentSku.price,
           };
 
           setCart([data, ...cart]);
-          toast.success("Đã thêm vào giỏ hàng của bạn")
+          toast.success("Đã thêm vào giỏ hàng của bạn");
         }
       }
     });
@@ -181,7 +188,7 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
                     {listImage.map((item, index) => (
                       <SwiperSlide key={index}>
                         <Item
-                          original={getImageServer(item)}
+                          original={item}
                           width={sizeImage.width}
                           height={sizeImage.height}
                         >
@@ -195,7 +202,7 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
                               className={`w-[100px] cursor-pointer  aspect-[1/1] rounded-lg mt-2 first:mt-0 ${
                                 indexImage === index && "border border-primary"
                               }`}
-                              src={getImageServer(item)}
+                              src={item}
                             />
                           )}
                         </Item>
@@ -203,8 +210,14 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
                     ))}
                   </Swiper>
                 </div>
+                {/*  */}
                 <div className="md:ml-2 md:p-2 flex-1 text-center mx-auto">
-                  <Item
+                  <img
+                    src={listImage[indexImage]}
+                    onClick={() => openImageViewer()}
+                    className="w-full max-h-[500px] object-contain rounded-lg text-center"
+                  />
+                  {/* <Item
                     original={getImageServer(listImage[indexImage])}
                     width={sizeImage.width}
                     height={sizeImage.height}
@@ -221,8 +234,9 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
                         </div>
                       </div>
                     )}
-                  </Item>
+                  </Item> */}
                 </div>
+                {/*  */}
               </div>
             </Gallery>
 
@@ -230,10 +244,12 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
               <h1 className="text-2xl mt-4 md:mt-0">{detail.name}</h1>
               <div className="mt-2 flex items-center space-x-4">
                 <div className="text-2xl text-primary">
-                  {currentSku.priceDisplay ? currentSku.priceDisplay : formatPrices(
-                    currentSku?.price -
-                      (currentSku?.price * currentSku?.discount) / 100
-                  )}
+                  {currentSku.priceDisplay
+                    ? currentSku.priceDisplay
+                    : formatPrices(
+                        currentSku?.price -
+                          (currentSku?.price * currentSku?.discount) / 100
+                      )}
                 </div>
                 {currentSku?.discount > 0 && !currentSku.priceDisplay && (
                   <div className="text-xl text-[#999] line-through">
@@ -303,12 +319,18 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
               ))}
 
               <div className="flex  mt-4 justify-center w-full">
-                <button
-                  onClick={handleAddToCart}
-                  className="w-full hover:bg-primaryHover transition-all uppercase border-none outline-none bg-primary rounded-lg text-white px-2 py-2"
-                >
-                  Thêm vào giỏ
-                </button>
+                {!currentSku.priceDisplay ? (
+                  <button
+                    onClick={handleAddToCart}
+                    className="w-full hover:bg-primaryHover transition-all uppercase border-none outline-none bg-primary rounded-lg text-white px-2 py-2"
+                  >
+                    Thêm vào giỏ
+                  </button>
+                ) : (
+                  <button className="w-full hover:bg-primaryHover transition-all uppercase border-none outline-none bg-primary rounded-lg text-white px-2 py-2">
+                    Liên hệ
+                  </button>
+                )}
               </div>
               <div className="mt-4">
                 <div className="flex items-center">
@@ -346,6 +368,15 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
           )}
           {/* <Section4 title="Sự kết hợp hoàn hảo" /> */}
         </div>
+        {isViewerOpen && (
+          <ImageViewer
+            src={listImage}
+            currentIndex={indexImage}
+            disableScroll={true}
+            closeOnClickOutside={true}
+            onClose={closeImageViewer}
+          />
+        )}
       </MainLayout>
     </>
   );

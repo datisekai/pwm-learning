@@ -315,3 +315,6 @@ span.lazy-load-image-background {
 .user:hover .menu-user{
     display: block;
 }
+#ReactSimpleImageViewer{
+    z-index: 1000;
+}

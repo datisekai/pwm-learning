@@ -32,6 +32,7 @@
     "react-paginate": "^8.1.4",
     "react-photoswipe-gallery": "^2.2.6",
     "react-select": "^5.7.0",
+    "react-simple-image-viewer": "^1.2.2",
     "react-switch": "^7.0.0",
     "sharp": "^0.31.3",
     "suneditor": "^2.44.3",

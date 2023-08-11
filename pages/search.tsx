@@ -108,15 +108,20 @@ const Search: NextPage<SearchProps> = () => {
                   </select>
                 </div>
               </div>
-              <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-2 gap-y-4">
-                {isProductsLoading
-                  ? [1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
-                      <ProductSkeletonCard key={item} />
-                    ))
-                  : products?.products.map((item: any) => (
-                      <HomeCard key={item.id} data={item} />
-                    ))}
-              </div>
+              {products?.products.length == 0 ? (
+                <div className=""></div>
+              ) : (
+                <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-2 gap-y-4">
+                  {isProductsLoading
+                    ? [1, 2, 3, 4, 5, 6, 7, 8].map((item) => (
+                        <ProductSkeletonCard key={item} />
+                      ))
+                    : products?.products.map((item: any) => (
+                        <HomeCard key={item.id} data={item} />
+                      ))}
+                </div>
+              )}
+
               <div className="flex w-full justify-end mt-5">
                 {products && products?.totalPage > 1 && (
                   <ReactPaginate
