@@ -18,7 +18,7 @@ import { AiOutlineRight } from "react-icons/ai";
 import React, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import ProductSkeletonCard from "../components/skeletons/ProductSkeletonCard";
-
+import ImageNoSuitableProductFound from "../public/images/Nosuitableproductfound.png";
 interface SearchProps {
   // query: any;
   // species: SpeciesModel[];
@@ -109,7 +109,12 @@ const Search: NextPage<SearchProps> = () => {
                 </div>
               </div>
               {products?.products.length == 0 ? (
-                <div className=""></div>
+                <div className="mt-10 flex justify-center">
+                  <img
+                    src="/images/Nosuitableproductfound.png"
+                    alt="Ảnh không tìm thấy sản phẩm"
+                  />
+                </div>
               ) : (
                 <div className="mt-4 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-2 gap-y-4">
                   {isProductsLoading
