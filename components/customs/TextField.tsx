@@ -10,7 +10,7 @@ interface TextFieldProps {
   placeholder?: string;
   rules?: any;
   showError?: boolean;
-  errorTextColor?:string
+  errorTextColor?: string;
 }
 
 const TextField: FC<TextFieldProps> = ({
@@ -22,7 +22,7 @@ const TextField: FC<TextFieldProps> = ({
   placeholder = "",
   rules,
   showError = true,
-  errorTextColor ='text-primary'
+  errorTextColor = "text-primary",
 }) => {
   return (
     <>

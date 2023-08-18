@@ -14,6 +14,9 @@ interface IUserAction {
   add: (data: any) => Promise<UserModel>;
   getAll: () => Promise<UserModel[]>;
   updateMyInfo: (data: any) => Promise<any>;
+  register: (
+    data: any
+  ) => Promise<{ token: string; detailActions: any[]; UserModel: UserModel }>;
 }
 
 const UserAction: IUserAction = {
@@ -56,6 +59,10 @@ const UserAction: IUserAction = {
     } catch (error) {
       console.log(error);
     }
+  },
+  register: async (data) => {
+    const result = await axiosClient.post("/user/registernewuser", data);
+    return result.data;
   },
 };
 

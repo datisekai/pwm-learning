@@ -114,11 +114,14 @@ const FunctionAdmin = () => {
               defaultValue={permissionId}
               className="css-field"
             >
-              {permissions?.map((item) => (
-                <option key={item.id} value={item.id}>
-                  {item.name}
-                </option>
-              ))}
+              {permissions?.map(
+                (item) =>
+                  item.id !== 10 && (
+                    <option key={item.id} value={item.id}>
+                      {item.name}
+                    </option>
+                  )
+              )}
             </select>
           </div>
         </div>

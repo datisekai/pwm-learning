@@ -1,5 +1,5 @@
-import Link from "next/link";
 import React from "react";
+import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import UserAction from "../actions/User.action";
@@ -7,11 +7,12 @@ import TextField from "../components/customs/TextField";
 import { toast } from "react-hot-toast";
 import { setCookie } from "cookies-next";
 import { useRouter } from "next/router";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { GetServerSideProps } from "next";
+import { UserModel } from "../models/User.model";
 import Meta from "../components/Meta";
-
-const LoginAdmin = () => {
+import { after } from "node:test";
+const register = () => {
   const {
     control,
     formState: { errors },
@@ -20,14 +21,22 @@ const LoginAdmin = () => {
     defaultValues: {
       email: "",
       password: "",
+      permissionId: "10",
+      name: "",
+      phone: "",
+      confirmPassword: "",
     },
   });
 
   const router = useRouter();
-  const { mutate, isLoading } = useMutation(UserAction.login, {
+  const queryClient = useQueryClient();
+  const { mutate, isLoading } = useMutation(UserAction.register, {
     onSuccess: (data) => {
+      const dataUserOld: UserModel[] =
+        queryClient.getQueryData(["users"]) || [];
+      queryClient.setQueryData(["users"], [data.UserModel, ...dataUserOld]);
+      toast.success("Đăng ký thành công");
       setCookie("token", data.token);
-      toast.success("Đăng nhập thành công");
       setCookie("detailActions", data?.detailActions);
       if (data.detailActions.length > 0) {
         router.push("/admin");
@@ -39,16 +48,18 @@ const LoginAdmin = () => {
       err && err?.message && toast.error(err.message);
     },
   });
-
-  const handleLogin = async (data: any) => {
-    mutate(data);
+  const handleRegister = async (data: any) => {
+    if (data.confirmPassword !== data.password) {
+      toast.error("Xác nhận mật khẩu không khớp");
+    } else {
+      mutate(data);
+    }
   };
-
   return (
     <>
       <Meta
-        description="Đăng nhập"
-        title="Đăng nhập | PWM"
+        description="Đăng ký"
+        title="Đăng ký | PWM"
         image="/images/logo.jpg"
       />
       <div className="min-h-screen flex items-center justify-center bg-[#f5f5f5]">
@@ -66,8 +77,8 @@ const LoginAdmin = () => {
               />
             </Link>
           </div>
-          <h1 className="font-bold uppercase text-center mt-2">Đăng nhập</h1>
-          <form onSubmit={handleSubmit(handleLogin)}>
+          <h1 className="font-bold uppercase text-center mt-2">Đăng ký</h1>
+          <form onSubmit={handleSubmit(handleRegister)}>
             <div className="mt-4">
               <TextField
                 control={control}
@@ -94,12 +105,23 @@ const LoginAdmin = () => {
                 }}
                 className="px-4 py-2 mt-1 bg-[#f5f5f5] dark:text-black outline-none w-full border rounded-sm"
               />
+              <TextField
+                control={control}
+                error={errors}
+                name="confirmPassword"
+                type="password"
+                placeholder="Xác nhận mật khẩu..."
+                rules={{
+                  required: "Vui lòng không bỏ trống",
+                }}
+                className="px-4 py-2 mt-1 bg-[#f5f5f5] dark:text-black outline-none w-full border rounded-sm"
+              />
               <div className=" flex justify-end">
                 <Link
-                  href={"/register"}
+                  href={"/login"}
                   className="text-primary mr-1 hover:text-primaryHover"
                 >
-                  Đăng ký
+                  Đăng nhập
                 </Link>
               </div>
               <button
@@ -107,7 +129,7 @@ const LoginAdmin = () => {
                 type="submit"
                 className="bg-primary mt-4 hover:bg-primaryHover transition-all text-white px-4 py-2 rounded-sm w-full"
               >
-                Đăng nhập
+                Đăng ký
               </button>
             </div>
           </form>
@@ -117,20 +139,4 @@ const LoginAdmin = () => {
   );
 };
 
-export default LoginAdmin;
-
-export const getServerSideProps: GetServerSideProps = async ({ req, res }) => {
-  const token = req.cookies["token"];
-
-  if (token) {
-    return {
-      redirect: {
-        destination: "/admin",
-      },
-      props: {},
-    };
-  }
-  return {
-    props: {},
-  };
-};
+export default register;
