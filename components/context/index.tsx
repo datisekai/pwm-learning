@@ -20,7 +20,6 @@ const AuthContextProvider: React.FC<AuthProps> = ({ children }) => {
   // const [cart, setCart] = React.useState<SkuCartModel[]>([]);
 
   const [cart, setCart] = useLocalStorage("cart", []);
-
   // React.useEffect(() => {
   //   setCart(cart);
   // }, [cartLocal]);

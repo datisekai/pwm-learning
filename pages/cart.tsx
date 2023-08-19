@@ -7,23 +7,42 @@ import { LazyLoadImage } from "react-lazy-load-image-component";
 import { AuthContext } from "../components/context";
 import MainLayout from "../components/layouts/MainLayout";
 import Meta from "../components/Meta";
-import React from "react";
+import React, { useEffect } from "react";
 import { SkuCartModel } from "../models/Sku.model";
 import { formatPrices, getImageServer } from "../utils";
 import { useForm } from "react-hook-form";
 import TextField from "../components/customs/TextField";
 import swal from "sweetalert";
 import { toast } from "react-hot-toast";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import OrderAction from "../actions/Order.action";
 import { useRouter } from "next/router";
 import { IsBrowser } from "../components/IsBrower";
-
+import CartAction from "../actions/Cart.action";
 const cssInputCurrent = "px-2 py-1 mt-2 w-full bg-orange-300 rounded";
 
 export default function Home() {
   const { cart, setCart } = React.useContext(AuthContext);
+  const dataIDProduct = cart.map((item: any) => {
+    return item.productId;
+  });
+  const { data, isFetched } = useQuery(["cart-confirmCart"], () =>
+    CartAction.confirmCart(dataIDProduct)
+  );
+  useEffect(() => {
+    if (isFetched) {
+      const listConfirmCart = cart
+        .map((item2: any) => {
+          const matchingItem = data.find(
+            (item: any) => item.id === item2.productId
+          );
+          return matchingItem ? item2 : null;
+        })
+        .filter((item: any) => item !== null);
 
+      setCart(listConfirmCart);
+    }
+  }, [data, isFetched]);
   const handleChangeQty = (id: number, value: number) => {
     if (value < 1) {
       return;
