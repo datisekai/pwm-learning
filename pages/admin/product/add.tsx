@@ -116,13 +116,13 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
       return;
     }
 
-    if (classify1.filter(item => item.text != "").length === 0) {
+    if (classify1.filter((item) => item.text != "").length === 0) {
       toast.error("Vui lòng nhập chi tiết phân loại 1");
       return;
     }
 
     if (newProduct.attributes.length === 2) {
-      if (classify2.filter(item => item.text != "").length === 0) {
+      if (classify2.filter((item) => item.text != "").length === 0) {
         toast.error("Vui lòng nhập chi tiết phân loại 2");
         return;
       }
@@ -205,7 +205,11 @@ const AddProduct: React.FC<AddProductProps> = ({ categories }) => {
 
   return (
     <>
-     <Meta image="/images/logo.jpg" title="Thêm sản phẩm | Admin" description="" />
+      <Meta
+        image="/images/logo.jpg"
+        title="Thêm sản phẩm | Admin"
+        description=""
+      />
       <AdminLayout>
         <div className="mt-5">
           <div className="flex items-center justify-between">

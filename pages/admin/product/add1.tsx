@@ -1,7 +1,7 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { AiOutlineDelete, AiOutlinePlus } from "react-icons/ai";
@@ -43,20 +43,35 @@ interface Attribute {
 interface AddProductProps {}
 
 const AddProduct: React.FC<AddProductProps> = () => {
+  var slugify = require("slugify");
   const {
     control,
     formState: { errors },
     handleSubmit,
     getValues,
     watch,
+    setValue,
   } = useForm({
     defaultValues: {
       name: "",
+      slug: "",
       category: "",
       description: "",
     },
   });
-
+  useEffect(() => {
+    setValue(
+      "slug",
+      slugify(getValues("name"), {
+        replacement: "-",
+        remove: undefined,
+        lower: false,
+        strict: false,
+        locale: "vi",
+        trim: true,
+      })
+    );
+  }, [getValues("name")]);
   const { data: categories } = useQuery(["categories"], CategoryAction.getAll);
 
   const { data: attributes } = useQuery(["attributes"], AttributeAction.getAll);
@@ -82,7 +97,7 @@ const AddProduct: React.FC<AddProductProps> = () => {
   const maxLength = 120;
 
   const name = watch("name");
-
+  const slug = watch("slug");
   const { mutate, isLoading } = useMutation(ProductAction.add1, {
     onSuccess: () => {
       toast.success("Thêm thành công");
@@ -121,8 +136,6 @@ const AddProduct: React.FC<AddProductProps> = () => {
       return;
     }
 
-
-    
     if (
       skus.some((item) => !isNumber(item.price) || !isNumber(item.discount))
     ) {
@@ -156,6 +169,7 @@ const AddProduct: React.FC<AddProductProps> = () => {
       thumbnail: avatars[0],
       attributes: groupClassify.map((item) => +item.id),
       skus: skusSending,
+      slug: data.slug,
     };
 
     mutate(sending);
@@ -283,6 +297,30 @@ const AddProduct: React.FC<AddProductProps> = () => {
                       </div>
                       <p className="py-1 text-primary text-sm">
                         {errors["name"] && errors["name"].message}
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center mt-2 ">
+                    <span className="w-[150px]">Slug sản phẩm</span>
+                    <div className="flex-1 ml-4 ">
+                      <div className=" flex items-center border rounded-md">
+                        <TextField
+                          control={control}
+                          error={errors}
+                          showError={false}
+                          rules={{
+                            required: "Không được để trống ô",
+                          }}
+                          name="slug"
+                          placeholder="Nhập vào"
+                          className="w-full px-4 py-1 rounded-md outline-none"
+                        />
+                        <div className="border-l px-2 text-[#666]">
+                          {slug.length}/{maxLength}
+                        </div>
+                      </div>
+                      <p className="py-1 text-primary text-sm">
+                        {errors["slug"] && errors["slug"].message}
                       </p>
                     </div>
                   </div>

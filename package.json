@@ -35,6 +35,7 @@
     "react-simple-image-viewer": "^1.2.2",
     "react-switch": "^7.0.0",
     "sharp": "^0.31.3",
+    "slugify": "^1.6.6",
     "suneditor": "^2.44.3",
     "suneditor-react": "^3.4.1",
     "sweetalert": "^2.1.2",
