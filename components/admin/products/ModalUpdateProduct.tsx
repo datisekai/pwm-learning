@@ -43,14 +43,14 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
       name: "",
       categoryId: 0,
       description: "",
+      slug: "",
     },
   });
-
-
 
   useEffect(() => {
     if (current) {
       setValue("name", current.name);
+      setValue("slug", current.slug);
       setValue("categoryId", current.categoryId);
       setValue("description", current.description.replace(/<br\/>/g, "\n"));
       setPreview(
@@ -158,6 +158,19 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
               control={control}
               error={errors}
               name="name"
+              className={"css-field"}
+              placeholder="Nhập vào"
+              rules={{
+                required: "Không được để trống ô",
+              }}
+            />
+          </div>
+          <div className="space-y-2">
+            <label>Slug sản phẩm</label>
+            <TextField
+              control={control}
+              error={errors}
+              name="slug"
               className={"css-field"}
               placeholder="Nhập vào"
               rules={{
