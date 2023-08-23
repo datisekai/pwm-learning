@@ -29,6 +29,7 @@ const UserAction: IUserAction = {
     return result.data;
   },
   update: async (data) => {
+    console.log(data);
     const result = await axiosClient.put(`/user/${data.id}`, {
       ...data,
       id: undefined,
