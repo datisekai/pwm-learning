@@ -48,7 +48,7 @@ export default function Home() {
         setCart(listConfirmCart);
       }
     }
-  }, [data, isFetched]);
+  }, [isFetched]);
   const handleChangeQty = (id: number, value: number) => {
     if (value < 1) {
       return;
