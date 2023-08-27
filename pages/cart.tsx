@@ -19,6 +19,7 @@ import OrderAction from "../actions/Order.action";
 import { useRouter } from "next/router";
 import { IsBrowser } from "../components/IsBrower";
 import CartAction from "../actions/Cart.action";
+import emailjs from "@emailjs/browser";
 const cssInputCurrent = "px-2 py-1 mt-2 w-full bg-orange-300 rounded";
 
 export default function Home() {
@@ -122,12 +123,21 @@ export default function Home() {
           ...data,
           skus: cart,
         };
-
         mutate(payload);
       }
     });
   };
-
+  const abc = () => {
+    const virtualForm = document.createElement("form");
+    virtualForm.innerHTML =
+      '<input type="text" name="message" value="abc \n cbm"><input type="text" name="message" value="1 \n cbm">';
+    emailjs.sendForm(
+      "service_o8hpj3y",
+      "template_0yhrpob",
+      virtualForm,
+      "Ip9v5IbQ4UHx37Gm4"
+    );
+  };
   return (
     <>
       <Meta
@@ -142,6 +152,7 @@ export default function Home() {
               <h1 className="font-sans text-2xl text-orange-600 font-bold text-center">
                 Giỏ hàng của bạn
               </h1>
+              <div onClick={abc}>abc</div>
               <div className="bg-white rounded-md mt-5 md:block hidden">
                 {cart?.length === 0 && (
                   <p className="text-center py-2">Chưa có sản phẩm</p>

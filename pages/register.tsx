@@ -12,7 +12,7 @@ import { GetServerSideProps } from "next";
 import { UserModel } from "../models/User.model";
 import Meta from "../components/Meta";
 import { after } from "node:test";
-const register = () => {
+const Register = () => {
   const {
     control,
     formState: { errors },
@@ -139,4 +139,4 @@ const register = () => {
   );
 };
 
-export default register;
+export default Register;

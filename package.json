@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emailjs/browser": "^3.11.0",
     "@next/font": "13.0.7",
     "@tanstack/react-query": "^4.22.0",
     "@types/node": "18.11.15",
@@ -19,7 +20,6 @@
     "dayjs": "^1.11.7",
     "eslint": "8.29.0",
     "eslint-config-next": "13.0.7",
-    "md5": "^2.3.0",
     "next": "13.0.7",
     "next-themes": "^0.2.1",
     "nextjs-progressbar": "^0.0.16",
