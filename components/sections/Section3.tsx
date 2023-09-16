@@ -23,28 +23,29 @@ interface Section3Props {
   dataProduct: ProductModel[];
 }
 
-const Section3: FC<Section3Props> = ({ title,dataCategory,dataProduct }) => {
+const Section3: FC<Section3Props> = ({ title, dataCategory, dataProduct }) => {
   return (
     <div className="mt-4 py-4 max-w-[1200px] w-[calc(100%-16px)] mx-auto">
       <div className="flex justify-between items-center py-1 border-b-[2px]">
         <h1 className="inline font-bold text-lg md:text-xl border-line uppercase">
           {title}
         </h1>
-        <Link href={`/search?speciesId=${dataCategory.id}`}><div className="flex items-center text-sm md:text-md hover:text-primary transition-all hover:cursor-pointer">
-          <button>Xem tất cả</button>
-          <BsChevronDown className="ml-1" />
-        </div></Link>
+        <Link href={`/search?speciesId=${dataCategory.id}`}>
+          <div className="flex items-center text-sm md:text-md hover:text-primary transition-all hover:cursor-pointer">
+            <button>Xem tất cả</button>
+            <BsChevronDown className="ml-1" />
+          </div>
+        </Link>
       </div>
       <div className="mt-4 flex">
         <div className="w-[180px] hidden md:flex flex-col ">
           <div>
             {dataCategory?.categories.map((item) => (
               <Link key={item.id} href={`/search?categoryId=${item.id}`}>
-              <div
-                className="py-2 hover:text-primary transition-all cursor-pointer border-b-[2px]"
-              >
-                <span>{item.name}</span>
-              </div></Link>
+                <div className="py-2 hover:text-primary transition-all cursor-pointer border-b-[2px]">
+                  <span>{item.name}</span>
+                </div>
+              </Link>
             ))}
           </div>
         </div>

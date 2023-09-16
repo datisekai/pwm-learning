@@ -12,10 +12,11 @@ interface HomeCardProps {
 const HomeCard: React.FC<HomeCardProps> = ({ data }) => {
   const minPrice = useMemo(() => {
     let min =
-      data?.skus[0].price - (data.skus[0].price * data.skus[0].discount/100) || 0;
+      data?.skus[0].price -
+        (data.skus[0].price * data.skus[0].discount) / 100 || 0;
     data?.skus.forEach((item) => {
       if (item.price < min) {
-        min = item.price - (item.price * item.discount/100);
+        min = item.price - (item.price * item.discount) / 100;
       }
     });
     return min;
@@ -23,15 +24,15 @@ const HomeCard: React.FC<HomeCardProps> = ({ data }) => {
 
   const maxPrice = useMemo(() => {
     let max =
-    data?.skus[0].price - (data.skus[0].price * data.skus[0].discount/100) || 0;
+      data?.skus[0].price -
+        (data.skus[0].price * data.skus[0].discount) / 100 || 0;
     data?.skus.forEach((item) => {
       if (item.price > max) {
-        max = item.price - (item.price * item.discount/100);
+        max = item.price - (item.price * item.discount) / 100;
       }
     });
     return max;
   }, [data]);
-
 
   return (
     <Link href={`/product/${data.slug}`}>
@@ -47,9 +48,13 @@ const HomeCard: React.FC<HomeCardProps> = ({ data }) => {
           </button>
         </div>
         <div className="mt-2 text-center">
-          <h3 className="font-bold text-sm px-2 line-clamp-2 md:text-md">{data.name}</h3>
+          <h3 className="font-bold text-sm px-2 line-clamp-2 md:text-md">
+            {data.name}
+          </h3>
           <p className="font-bold text-sm md:text-md text-primary">
-            {minPrice === maxPrice
+            {data.skus[0].priceDisplay !== null
+              ? data.skus[0].priceDisplay
+              : minPrice === maxPrice
               ? formatPrices(minPrice)
               : `${formatPrices(minPrice)} - ${formatPrices(maxPrice)}`}
           </p>

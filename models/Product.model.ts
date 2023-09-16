@@ -28,6 +28,7 @@ export interface Sku {
   createdAt: Date;
   updatedAt: Date;
   status: boolean;
+  priceDisplay: string;
 }
 
 export interface Detailattribute {
@@ -64,7 +65,7 @@ export interface ProductImage {
   updatedAt: Date;
 }
 
-export interface  ProductModel {
+export interface ProductModel {
   id: number;
   name: string;
   thumbnail: string;
@@ -80,6 +81,5 @@ export interface  ProductModel {
   skus: Sku[];
   popular?: any;
   productattributes: Productattribute[];
-  productimages:ProductImage[]
+  productimages: ProductImage[];
 }
-
