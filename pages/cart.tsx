@@ -127,6 +127,19 @@ export default function Home() {
       }
     });
   };
+
+  const handleDeleteItemCart = (item: any) => {
+    swal({
+      title: "Bạn có muốn xóa sản phẩm này ra khỏi giỏ hàng?",
+      icon: "warning",
+      buttons: ["Hủy", "OK"],
+      dangerMode: true,
+    }).then((willDeleteItemCart) => {
+      if (willDeleteItemCart) {
+        setCart(cart.filter((element: any) => element.id !== item.id));
+      }
+    });
+  };
   return (
     <>
       <Meta
@@ -194,13 +207,7 @@ export default function Home() {
                       </div>
                       <p></p>
                     </div>
-                    <div
-                      onClick={() =>
-                        setCart(
-                          cart.filter((element: any) => element.id !== item.id)
-                        )
-                      }
-                    >
+                    <div onClick={() => handleDeleteItemCart(item)}>
                       <BiTrash className="text-[25px] m-auto dark:text-black hover:cursor-pointer" />
                     </div>
                   </div>
@@ -308,7 +315,7 @@ export default function Home() {
                 <div className="mt-3">
                   <label className="text-gray-100 font-bold">Họ tên</label>
                   <TextField
-                    errorTextColor="text-white"
+                    errorTextColor="text-[#EE0000]"
                     control={control}
                     error={errors}
                     name="name"
@@ -322,7 +329,7 @@ export default function Home() {
                     Số điện thoại
                   </label>
                   <TextField
-                    errorTextColor="text-white"
+                    errorTextColor="text-[#EE0000]"
                     control={control}
                     error={errors}
                     name="phone"
@@ -341,7 +348,7 @@ export default function Home() {
               <div>
                 <label className="text-gray-100 font-bold">Địa chỉ</label>
                 <TextField
-                  errorTextColor="text-white"
+                  errorTextColor="text-[#EE0000]"
                   control={control}
                   error={errors}
                   name="address"
