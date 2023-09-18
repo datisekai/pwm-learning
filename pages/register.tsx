@@ -17,6 +17,7 @@ const Register = () => {
     control,
     formState: { errors },
     handleSubmit,
+    watch,
   } = useForm({
     defaultValues: {
       email: "",
@@ -49,11 +50,7 @@ const Register = () => {
     },
   });
   const handleRegister = async (data: any) => {
-    if (data.confirmPassword !== data.password) {
-      toast.error("Xác nhận mật khẩu không khớp");
-    } else {
-      mutate(data);
-    }
+    mutate(data);
   };
   return (
     <>
@@ -113,6 +110,11 @@ const Register = () => {
                 placeholder="Xác nhận mật khẩu..."
                 rules={{
                   required: "Vui lòng không bỏ trống",
+                  validate: (value: string) => {
+                    if (watch("password") != value) {
+                      return "Mật khẩu không khớp";
+                    }
+                  },
                 }}
                 className="px-4 py-2 mt-1 bg-[#f5f5f5] dark:text-black outline-none w-full border rounded-sm"
               />
