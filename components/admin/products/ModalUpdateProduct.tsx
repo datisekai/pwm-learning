@@ -31,8 +31,6 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
   const [file, setFile] = React.useState<File[]>();
 
   const [preview, setPreview] = React.useState<string[]>([]);
-  const { data: products } = useQuery(["products"], ProductAction.getAll);
-
   const {
     control,
     formState: { errors },
@@ -51,10 +49,8 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
 
   useEffect(() => {
     if (current) {
-      let reSlug = current.slug.split("-");
-      let slug = reSlug.slice(0, length - 1).join("-");
       setValue("name", current.name);
-      setValue("slug", slug);
+      setValue("slug", current.slug);
       setValue("categoryId", current.categoryId);
       setValue("description", current.description.replace(/<br\/>/g, "\n"));
       setPreview(
@@ -89,15 +85,7 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
   });
 
   const handleUpdate = async (data: any) => {
-    let isExistSlug = false;
-    products?.map((item) => {
-      let reSlug = item.slug.split("-");
-      let slug = reSlug.slice(0, length - 1).join("-");
-      if (slug == data.slug) {
-        isExistSlug = true;
-      }
-    });
-    if (isExistSlug) {
+    if (current.slug == data.slug) {
       toast.error("Slug đã được sử dụng");
       return;
     }
