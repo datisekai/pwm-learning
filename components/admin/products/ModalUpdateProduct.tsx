@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
@@ -31,6 +31,7 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
   const [file, setFile] = React.useState<File[]>();
 
   const [preview, setPreview] = React.useState<string[]>([]);
+  const { data: products } = useQuery(["products"], ProductAction.getAll);
 
   const {
     control,
@@ -50,8 +51,10 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
 
   useEffect(() => {
     if (current) {
+      let reSlug = current.slug.split("-");
+      let slug = reSlug.slice(0, length - 1).join("-");
       setValue("name", current.name);
-      setValue("slug", current.slug);
+      setValue("slug", slug);
       setValue("categoryId", current.categoryId);
       setValue("description", current.description.replace(/<br\/>/g, "\n"));
       setPreview(
@@ -86,6 +89,18 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
   });
 
   const handleUpdate = async (data: any) => {
+    let isExistSlug = false;
+    products?.map((item) => {
+      let reSlug = item.slug.split("-");
+      let slug = reSlug.slice(0, length - 1).join("-");
+      if (slug == data.slug) {
+        isExistSlug = true;
+      }
+    });
+    if (isExistSlug) {
+      toast.error("Slug đã được sử dụng");
+      return;
+    }
     const sending: any = {
       ...data,
       id: current.id,

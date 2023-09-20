@@ -133,10 +133,9 @@ const AddProduct: React.FC<AddProductProps> = () => {
     }
     let isExistSlug = false;
     products?.map((item) => {
-      var reSlug = item.slug.split("-");
-      var isSlug = reSlug.slice(0, length - 1).join("-");
-      console.log(isSlug);
-      if (isSlug == data.slug) {
+      let reSlug = item.slug.split("-");
+      let slug = reSlug.slice(0, length - 1).join("-");
+      if (slug == data.slug) {
         isExistSlug = true;
       }
     });
