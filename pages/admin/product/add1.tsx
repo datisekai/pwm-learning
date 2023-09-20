@@ -19,6 +19,7 @@ import AdminLayout from "../../../components/layouts/AdminLayout";
 import Meta from "../../../components/Meta";
 import TranslationArea from "../../../components/TranslationArea";
 import { AttributeAdd, Detailattribute } from "../../../models/Attribute.model";
+import slugify from "slugify";
 import {
   getCombinationsByAttributeId,
   isNumber,
@@ -43,7 +44,6 @@ interface Attribute {
 interface AddProductProps {}
 
 const AddProduct: React.FC<AddProductProps> = () => {
-  var slugify = require("slugify");
   const {
     control,
     formState: { errors },
@@ -59,22 +59,11 @@ const AddProduct: React.FC<AddProductProps> = () => {
       description: "",
     },
   });
-  useEffect(() => {
-    setValue(
-      "slug",
-      slugify(getValues("name"), {
-        replacement: "-",
-        remove: undefined,
-        lower: false,
-        strict: false,
-        locale: "vi",
-        trim: true,
-      })
-    );
-  }, [getValues("name")]);
   const { data: categories } = useQuery(["categories"], CategoryAction.getAll);
 
   const { data: attributes } = useQuery(["attributes"], AttributeAction.getAll);
+
+  const { data: products } = useQuery(["products"], ProductAction.getAll);
 
   const initGroupClassify = (uuid: string) => ({
     detailattributes: [],
@@ -142,7 +131,19 @@ const AddProduct: React.FC<AddProductProps> = () => {
       toast.error("Giá và % giảm phải là số");
       return;
     }
-
+    let isExistSlug = false;
+    products?.map((item) => {
+      var reSlug = item.slug.split("-");
+      var isSlug = reSlug.slice(0, length - 1).join("-");
+      console.log(isSlug);
+      if (isSlug == data.slug) {
+        isExistSlug = true;
+      }
+    });
+    if (isExistSlug) {
+      toast.error("Slug đã được sử dụng");
+      return;
+    }
     let avatars = await Promise.all(
       Array.from(thumbnails).map((item) => uploadImg(item))
     );
@@ -206,7 +207,19 @@ const AddProduct: React.FC<AddProductProps> = () => {
     setSkus(newData);
     return newData;
   }, [groupClassify]);
-
+  const handleCreateSlug = () => {
+    setValue(
+      "slug",
+      slugify(getValues("name"), {
+        replacement: "-",
+        remove: undefined,
+        lower: false,
+        strict: false,
+        locale: "vi",
+        trim: true,
+      })
+    );
+  };
   return (
     <>
       <Meta
@@ -315,8 +328,11 @@ const AddProduct: React.FC<AddProductProps> = () => {
                           placeholder="Nhập vào"
                           className="w-full px-4 py-1 rounded-md outline-none"
                         />
-                        <div className="border-l px-2 text-[#666]">
-                          {slug.length}/{maxLength}
+                        <div
+                          className="bg-primary border-l rounded-r-md px-2 py-1 cursor-pointer text-white"
+                          onClick={handleCreateSlug}
+                        >
+                          Auto
                         </div>
                       </div>
                       <p className="py-1 text-primary text-sm">

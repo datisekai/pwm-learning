@@ -13,6 +13,7 @@ import { getImageServer, uploadImg } from "../../../utils";
 import Select from "../../customs/Select";
 import TextArea from "../../customs/TextArea";
 import TextField from "../../customs/TextField";
+import slugify from "slugify";
 
 interface ModalUpdateProductProps {
   open: boolean;
@@ -100,7 +101,19 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
 
     mutate(sending);
   };
-
+  const handleCreateSlug = () => {
+    setValue(
+      "slug",
+      slugify(getValues("name"), {
+        replacement: "-",
+        remove: undefined,
+        lower: false,
+        strict: false,
+        locale: "vi",
+        trim: true,
+      })
+    );
+  };
   return (
     <div className={`${!open && "hidden"} `}>
       <div
@@ -166,7 +179,15 @@ const ModalUpdateProduct: React.FC<ModalUpdateProductProps> = ({
             />
           </div>
           <div className="space-y-2">
-            <label>Slug sản phẩm</label>
+            <div className="flex justify-between">
+              <label>Slug sản phẩm</label>
+              <div
+                onClick={handleCreateSlug}
+                className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300  text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 px-4 rounded-sm cursor-pointer"
+              >
+                Auto
+              </div>
+            </div>
             <TextField
               control={control}
               error={errors}
