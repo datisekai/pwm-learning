@@ -19,36 +19,11 @@ import OrderAction from "../actions/Order.action";
 import { useRouter } from "next/router";
 import { IsBrowser } from "../components/IsBrower";
 import CartAction from "../actions/Cart.action";
-import emailjs from "@emailjs/browser";
 const cssInputCurrent = "px-2 py-1 mt-2 w-full bg-orange-300 rounded";
 
 export default function Home() {
   const { cart, setCart } = React.useContext(AuthContext);
-  let dataIDProduct = [-1];
-  if (cart.length > 0) {
-    dataIDProduct = cart.map((item: any) => {
-      return item.productId;
-    });
-  }
-  const { data, isFetched } = useQuery(["cart-confirmCart"], () =>
-    CartAction.confirmCart(dataIDProduct)
-  );
-  useEffect(() => {
-    if (isFetched) {
-      if (data.length > 0) {
-        const listConfirmCart = cart
-          .map((item2: any) => {
-            const matchingItem = data.find(
-              (item: any) => item.id === item2.productId
-            );
-            return matchingItem ? item2 : null;
-          })
-          .filter((item: any) => item !== null);
 
-        setCart(listConfirmCart);
-      }
-    }
-  }, [isFetched]);
   const handleChangeQty = (id: number, value: number) => {
     if (value < 1) {
       return;
