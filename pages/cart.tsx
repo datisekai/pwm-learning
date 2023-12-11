@@ -406,7 +406,7 @@ export default function Home() {
                 <div className="flex">
                   <select
                     name="city"
-                    className={"css-field mr-1 !bg-orange-300 !text-white"}
+                    className={"css-field mr-1 !bg-orange-300"}
                     onChange={(e) => handleSelectChange(e, "city")}
                   >
                     <option selected={false} value={-1}>
@@ -421,7 +421,7 @@ export default function Home() {
                   <select
                     disabled={valueCity.value === -1 ? true : false}
                     name="district"
-                    className={"css-field mr-1 !bg-orange-300 !text-white"}
+                    className={"css-field mr-1 !bg-orange-300"}
                     onChange={(e) => handleSelectChange(e, "district")}
                   >
                     <option selected={false} value={-1}>
@@ -436,7 +436,7 @@ export default function Home() {
                   <select
                     disabled={valueDistrict.value === -1 ? true : false}
                     name="ward"
-                    className={"css-field !bg-orange-300 !text-white"}
+                    className={"css-field !bg-orange-300"}
                     onChange={(e) => handleSelectChange(e, "ward")}
                   >
                     <option selected={false} value={-1}>
