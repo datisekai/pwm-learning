@@ -66,7 +66,6 @@ const ProductAdmin = () => {
     },
   });
 
-
   const handleDelete = (id: number | string) => {
     swal({
       title: "Bạn có chắc chắn muốn xóa?",
@@ -229,15 +228,17 @@ const ProductAdmin = () => {
                         <td className="py-4 px-6">
                           <div className="flex space-x-2">
                             {user?.detailActions.includes("product:update") && (
-                              <div
-                                onClick={() => {
-                                  setCurrent(item);
-                                  setOpenModal(true);
-                                }}
-                                className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
-                              >
-                                <CiEdit fontSize={24} />
-                              </div>
+                              <Link href={`/admin/product/${item.slug}`}>
+                                <div
+                                  // onClick={() => {
+                                  //   setCurrent(item);
+                                  //   setOpenModal(true);
+                                  // }}
+                                  className="bg-primary flex items-center justify-center text-white p-1 rounded-md hover:bg-primaryHover cursor-pointer"
+                                >
+                                  <CiEdit fontSize={24} />
+                                </div>
+                              </Link>
                             )}
                             {user?.detailActions.includes("product:update") && (
                               <div

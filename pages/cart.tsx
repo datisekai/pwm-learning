@@ -19,11 +19,11 @@ import OrderAction from "../actions/Order.action";
 import { useRouter } from "next/router";
 import { IsBrowser } from "../components/IsBrower";
 import CartAction from "../actions/Cart.action";
+import Select from "../components/customs/Select";
 const cssInputCurrent = "px-2 py-1 mt-2 w-full bg-orange-300 rounded";
 
 export default function Home() {
   const { cart, setCart } = React.useContext(AuthContext);
-
   const handleChangeQty = (id: number, value: number) => {
     if (value < 1) {
       return;
@@ -44,6 +44,7 @@ export default function Home() {
   const {
     control,
     formState: { errors },
+    setValue,
     handleSubmit,
   } = useForm({
     defaultValues: {
@@ -52,6 +53,87 @@ export default function Home() {
       address: "",
     },
   });
+
+  const [valueCity, setValueCity] = React.useState({ value: -1, text: "" });
+  const [valueDistrict, setValueDistrict] = React.useState({
+    value: -1,
+    text: "",
+  });
+  const [valueWard, setValueWard] = React.useState({ value: -1, text: "" });
+
+  const handleSelectChange = (e: any, type: String) => {
+    const value = parseInt(e.target.value);
+    const text = e.target.options[e.target.selectedIndex].text;
+    if (type === "city") {
+      setValueCity({ value, text });
+      setValueDistrict({ value: -1, text: "" });
+      setValueWard({ value: -1, text: "" });
+    } else if (type === "district") {
+      setValueDistrict({ value, text });
+      setValueWard({ value: -1, text: "" });
+    } else {
+      setValueWard({ value, text });
+    }
+  };
+  const getAddress = () => {
+    console.log(valueCity, valueDistrict, valueWard);
+    if (
+      valueCity.value !== -1 &&
+      valueDistrict.value !== -1 &&
+      valueWard.value !== -1
+    ) {
+      setValue(
+        "address",
+        valueCity.text + ", " + valueDistrict.text + ", " + valueWard.text
+      );
+      return;
+    }
+    setValue("address", "");
+  };
+
+  const [cities, setCities] = React.useState([]);
+  const [districts, setDistricts] = React.useState([]);
+  const [wards, setWards] = React.useState([]);
+
+  const apiAddress = "https://provinces.open-api.vn/api/?depth=3";
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(apiAddress);
+        const data = await response.json();
+        setCities(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    setDistricts([]);
+    setWards([]);
+    cities.map((item: any) => {
+      if (item.code === valueCity.value) {
+        setDistricts(item.districts);
+      }
+    });
+    getAddress();
+  }, [valueCity]);
+
+  useEffect(() => {
+    setWards([]);
+    districts.map((item: any) => {
+      if (item.code === valueDistrict.value) {
+        setWards(item.wards);
+      }
+    });
+    getAddress();
+  }, [valueDistrict]);
+
+  useEffect(() => {
+    getAddress();
+  }, [valueWard]);
 
   const router = useRouter();
 
@@ -85,7 +167,6 @@ export default function Home() {
       toast.error("Vui lòng thêm sản phẩm vào giỏ hàng");
       return;
     }
-
     swal({
       title: "Bạn có chắc chắn thanh toán",
       text: `Số tiền cần thanh toán là ${formatPrices(shipping + subTotal)}`,
@@ -322,12 +403,58 @@ export default function Home() {
               </div>
               <div>
                 <label className="text-gray-100 font-bold">Địa chỉ</label>
+                <div className="flex">
+                  <select
+                    name="city"
+                    className={"css-field mr-1 !bg-orange-300 !text-white"}
+                    onChange={(e) => handleSelectChange(e, "city")}
+                  >
+                    <option selected={false} value={-1}>
+                      Thành phố/tỉnh
+                    </option>
+                    {cities?.map((item: any) => (
+                      <option key={item.code} value={`${item.code}`}>
+                        {item.name}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    disabled={valueCity.value === -1 ? true : false}
+                    name="district"
+                    className={"css-field mr-1 !bg-orange-300 !text-white"}
+                    onChange={(e) => handleSelectChange(e, "district")}
+                  >
+                    <option selected={false} value={-1}>
+                      Quận/huyện
+                    </option>
+                    {districts?.map((item: any) => (
+                      <option key={item.code} value={`${item.code}`}>
+                        {item.name}
+                      </option>
+                    ))}
+                  </select>
+                  <select
+                    disabled={valueDistrict.value === -1 ? true : false}
+                    name="ward"
+                    className={"css-field !bg-orange-300 !text-white"}
+                    onChange={(e) => handleSelectChange(e, "ward")}
+                  >
+                    <option selected={false} value={-1}>
+                      Phường/xã
+                    </option>
+                    {wards?.map((item: any) => (
+                      <option key={item.code} value={`${item.code}`}>
+                        {item.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 <TextField
                   errorTextColor="text-[#EE0000]"
                   control={control}
                   error={errors}
                   name="address"
-                  className={cssInputCurrent}
+                  className={cssInputCurrent && "hidden"}
                   rules={{ required: "Không được bỏ trống" }}
                 />
               </div>

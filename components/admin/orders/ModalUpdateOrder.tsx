@@ -98,7 +98,7 @@ const ModalUpdateOrder: React.FC<ModalUpdateOrderProps> = ({
               error={errors}
               name="status"
               className={"css-field"}
-            />  
+            />
           </div>
         </div>
 
