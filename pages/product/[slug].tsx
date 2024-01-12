@@ -54,7 +54,7 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
   const [detailAt, setDetailAt] = useState<
     { attributeId: number; detailId: number }[]
   >([]);
-  // 88888888888888888888888888888888888888888888888888
+  // -------------------------------------
   const [isViewerOpen, setIsViewerOpen] = useState(false);
   const openImageViewer = useCallback(() => {
     setIsViewerOpen(true);
@@ -62,7 +62,7 @@ const ProductDetail: NextPage<ProductDetailProps> = ({ detail }) => {
   const closeImageViewer = () => {
     setIsViewerOpen(false);
   };
-  //88888888888888888888888888888888888888888888888
+  //---------------------------------------
   React.useEffect(() => {
     if (detail && detail.skus) {
       setDetailAt(

@@ -30,7 +30,7 @@ const AuthContextProvider: React.FC<AuthProps> = ({ children }) => {
   );
   React.useEffect(() => {
     if (isFetched) {
-      if (data.length > 0) {
+      if (data?.length > 0) {
         const listConfirmCart = cart
           .map((item2: any) => {
             const matchingItem = data.find(

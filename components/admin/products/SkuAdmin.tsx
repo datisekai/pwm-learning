@@ -14,7 +14,7 @@ import LoadingSpinner from "../../LoadingSpinner";
 import SearchAdmin from "../../SearchAdmin";
 import ModalUpdateSku from "./ModalUpdateSku";
 
-const SkuAdmin = () => {
+const SkuAdmin = ({ productId }: any) => {
   const [openModalUpdate, setOpenModalUpdate] = useState(false);
   const [current, setCurrent] = useState<any>();
   const [search, setSearch] = useState("");
@@ -23,7 +23,7 @@ const SkuAdmin = () => {
 
   const { data: skus, isLoading: isLoadingSku } = useQuery(
     ["skus", router.asPath],
-    SkuAction.getAll
+    () => SkuAction.getById(productId)
   );
 
   React.useEffect(() => {
@@ -75,15 +75,15 @@ const SkuAdmin = () => {
   };
 
   useEffect(() => {
-    if(search.trim().length === 0){
-      setCurrentProduct(skus || [])
+    if (search.trim().length === 0) {
+      setCurrentProduct(skus || []);
     }
-  },[search])
-  
+  }, [search]);
+
   return (
     <>
       <div className="mt-5 grid">
-        <div className="flex items-center justify-between">
+        {/* <div className="flex items-center justify-between">
           <h1 className="text-white bg-primary px-4 py-2 inline rounded-lg">
             Quản lý hàng hóa
           </h1>
@@ -93,7 +93,7 @@ const SkuAdmin = () => {
           onChange={(e) => setSearch(e.target.value)}
           value={search}
           placeholder={"Tìm kiếm theo tên, mã sku..."}
-        />
+        /> */}
         <div className="mt-4 bg-white rounded-3xl p-4 max-h-[450px] overflow-scroll shadow-master">
           <div className="relative">
             {!isLoadingSku ? (
@@ -103,9 +103,7 @@ const SkuAdmin = () => {
                     <th scope="col" className="py-2 md:py-3 px-3 md:px-6">
                       Hình ảnh
                     </th>
-                    <th scope="col" className="py-2 md:py-3 px-3 md:px-6">
-                      Tên sản phẩm
-                    </th>
+
                     <th scope="col" className="py-2 md:py-3 px-3 md:px-6">
                       Loại
                     </th>
@@ -159,16 +157,17 @@ const SkuAdmin = () => {
                           scope="row"
                           className="py-2 md:py-4 px-3 md:px-6 font-medium  whitespace-nowrap dark:text-white"
                         >
-                          {item.image != "null" || !item.image ? <LazyLoadImage
-                            src={getImageServer(item.image)}
-                            alt="123"
-                            width={50}
-                            height={50}
-                          /> : 'Không có'}
+                          {item.image != "null" || !item.image ? (
+                            <LazyLoadImage
+                              src={getImageServer(item.image)}
+                              alt="123"
+                              width={50}
+                              height={50}
+                            />
+                          ) : (
+                            "Không có"
+                          )}
                         </th>
-                        <td className="py-2 md:py-4 px-3 md:px-6 break-words max-w-[300px]">
-                          {item.product.name}
-                        </td>
                         <td className="py-2 md:py-4 px-3 md:px-6 break-words max-w-[300px]">
                           {types.trim().replace("  ", " , ")}
                         </td>
@@ -182,7 +181,7 @@ const SkuAdmin = () => {
                           {item.sku}
                         </td>
                         <td className="py-2 md:py-4 px-3 md:px-6">
-                          {item.priceDisplay ? item.priceDisplay : 'Không có'}
+                          {item.priceDisplay ? item.priceDisplay : "Không có"}
                         </td>
                         {(user?.detailActions.includes("product:update") ||
                           user?.detailActions.includes("product:delete")) && (

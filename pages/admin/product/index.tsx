@@ -23,11 +23,11 @@ const ProductAdminManager = () => {
       title: "Sản phẩm",
       hide: !user?.detailActions.includes("product:view"),
     },
-    {
-      id: 1,
-      title: "Hàng hóa",
-      hide: !user?.detailActions.includes("product:view"),
-    },
+    // {
+    //   id: 1,
+    //   title: "Hàng hóa",
+    //   hide: !user?.detailActions.includes("product:view"),
+    // },
     {
       id: 2,
       title: "Chủng loại",
@@ -76,7 +76,7 @@ const ProductAdminManager = () => {
           </ul>
           <div>
             {+tab === 0 && <ProductAdmin />}
-            {+tab === 1 && <SkuAdmin />}
+            {/* {+tab === 1 && <SkuAdmin />} */}
             {+tab === 2 && <SpeciesAdmin />}
             {+tab === 3 && <PCategoryAdmin />}
             {+tab === 4 && <AttributeAdmin />}

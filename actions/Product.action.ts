@@ -2,18 +2,20 @@ import { toast } from "react-hot-toast";
 import axiosClient from "../config/axiosClient";
 import { ProductModel } from "../models/Product.model";
 
-interface IProductAction{
-  add:(data:any) => Promise<any>
-  add1:(data:any) => Promise<any>
-  getAll:() => Promise<ProductModel[]>
-  update:(data:any) => Promise<any>
-  delete:(id:number | string) => Promise<any>
-  search:(query:any) => Promise<{products:ProductModel[], totalPage:number}>,
-  detail:(slug:string) => Promise<ProductModel>
-  updateAttr:(data:any) => Promise<ProductModel>
+interface IProductAction {
+  add: (data: any) => Promise<any>;
+  add1: (data: any) => Promise<any>;
+  getAll: () => Promise<ProductModel[]>;
+  update: (data: any) => Promise<any>;
+  delete: (id: number | string) => Promise<any>;
+  search: (
+    query: any
+  ) => Promise<{ products: ProductModel[]; totalPage: number }>;
+  detail: (slug: string) => Promise<ProductModel>;
+  updateAttr: (data: any) => Promise<ProductModel>;
 }
 
-const ProductAction:IProductAction = {
+const ProductAction: IProductAction = {
   add: async (data: any) => {
     const result = await axiosClient.post("/product", data);
     return result.data;
@@ -55,22 +57,25 @@ const ProductAction:IProductAction = {
       };
     }
   },
-  detail:async(slug:string) => {
+  detail: async (slug: string) => {
     try {
       const result = await axiosClient.get(`/product/detail/${slug}`);
-      return result.data      
+      return result.data;
     } catch (error) {
-      return null
+      return null;
     }
   },
-  updateAttr:async(data) => {
+  updateAttr: async (data) => {
     try {
-      const result = await axiosClient.put(`/product/attribute/${data.productId}`,data);
-      return result.data
+      const result = await axiosClient.put(
+        `/product/attribute/${data.productId}`,
+        data
+      );
+      return result.data;
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  },
 };
 
 export default ProductAction;

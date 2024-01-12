@@ -1,5 +1,10 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { GetServerSideProps } from "next";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  GetStaticPaths,
+  GetStaticProps,
+  GetServerSideProps,
+  NextPage,
+} from "next";
 import { useRouter } from "next/router";
 import React, { useMemo, useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -21,9 +26,14 @@ import { AttributeAdd, Detailattribute } from "../../../models/Attribute.model";
 import slugify from "slugify";
 import {
   getCombinationsByAttributeId,
+  getImageServer,
   isNumber,
   uploadImg,
 } from "../../../utils";
+import SkuAdmin from "../../../components/admin/products/SkuAdmin";
+import { ProductDetailModel } from "../../../models/ProductDetail.model";
+import SkuAction from "../../../actions/Sku.action";
+import { ProductModel } from "../../../models/Product.model";
 
 export interface Sku {
   price: string;
@@ -40,9 +50,11 @@ interface Attribute {
   name: string;
   attributeId: number;
 }
-interface UpdateProductProps {}
+interface UpdateProductProps {
+  detail: ProductDetailModel;
+}
 
-const UpdateProduct: React.FC<UpdateProductProps> = () => {
+const UpdateProduct: NextPage<UpdateProductProps> = ({ detail }) => {
   const {
     control,
     formState: { errors },
@@ -58,151 +70,74 @@ const UpdateProduct: React.FC<UpdateProductProps> = () => {
       description: "",
     },
   });
+
   const { data: categories } = useQuery(["categories"], CategoryAction.getAll);
-
-  const { data: attributes } = useQuery(["attributes"], AttributeAction.getAll);
-
   const { data: products } = useQuery(["products"], ProductAction.getAll);
-
-  const initGroupClassify = (uuid: string) => ({
-    detailattributes: [],
-    id: 0,
-    name: "",
-    uuid,
-  });
-
-  const [groupClassify, setGroupClassify] = useState<AttributeAdd[]>([
-    initGroupClassify(uuidv4()),
-  ]);
 
   const router = useRouter();
 
   const [thumbnails, setThumbnails] = useState<File[]>([]);
-  const [preview, setPreview] = useState([]);
+  const [preview, setPreview] = useState<string[]>([]);
 
-  const [skus, setSkus] = useState<Sku[]>([]);
-
-  const maxLength = 120;
-
-  const name = watch("name");
-  const slug = watch("slug");
-  const { mutate, isLoading } = useMutation(ProductAction.add1, {
-    onSuccess: () => {
-      toast.success("Thêm thành công");
+  const queryClient = useQueryClient();
+  const { mutate, isLoading } = useMutation(ProductAction.update, {
+    onSuccess: (data, variables) => {
+      const dataProductOld: ProductModel[] =
+        queryClient.getQueryData(["products", router.asPath]) || [];
+      toast.success("Cập nhật thành công");
+      queryClient.setQueryData(
+        ["products", router.asPath],
+        dataProductOld.map((item) => {
+          if (item.id === variables.id) {
+            return data;
+          }
+          return item;
+        })
+      );
       router.push("/admin/product");
     },
-    onError: () => {
+    onError: (err) => {
+      console.log(err);
       toast.error("Có lỗi xảy ra, vui lòng thử lại");
     },
   });
 
-  const handleAdd = async (data: any) => {
-    if (!thumbnails || thumbnails.length <= 0) {
-      toast.error("Vui lòng chọn hình ảnh chính");
-      return;
-    }
-
-    if (groupClassify.length == 1 && groupClassify[0].id === 0) {
-      toast.error("Vui lòng chọn phân loại");
-      return;
-    }
-
-    if (groupClassify.some((item) => item.id === 0)) {
-      toast.error("Vui lòng nhập đầy đủ phân loại hoặc xóa nếu không sử dụng");
-      return;
-    }
-
-    if (
-      skus.some(
-        (item) =>
-          item.discount.trim() == "" ||
-          item.price.trim() == "" ||
-          item.skuPhanLoai.trim() == ""
-      )
-    ) {
-      toast.error("Vui lòng nhập đầy đủ thông tin biến thể");
-      return;
-    }
-
-    if (
-      skus.some((item) => !isNumber(item.price) || !isNumber(item.discount))
-    ) {
-      toast.error("Giá và % giảm phải là số");
-      return;
-    }
-    let isExistSlug = false;
-    products?.map((item) => {
-      if (item.slug == data.slug) {
-        isExistSlug = true;
+  const handleUpdate = async (data: any) => {
+    if (data.slug !== detail.slug) {
+      let isExistSlug = false;
+      products?.map((item) => {
+        if (item.slug == data.slug) {
+          isExistSlug = true;
+        }
+      });
+      if (isExistSlug) {
+        toast.error("Slug đã được sử dụng");
+        return;
       }
-    });
-    if (isExistSlug) {
-      toast.error("Slug đã được sử dụng");
-      return;
     }
-    let avatars = await Promise.all(
-      Array.from(thumbnails).map((item) => uploadImg(item))
-    );
 
-    let images = await Promise.all(
-      skus.map((item) => (item.file ? uploadImg(item.file) : null))
-    );
-
-    const skusSending = skus.map((item, index) => {
-      return {
-        price: item.price,
-        discount: item.discount,
-        sku: item.skuPhanLoai,
-        image: images[index] || undefined,
-        detailAttributes: item.detailAttributes,
-      };
-    });
-
-    const sending = {
-      name: data.name,
-      categoryId: data.category,
-      description: data.description,
-      thumbnails: avatars,
-      thumbnail: avatars[0],
-      attributes: groupClassify.map((item) => +item.id),
-      skus: skusSending,
-      slug: data.slug,
+    const sending: any = {
+      ...data,
+      id: detail.id,
+      description: data.description.replace(/\n/g, "<br/>"),
     };
+    if (detail.categoryId !== +data.category) {
+      sending.categoryId = +data.category;
+      sending.category = categories?.find((item) => {
+        return item.id === +data.category;
+      });
+    }
+    if (thumbnails && thumbnails.length > 0) {
+      sending.thumbnails = await Promise.all(
+        Array.from(thumbnails).map((item) => uploadImg(item))
+      );
+
+      sending.thumbnail = sending.thumbnails[0];
+    }
+    console.log(thumbnails);
 
     mutate(sending);
   };
-
-  const dataTable = useMemo(() => {
-    if (groupClassify.length === 1 && groupClassify[0].id === 0) {
-      return [];
-    }
-
-    const listDetails: Detailattribute[] = groupClassify.reduce(
-      (pre: any, cur) => {
-        if (cur.id !== 0) {
-          return [...pre, ...cur.detailattributes];
-        }
-        return pre;
-      },
-      []
-    );
-
-    const logTest = getCombinationsByAttributeId(listDetails);
-
-    const newData: Sku[] = logTest.map((item) => ({
-      sku: "",
-      price: "",
-      discount: "",
-      file: undefined,
-      preview: "",
-      detailAttributes: item,
-      skuPhanLoai: "",
-      priceDisplay: "",
-    }));
-
-    setSkus(newData);
-    return newData;
-  }, [groupClassify]);
   const handleCreateSlug = () => {
     setValue(
       "slug",
@@ -216,26 +151,17 @@ const UpdateProduct: React.FC<UpdateProductProps> = () => {
       })
     );
   };
-  const { data: product } = useQuery(["products"], () =>
-    ProductAction.detail("nhan-kim-cuong4")
-  );
   useEffect(() => {
-    if (product) {
-      setValue("name", product.name);
-      setValue("slug", product.slug);
-      // setValue("category", product.categoryId);
-      // setValue("description", product.description.replace(/<br\/>/g, "\n"));
-      // setPreview(
-      //   product.productimages.map((item) => getImageServer(item.image))
-      // );
+    if (detail) {
+      setValue("name", detail.name);
+      setValue("slug", detail.slug);
+      setValue("category", detail.categoryId.toString());
+      setValue("description", detail.description.replace(/<br\/>/g, "\n"));
+      setPreview(
+        detail.productimages.map((item) => getImageServer(item.image))
+      );
     }
-  }, [product]);
-  const formatCurrency = (number: number) => {
-    return new Intl.NumberFormat("vi-VN", {
-      style: "currency",
-      currency: "VND",
-    }).format(number);
-  };
+  }, [detail]);
   return (
     <>
       <Meta
@@ -250,9 +176,9 @@ const UpdateProduct: React.FC<UpdateProductProps> = () => {
               Cập nhật sản phẩm
             </h1>
           </div>
-          <div className="flex flex-col md:flex-row mt-10">
+          <div className="flex flex-col mt-10">
             <div
-              className="p-4 rounded-3xl  flex flex-col md:flex-row w-full md:w-[60%]"
+              className="p-4 rounded-3xl flex flex-col md:flex-row w-full"
               style={{
                 boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
               }}
@@ -392,133 +318,18 @@ const UpdateProduct: React.FC<UpdateProductProps> = () => {
                     </div>
                   </div>
 
-                  <div className="mt-2 flex items-center">
-                    <span className="w-[150px]">Phân loại hàng</span>
-                    <div className="ml-4 flex-1">
-                      <div className="grid grid-cols-2 lg:grid-cols-2 gap-2">
-                        {groupClassify.map((item, index) => (
-                          <div key={item.id} className="flex items-center">
-                            <select
-                              value={item.id}
-                              onChange={(e) => {
-                                const selectedElement = attributes?.find(
-                                  (element) => element.id === +e.target.value
-                                );
-
-                                const isExist = groupClassify.some(
-                                  (element) =>
-                                    element.id === selectedElement?.id
-                                );
-
-                                if (isExist) {
-                                  toast.error("Phân loại này đã được chọn");
-                                  return;
-                                }
-
-                                if (selectedElement) {
-                                  setGroupClassify(
-                                    groupClassify.map((element) => {
-                                      if (element.uuid === item.uuid) {
-                                        return {
-                                          ...element,
-                                          ...selectedElement,
-                                        };
-                                      }
-                                      return element;
-                                    })
-                                  );
-                                }
-                              }}
-                              className="bg-gray-50 border outline-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            >
-                              <option selected={false}>Chọn phân loại</option>
-                              {attributes?.map((item) => (
-                                <option value={item.id} key={item.id}>{`${
-                                  item.name
-                                } (${item.detailattributes
-                                  .map((childItem) => childItem.name)
-                                  .join(", ")})`}</option>
-                              ))}
-                            </select>
-                            <div
-                              onClick={() =>
-                                groupClassify.length > 1 &&
-                                setGroupClassify(
-                                  groupClassify.filter(
-                                    (element) => element.uuid !== item.uuid
-                                  )
-                                )
-                              }
-                              className="p-1 cursor-pointer"
-                            >
-                              <AiOutlineDelete className="text-[16px] md:text-[22px]" />
-                            </div>
-                            {index === groupClassify.length - 1 && (
-                              <div
-                                onClick={() =>
-                                  setGroupClassify([
-                                    ...groupClassify,
-                                    initGroupClassify(uuidv4()),
-                                  ])
-                                }
-                                className="p-1 cursor-pointer"
-                              >
-                                <AiOutlinePlus className="text-[16px] md:text-[22px] " />
-                              </div>
-                            )}
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
                   <div className="mt-4 flex justify-end">
                     <button
-                      onClick={handleSubmit(handleAdd)}
-                      className="text-white bg-primary  py-1 rounded-md w-[150px]"
+                      onClick={handleSubmit(handleUpdate)}
+                      className="text-white bg-primary  py-1 rounded-md w-[80px]"
                     >
-                      Lưu sản phẩm
+                      Lưu
                     </button>
                   </div>
                 </div>
               </div>
             </div>
-            <div
-              className="p-4 rounded-3xl mt-4 md:mt-0 flex flex-col md:flex-row w-full md:w-[40%] md:ml-4"
-              style={{
-                boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
-              }}
-            >
-              <div className="">
-                <h2 className="font-bold">Thông tin biến thể</h2>
-                <div className="mt-5">
-                  <div className="mt-4 space-y-2">
-                    <div className="flex items-center">
-                      <div className="grid flex-1 grid-cols-4 gap-2">
-                        <h4>SKU</h4>
-                        <h4>Giá hàng hóa</h4>
-                        <h4>Giá hiển thị</h4>
-                        <h4>% giảm</h4>
-                      </div>
-                    </div>
-                  </div>
-                  {/* *************** */}
-                  <div className="mt-4 space-y-2">
-                    <div className="flex items-center">
-                      <div className="grid flex-1 grid-cols-4 gap-2">
-                        <h4>abc</h4>
-                        <h4>{formatCurrency(123123123)}</h4>
-                        <h4>Không có</h4>
-                        <button className="text-white bg-primary  py-1 rounded-md w-[150px]">
-                          Cập nhật
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                  {/* ******************* */}
-                </div>
-              </div>
-            </div>
+            <SkuAdmin productId={detail.id} />
           </div>
         </div>
       </AdminLayout>
@@ -528,12 +339,23 @@ const UpdateProduct: React.FC<UpdateProductProps> = () => {
 
 export default UpdateProduct;
 
-export const getServerSideProps: GetServerSideProps = async ({ req }) => {
+export const getServerSideProps: GetServerSideProps = async ({
+  req,
+  params,
+}) => {
   const detailActions = JSON.parse(req.cookies["detailActions"] || "[]");
+  const slug = params?.slug as string;
 
-  if (detailActions.includes("product:add")) {
+  if (!slug) {
     return {
-      props: {},
+      notFound: true,
+    };
+  }
+  const data = await ProductAction.detail(slug);
+
+  if (detailActions.includes("product:update")) {
+    return {
+      props: { detail: data },
     };
   }
 

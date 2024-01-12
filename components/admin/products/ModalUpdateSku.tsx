@@ -29,7 +29,7 @@ const ModalUpdateSku: React.FC<ModalUpdateSkuProps> = ({
   const [file, setFile] = useState();
   const [preview, setPreview] = useState("");
   const queryClient = useQueryClient();
-
+  console.log(preview);
   const {
     control,
     formState: { errors },
@@ -42,7 +42,7 @@ const ModalUpdateSku: React.FC<ModalUpdateSkuProps> = ({
       price: 0,
       discount: 0,
       sku: "",
-      priceDisplay:""
+      priceDisplay: "",
     },
   });
 
@@ -110,9 +110,9 @@ const ModalUpdateSku: React.FC<ModalUpdateSkuProps> = ({
                 accept="image/*"
                 className="hidden"
                 name=""
-                id="mainImage"
+                id="mainImage1"
               />
-              <label htmlFor="mainImage" className="cursor-pointer ">
+              <label htmlFor="mainImage1" className="cursor-pointer ">
                 {preview ? (
                   <LazyLoadImage
                     src={preview}
@@ -163,7 +163,6 @@ const ModalUpdateSku: React.FC<ModalUpdateSkuProps> = ({
               name="priceDisplay"
               className={"css-field"}
               placeholder="Nhập vào"
-              
             />
           </div>
           <div className="space-y-2">

@@ -206,7 +206,7 @@ const ProductAdmin = () => {
                       </td>
                       <td className="py-4 px-6">{item.skus.length}</td>
                       <td className="py-4 px-6">
-                        {dayjs(item.createdAt).format("DD/MM/YYYY")}
+                        {dayjs(item.updatedAt).format("DD/MM/YYYY")}
                       </td>
                       <td className="py-4 px-6 break-words max-w-[300px]">
                         {item.user.email}
