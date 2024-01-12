@@ -29,7 +29,6 @@ const ModalUpdateSku: React.FC<ModalUpdateSkuProps> = ({
   const [file, setFile] = useState();
   const [preview, setPreview] = useState("");
   const queryClient = useQueryClient();
-  console.log(preview);
   const {
     control,
     formState: { errors },

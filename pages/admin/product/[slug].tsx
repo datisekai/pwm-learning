@@ -134,7 +134,6 @@ const UpdateProduct: NextPage<UpdateProductProps> = ({ detail }) => {
 
       sending.thumbnail = sending.thumbnails[0];
     }
-    console.log(thumbnails);
 
     mutate(sending);
   };
