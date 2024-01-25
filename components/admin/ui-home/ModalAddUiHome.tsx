@@ -10,6 +10,7 @@ import UIAction from "../../../actions/UiHome.action";
 import { UIModel } from "../../../models/Ui.model";
 import { uploadImg } from "../../../utils";
 import TextField from "../../customs/TextField";
+import { useTheme } from "next-themes";
 
 interface ModalAddUiHomeProps {
   open: boolean;
@@ -38,6 +39,7 @@ const ModalAddUiHome: React.FC<ModalAddUiHomeProps> = ({
   const queryClient = useQueryClient();
 
   const router = useRouter();
+  const { systemTheme, theme, setTheme } = useTheme();
 
   const [thumbnail, setThumbnail] = useState<File>();
   const [preview, setPreview] = useState<string>("");
@@ -79,7 +81,9 @@ const ModalAddUiHome: React.FC<ModalAddUiHomeProps> = ({
         className="fixed inset-0 bg-[rgba(0,0,0,0.6)] z-[60]"
         onClick={handleClose}
       ></div>
-      <div className="w-[90%] md:w-[500px] p-4 rounded-lg bg-white fixed z-[70] top-[50%] translate-y-[-50%] translate-x-[-50%] left-[50%] ">
+      <div
+        className={`${theme}-text w-[90%] md:w-[500px] p-4 rounded-lg bg-white fixed z-[70] top-[50%] translate-y-[-50%] translate-x-[-50%] left-[50%] `}
+      >
         <h2 className="font-bold">Thêm UI</h2>
         <div className="mt-4 space-y-2">
           <div className="flex items-center space-x-2 mb-2">

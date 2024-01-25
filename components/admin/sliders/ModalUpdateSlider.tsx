@@ -10,6 +10,7 @@ import SpeciesAction from "../../../actions/Species.action";
 import { SliderModel } from "../../../models/Slider.model";
 import { getImageServer, uploadImg } from "../../../utils";
 import TextField from "../../customs/TextField";
+import { useTheme } from "next-themes";
 
 interface ModalUpdateSliderProps {
   open: boolean;
@@ -36,6 +37,7 @@ const ModalUpdateSlider: React.FC<ModalUpdateSliderProps> = ({
   });
 
   const queryClient = useQueryClient();
+  const { systemTheme, theme, setTheme } = useTheme();
 
   const [thumbnail, setThumbnail] = React.useState<File>();
   const [preview, setPreview] = React.useState<string>("");
@@ -90,7 +92,9 @@ const ModalUpdateSlider: React.FC<ModalUpdateSliderProps> = ({
         className="fixed inset-0 bg-[rgba(0,0,0,0.6)] z-[60]"
         onClick={handleClose}
       ></div>
-      <div className="w-[90%] md:w-[500px] p-4 rounded-lg bg-white fixed z-[70] top-[50%] translate-y-[-50%] translate-x-[-50%] left-[50%] ">
+      <div
+        className={`${theme}-text w-[90%] md:w-[500px] p-4 rounded-lg bg-white fixed z-[70] top-[50%] translate-y-[-50%] translate-x-[-50%] left-[50%] `}
+      >
         <h2 className="font-bold">Cập nhật slider</h2>
         <div className="mt-4 space-y-2">
           <div className="flex items-center space-x-2 mb-2">

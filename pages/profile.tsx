@@ -9,10 +9,12 @@ import TextField from "../components/customs/TextField";
 import MainLayout from "../components/layouts/MainLayout";
 import Meta from "../components/Meta";
 import { generateAvatar } from "../utils";
+import { useTheme } from "next-themes";
 
 const MyInfo = () => {
   const { user, setUser } = useContext(AuthContext);
-
+  const { systemTheme, theme, setTheme } = useTheme();
+  console.log(theme);
   const {
     control,
     formState: { errors },
@@ -58,7 +60,7 @@ const MyInfo = () => {
         image="/images/logo.jpg"
       />
       <MainLayout>
-        <div className="  bg-gray-100 min-h-screen mx-auto">
+        <div className={`bg-gray-100 min-h-screen mx-auto ${theme}`}>
           <div className="max-w-[1200px] mx-auto pt-4 flex flex-col md:flex-row">
             <div className="w-full md:w-[20%] space-y-2 flex flex-col items-center">
               <div className="flex items-center space-x-2">
@@ -75,7 +77,7 @@ const MyInfo = () => {
               </div>
             </div>
             <div className="flex-1 bg-white p-4 rounded-md shadow">
-              <div className="border-b pb-2">
+              <div className={`border-b pb-2 ${theme}-text`}>
                 <h1 className="text-lg md:text-xl">Hồ sơ của tôi</h1>
                 <p className="text-sm">
                   Quản lý thông tin để bảo mật tài khoản
@@ -101,7 +103,7 @@ const MyInfo = () => {
                   <label className="w-[120px] text-right md:w-[200px] text-gray-500">
                     Email
                   </label>
-                  <span>{user?.email}</span>
+                  <span className={`${theme}-text`}>{user?.email}</span>
                 </div>
                 <div className="flex items-center space-x-4">
                   <label className="w-[120px] text-right md:w-[200px] text-gray-500">

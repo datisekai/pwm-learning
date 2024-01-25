@@ -11,6 +11,7 @@ import TextField from "../../customs/TextField";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { FcAddImage } from "react-icons/fc";
 import { uploadImg } from "../../../utils";
+import { useTheme } from "next-themes";
 interface ModalAddInfoProps {
   open: boolean;
   handleClose: () => void;
@@ -33,6 +34,7 @@ const ModalAddInfo: React.FC<ModalAddInfoProps> = ({ handleClose, open }) => {
     },
   });
   const router = useRouter();
+  const { systemTheme, theme, setTheme } = useTheme();
   const [preview, setPreview] = useState("");
   const [file, setFile] = React.useState<any>();
 
@@ -53,8 +55,8 @@ const ModalAddInfo: React.FC<ModalAddInfoProps> = ({ handleClose, open }) => {
       );
 
       reset();
-      setFile(undefined)
-      setPreview("")
+      setFile(undefined);
+      setPreview("");
     },
     onError: (err) => {
       console.log(err);
@@ -79,7 +81,9 @@ const ModalAddInfo: React.FC<ModalAddInfoProps> = ({ handleClose, open }) => {
         className="fixed inset-0 bg-[rgba(0,0,0,0.6)] z-[60]"
         onClick={handleClose}
       ></div>
-      <div className="w-[90%] md:w-[500px] p-4 rounded-lg bg-white fixed z-[70] top-[50%] translate-y-[-50%] translate-x-[-50%] left-[50%] ">
+      <div
+        className={`${theme}-text w-[90%] md:w-[500px] p-4 rounded-lg bg-white fixed z-[70] top-[50%] translate-y-[-50%] translate-x-[-50%] left-[50%] `}
+      >
         <h2 className="font-bold">Thêm giới thiệu</h2>
         <div className="mt-4 space-y-2">
           <div className="space-y-2">

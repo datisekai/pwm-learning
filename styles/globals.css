@@ -318,3 +318,10 @@ span.lazy-load-image-background {
 #ReactSimpleImageViewer{
     z-index: 1000;
 }
+
+.dark{
+    background-color: black;
+}
+.dark-text{
+    color: black;
+}

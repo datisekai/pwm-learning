@@ -57,7 +57,9 @@ const ProductAdminManager = () => {
                   !item.hide && (
                     <li
                       key={item.id}
-                      onClick={() => router.push(`/admin/product?tab=${index}`)}
+                      onClick={() =>
+                        router.push(`/admin/product?tab=${item.id}`)
+                      }
                       className="mr-2 cursor-pointer"
                     >
                       <span

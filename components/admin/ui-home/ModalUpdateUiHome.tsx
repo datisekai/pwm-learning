@@ -9,6 +9,7 @@ import UIAction from "../../../actions/UiHome.action";
 import { UIModel } from "../../../models/Ui.model";
 import { getImageServer, uploadImg } from "../../../utils";
 import TextField from "../../customs/TextField";
+import { useTheme } from "next-themes";
 
 interface ModalUpdateUiHomeProps {
   open: boolean;
@@ -49,6 +50,7 @@ const ModalUpdateUiHome: React.FC<ModalUpdateUiHomeProps> = ({
   const queryClient = useQueryClient();
 
   const router = useRouter();
+  const { systemTheme, theme, setTheme } = useTheme();
 
   const { mutate, isLoading } = useMutation(UIAction.update, {
     onSuccess: (data, variable) => {
@@ -90,7 +92,9 @@ const ModalUpdateUiHome: React.FC<ModalUpdateUiHomeProps> = ({
         className="fixed inset-0 bg-[rgba(0,0,0,0.6)] z-[60]"
         onClick={handleClose}
       ></div>
-      <div className="w-[90%] md:w-[500px] p-4 rounded-lg bg-white fixed z-[70] top-[50%] translate-y-[-50%] translate-x-[-50%] left-[50%] ">
+      <div
+        className={`${theme}-text w-[90%] md:w-[500px] p-4 rounded-lg bg-white fixed z-[70] top-[50%] translate-y-[-50%] translate-x-[-50%] left-[50%] `}
+      >
         <h2 className="font-bold">Cập nhật UI</h2>
         <div className="mt-4 space-y-2">
           <div className="flex items-center space-x-2 mb-2">
