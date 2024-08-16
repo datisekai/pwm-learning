@@ -8,6 +8,26 @@ const axiosClient = axios.create({
 });
 
 axiosClient.interceptors.request.use((config: any) => {
+  if (config.url?.indexOf("login") !== -1) {
+    return config;
+  }
+
+  if (config.url?.indexOf("upload/") !== -1) {
+    config.headers["Content-Type"] = "multipart/form-data";
+  }
+
+  if (!config?.headers) {
+    throw new Error(
+      `Expected 'config' and 'config.headers' not to be undefined`
+    );
+  }
+
+  const token = getCookie("token");
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
   return config;
 });
 
