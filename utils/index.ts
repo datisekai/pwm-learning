@@ -1,3 +1,4 @@
+import axios from "axios";
 import axiosClient from "../config/axiosClient";
 
 export const formatPrices = (price: number) => {
@@ -18,23 +19,27 @@ export const formatNumber = (value: number) => {
 };
 
 export const getImageServer = (filename: string) => {
+  if (filename.includes("https://") || filename.includes("http://"))
+    return filename;
   return `${process.env.NEXT_PUBLIC_SERVER_URL}/images/${filename}`;
 };
 
-export const uploadImg = async (files: any) => {
-  if (!files) {
+const UPLOAD_NAME = process.env.NEXT_PUBLIC_UPLOAD_NAME;
+const UPLOAD_PRESET = process.env.NEXT_PUBLIC_UPLOAD_PRESET;
+
+const upload = axios.create({
+  baseURL: `https://api.cloudinary.com/v1_1/${UPLOAD_NAME}/image/upload`,
+});
+
+export const uploadImg = async (file: any) => {
+  if (!file) {
     return null;
   }
-
   const formData = new FormData();
-  formData.append("pwm-file", files);
-
-  try {
-    const res = await axiosClient.post("/upload/image", formData);
-    return res.data.url;
-  } catch (error) {
-    console.log(error);
-  }
+  formData.append("file", file);
+  formData.append("upload_preset", UPLOAD_PRESET as string);
+  const imageData = await upload.post("/", formData);
+  return imageData.data.url;
 };
 
 export function validURL(str: string) {

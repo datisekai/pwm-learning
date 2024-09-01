@@ -1,7 +1,8 @@
 import axios, { AxiosResponse } from "axios";
 import { deleteCookie, getCookie } from "cookies-next";
+export const API_URL = process.env.NEXT_PUBLIC_SERVER_URL;
 const axiosClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_SERVER_URL,
+  baseURL: API_URL,
   headers: {
     "Content-Type": "application/json",
   },

@@ -1,6 +1,6 @@
 import { setCookie } from "cookies-next";
 import { toast } from "react-hot-toast";
-import axiosClient from "../config/axiosClient";
+import axiosClient, { API_URL } from "../config/axiosClient";
 import { UserModel } from "../models/User.model";
 
 interface IUserAction {
@@ -21,8 +21,10 @@ interface IUserAction {
 
 const UserAction: IUserAction = {
   login: async (data) => {
-    const result = await axiosClient.post("/user/login", data);
-    return result.data;
+    // const result = await axiosClient.post("/user/login", data);
+    const response = await axiosClient.post(`/user/login`, data);
+    return response.data;
+    // return result.data;
   },
   myInfo: async () => {
     const result = await axiosClient.get("/user/me");
