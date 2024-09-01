@@ -10,12 +10,8 @@ import AuthContextProvider from "../components/context";
 import { Toaster } from "react-hot-toast";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
-import 'photoswipe/dist/photoswipe.css'
-import "suneditor/dist/css/suneditor.min.css"
-
-
-
-
+import "photoswipe/dist/photoswipe.css";
+import "suneditor/dist/css/suneditor.min.css";
 
 const queryClient = new QueryClient({
   defaultOptions: { queries: { refetchOnWindowFocus: false } },
@@ -31,7 +27,7 @@ export default function App({ Component, pageProps }: AppProps) {
           showSpinner: false,
         }}
       />
-      <ThemeProvider enableSystem={true} attribute="class">
+      <ThemeProvider enableSystem={false} forcedTheme="light" attribute="class">
         <QueryClientProvider client={queryClient}>
           <AuthContextProvider>
             <Component {...pageProps} />
